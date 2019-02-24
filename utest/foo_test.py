@@ -2,7 +2,6 @@
 
 
 """
-Unit testing of the dummypackage.foo_module. Doc:
 https://docs.python.org/3/library/unittest.html#assert-methods
 """
 
