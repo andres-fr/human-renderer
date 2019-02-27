@@ -19,7 +19,7 @@ def setup():
     #
     setuptools.setup(
         name="human-renderer",
-        version="0.2.1",
+        version="0.2.2",
         author="Andres FR",
         author_email="andres-fr@users.noreply.github.com",
         description="Rendering human poses from sequential data using \
