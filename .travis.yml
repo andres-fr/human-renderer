@@ -53,22 +53,22 @@ addons:
 # here we define the stages. stage ordering will come later
 jobs:
   include:
-    # Perform all needed tests to ensure repo quality. All scripts
-    # in a stage are done in parallel. Stages are done sequentially.
-    - stage: test
-      name: "Check Code Style"
-      script: python -m flake8
-    - script: python -m unittest utest/tautology.py
-      name: "Tautological Test"
-    - script: python ci_scripts/utest_with_coverage.py -n "$DOC_PACKAGE_NAME" -p "$CODECOV_REQUIRED_PERCENT"
-      name: "Unit Testing and Code Coverage"
+    # # Perform all needed tests to ensure repo quality. All scripts
+    # # in a stage are done in parallel. Stages are done sequentially.
+    # - stage: test
+    #   name: "Check Code Style"
+    #   script: python -m flake8
+    # - script: python -m unittest utest/tautology.py
+    #   name: "Tautological Test"
+    # - script: python ci_scripts/utest_with_coverage.py -n "$DOC_PACKAGE_NAME" -p "$CODECOV_REQUIRED_PERCENT"
+    #   name: "Unit Testing and Code Coverage"
 
-    # If all tests pass, go on to the build stage
-    - stage: build
-      script: python setup.py sdist bdist_wheel
-      name: "Build Package"
-    - script: bash ci_scripts/make_sphinx_docs.sh "$DOC_PACKAGE_NAME" "$DOC_AUTHOR_NAME"
-      name: "Build Autodocs"
+    # # If all tests pass, go on to the build stage
+    # - stage: build
+    #   script: python setup.py sdist bdist_wheel
+    #   name: "Build Package"
+    # - script: bash ci_scripts/make_sphinx_docs.sh "$DOC_PACKAGE_NAME" "$DOC_AUTHOR_NAME"
+    #   name: "Build Autodocs"
 
     # If building was successful, deploy to various platforms
     - stage: deploy
@@ -81,15 +81,15 @@ jobs:
           name: "$TRAVIS_COMMIT_MESSAGE"
           body: "See [CHANGELOG]($CHANGELOG_PATH) for details."
           api_key:
-            secure: "mf8Clj5RXzIX05dXTDGWnxeembpncHslFlIaSEpJt83/odusp1u885rxvYjrSzpcsxE3iaWdDf9W3vlB9/Hm/b5TUc0WBg/kxCx5qs3v6K9N0+3JURMUEhtBfUYs6FJ4RRIcWoakxFjlSZM9FmvGo1yQlabKZlPLTvQn4xwWQzk9fLAyKEDFJnCCmN1HzZm8SNLSIhZrvyw9Cz12bZYixsyfFODEV/Nk4XE4CTcFqgWRzy1wLN5oYQB/+H9CvVnX9yeF9ijkmBLzktgtU0xe0zYZNeHcGiviIS8oWVIpnJ8BSh55oqBsTxJshdKXO7O4dymzya4aLM/cr2SIjUCNOfaBiF4pJ82IHvLN3N0KMXRfpZjktaytZHgVdGAgMxoqzlLZulREaAL0O89r5y7LnXj2QUtnluXwiXvFlCbnWL1Tu8721xjXqNdGj4c2BVwnRIy8fFImvdaTKumHeUpkviYaEReNMBU3Kc8lBzm5uEaZoo0eErWtOoDJ+YF0IFwY0dnGH+8V3nTasO0n+lhiWZ+p22ckO7MvONRfgrWZT+qkZF0jEwKQRfou9+Jcs2+cilTJs/LRW2/nO+tA9H3DMFaq6aXM2DkxJO0+mQmxAHjCmuBTeru4416rzdATZ6OIhsC2D5CIY/HrlC4fGJBbwlG751hCqeMY0QoxLwI0cSY="
+            secure: "hglqBpMBdohKerTSXFbwlrWnnnL01wV1mRPxNEr5EnB4+v+BQ4CPfutX+J5BZNMBJ5II5GeMbHCJh/IJg2jRPkEi0/aA9hbnVOmO05GgHsetcku5iiRRagbo+axU2gEynB0a3rCH+DJgouT5Gz6QnmqtiCjk+Rj9LA3yEfM48xTBkF2kWgDp/0Id8LH7tMKgBA1FrmColngC8kBLA5tBjGjO8/4x38krjCRM1Q37Hu9eQt03y4M5v93fBDSkUfOQzzI4VKpA38NE815X9q6pMkS8ZclMDj6cm05apwN7yck06TIsOcUzV+qJ+9+RakEAkZteB9yRMzwc3L5cq51q4Nn5hM6sGSjP0GWUVl11GPwwgvxrFSVx6jCnAOn4o2hskcWhVCJTK2GPeJKLTVfPqSLcBriR8pyjQWB1BqH29sqf6aXjOQi6qriMACtvPW7oPrMKOK8i5/xweGVg0twdPLXvuwovlaBiZvy1YgOKDHcAFyQ6K8uG+iHtAtRsbK89e1q4B11Lew2XJY8DRfQLQxK7s4YXxXNAdtyC+JslAdG9lu4ktnBTGCTK9qw+s9HfoNhaorP0qvQLeag6Cc/yYcvBwxyzpZmjbnABCjBOc1G0mwYunOLcJ1b0gjDwqOKg6+BZ1ab4lveKGmYhHZE3ZzGQdVO6MeBmBCKHKTa+b88="
           file_glob: true
           file: "$GH_RELEASES_ASSET_PATH"
           on:
-            tags: true
+            #tags: true
             repo: "$REPO_NAME"
 
 # Here you can specify the order for stages, or skip some
 stages:
-  - test
-  - build
+  #- test
+  #- build
   - deploy
