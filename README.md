@@ -52,4 +52,5 @@ git checkout -b dev
 git push -u origin dev # the first time, then `git push`
 
 # once a milestone is reached, merge into master:
+xx
 ```
