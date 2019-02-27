@@ -18,7 +18,8 @@ class Foo(object):
         """
         The instance will contain 2 small objects: 2*O(1) memory.
         """
-        assert size > 0, "size has to be a positive int!"
+        if size is not None:
+            assert size > 0, "size has to be a positive int!"
         self._x = range(size)
         self._result = 0
 

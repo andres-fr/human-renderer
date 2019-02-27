@@ -6,18 +6,21 @@
 ### run all tests:
 
 ```
+# with coverage:
+python ci_scripts/utest_with_coverage.py -n humanrenderer -p 99.9
+# without coverage:
 python -m unittest discover -s utest -t . -p "*_test.py" -v
 ```
 
 ### Bump version:
 
-After a satisfactory commit do:
+Regular work is performed on the `dev` branch. After a milestone commit, merge into `master` and tag it before pushing with:
 
 ```
 bump2version {major | minor | patch}
 ```
 
-And then a push will automatically trigger the tag release.
+And then a push will automatically trigger the tagged release.
 
 ### Build package:
 
@@ -30,20 +33,8 @@ python setup.py sdist bdist_wheel
 
 ### Build docs:
 
-Args help: `sphinx-quickstart -h`
-
-Run this in the repo root:
 
 ```
-rm -r docs/
-version=`grep "current_version" .bumpversion.cfg | cut -d'=' -f2 | xargs`
-sphinx-quickstart -q -p humanrenderer -a "Andres FR" --makefile --batchfile --ext-autodoc --ext-mathjax --ext-viewcode --ext-githubpages -d version=$version -d release=$version docs/
-# sadly the following is needed to change the html_theme flag
-sed -i '/html_theme/d' docs/conf.py # remove the html_theme line
-sed -i '1r ci_scripts/sphinx_doc_config.txt' docs/conf.py # add the desired config after line 1
-echo "" >> docs/conf.py # add newline at EOF to pass flake8
-sphinx-apidoc -f humanrenderer -o docs/
-make -C docs clean && make -C docs latexpdf && make -C docs html
- ```
-
+./ci_scripts/make_sphinx_docs.sh humanrenderer "Andres Fernandez Rodriguez"
+```
 

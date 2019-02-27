@@ -4,7 +4,7 @@ import sys
 MODULE_ROOT_DIR = dirname(dirname(abspath(__file__)))
 # append module root directory to sys.path
 if MODULE_ROOT_DIR not in sys.path:
-    sys.path.append(MODULE_ROOT_DIR)
+    sys.path.insert(0, MODULE_ROOT_DIR)
 
 html_theme = "sphinx_rtd_theme"
 #
@@ -28,8 +28,8 @@ html_theme = "sphinx_rtd_theme"
 # -- Project information -----------------------------------------------------
 
 project = 'humanrenderer'
-copyright = '2019, Andres FR'
-author = 'Andres FR'
+copyright = '2019, Andres Fernandez Rodriguez'
+author = 'Andres Fernandez Rodriguez'
 
 # The short X.Y version
 version = '0.1.0'
@@ -48,7 +48,7 @@ release = '0.1.0'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.mathjax',
+    'sphinx.ext.imgmath',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
 ]
@@ -139,7 +139,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'humanrenderer.tex', 'humanrenderer Documentation',
-     'Andres FR', 'manual'),
+     'Andres Fernandez Rodriguez', 'manual'),
 ]
 
 
@@ -184,3 +184,4 @@ epub_exclude_files = ['search.html']
 
 
 # -- Extension configuration -------------------------------------------------
+latex_elements = {'extraclassoptions': 'openany,oneside'}

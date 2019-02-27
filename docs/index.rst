@@ -1,5 +1,5 @@
 .. humanrenderer documentation master file, created by
-   sphinx-quickstart on Sun Feb 24 09:24:57 2019.
+   sphinx-quickstart on Wed Feb 27 05:57:22 2019.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
@@ -7,9 +7,10 @@ Welcome to humanrenderer's documentation!
 =========================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Contents:
 
+   humanrenderer
 
 
 Indices and tables
