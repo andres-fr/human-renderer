@@ -53,22 +53,22 @@ addons:
 # here we define the stages. stage ordering will come later
 jobs:
   include:
-    # # Perform all needed tests to ensure repo quality. All scripts
-    # # in a stage are done in parallel. Stages are done sequentially.
-    # - stage: test
-    #   name: "Check Code Style"
-    #   script: python -m flake8
-    # - script: python -m unittest utest/tautology.py
-    #   name: "Tautological Test"
-    # - script: python ci_scripts/utest_with_coverage.py -n "$DOC_PACKAGE_NAME" -p "$CODECOV_REQUIRED_PERCENT"
-    #   name: "Unit Testing and Code Coverage"
+    # Perform all needed tests to ensure repo quality. All scripts
+    # in a stage are done in parallel. Stages are done sequentially.
+    - stage: test
+      name: "Check Code Style"
+      script: python -m flake8
+    - script: python -m unittest utest/tautology.py
+      name: "Tautological Test"
+    - script: python ci_scripts/utest_with_coverage.py -n "$DOC_PACKAGE_NAME" -p "$CODECOV_REQUIRED_PERCENT"
+      name: "Unit Testing and Code Coverage"
 
-    # # If all tests pass, go on to the build stage
-    # - stage: build
-    #   script: python setup.py sdist bdist_wheel
-    #   name: "Build Package"
-    # - script: bash ci_scripts/make_sphinx_docs.sh "$DOC_PACKAGE_NAME" "$DOC_AUTHOR_NAME"
-    #   name: "Build Autodocs"
+    # If all tests pass, go on to the build stage
+    - stage: build
+      script: python setup.py sdist bdist_wheel
+      name: "Build Package"
+    - script: bash ci_scripts/make_sphinx_docs.sh "$DOC_PACKAGE_NAME" "$DOC_AUTHOR_NAME"
+      name: "Build Autodocs"
 
     # If building was successful, deploy to various platforms
     - stage: deploy
@@ -90,6 +90,6 @@ jobs:
 
 # Here you can specify the order for stages, or skip some
 stages:
-  #- test
-  #- build
+  - test
+  - build
   - deploy

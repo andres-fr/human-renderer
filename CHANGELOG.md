@@ -9,12 +9,12 @@ All notable changes to this project will be documented in this file.
 
 
 
-## [[Unreleased](https://github.com/andres-fr/human-renderer/compare/0.2.0...HEAD)]
+## [[Unreleased](https://github.com/andres-fr/human-renderer/compare/0.1.0...HEAD)]
 
 ### Added
 - 
 
-## [0.2.0] - 27/02/2019
+## [0.1.0] - 27/02/2019
 
 ### Added
 - Provided CI structure for testing, build, autodoc, and GH releases
