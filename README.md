@@ -38,3 +38,18 @@ python setup.py sdist bdist_wheel
 ./ci_scripts/make_sphinx_docs.sh humanrenderer "Andres Fernandez Rodriguez"
 ```
 
+
+### Branching:
+
+Travis builds get triggered on `master` and tagged builds only. Regular work can be done on a `dev` branch:
+
+```
+# create branch right after a commit:
+git checkout -b dev
+# work normally on it...
+...
+# track the new branch if you want to implicitly push to it:
+git push -u origin dev # the first time, then `git push`
+
+# once a milestone is reached, merge into master:
+```
