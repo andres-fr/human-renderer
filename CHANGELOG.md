@@ -22,5 +22,10 @@ All notable changes to this project will be documented in this file.
 
 ## TODO:
 
+- find the specs for the "default" HM skeleton format, and a Python parser (with JSON schema or similar).
+- find Python functionality for setting an arbitrary skeleton pose and test on blender console
+- learn how sequence system works and how to automate it via python
+- app that takes a number of skeleton sequences (with non-negative time cues) and renders them. as python-integrated as possible.
+
 - data model: tabular format for (multi-person) sequences of people, and I/O
 - minimal human pose rendering example
