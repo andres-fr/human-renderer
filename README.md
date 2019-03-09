@@ -60,6 +60,16 @@ xx
 ## Setup:
 
 
+
+### Blender
+
+Install as follows:
+
+1. Download from `https://www.blender.org/download/`
+2. Unpack into `<BLENDERPATH>` (e.g. `~/opt/`)
+3. Add to PATH in `.bashrc` or `.profile` (e.g. `export PATH=$HOME/opt/blender-2.79b-linux-glibc219-x86_64:$PATH`)
+4. now running `blender` will work on any terminal with that environment.
+
 ### Makehuman
 
 Install
@@ -79,7 +89,7 @@ Also for best compatibility with render, models should be exported in [MHX2 form
 # copy the export routine into the makehuman plugins folder
 sudo cp -r 9_export_mhx2/ /usr/share/makehuman/plugins/
 
-# After installing blender, copy the import rutine into the blender addons folder
+# Copy the import rutine into the blender addons folder
 cp -r import_runtime_mhx2/ ~/opt/blender-2.79b-linux-glibc219-x86_64/2.79/scripts/addons_contrib
 
 
@@ -108,21 +118,12 @@ Still, this didn't work because a newer version was installed with `pip --user`,
 1. Open `makehuman` in the virtual environment
 2. Create a model for a human, select the `Default` skeleton under `Pose/Animate`.
 3. Save and export as `MHX2` format.
+4. Import in blender as described. When importing the `MHX2` human model, it will appear whithout textures (all white), but this is normal behaviour for the edit mode. Textures will be included in render mode.
 
 
+# EXPERIMENTS
 
-### Blender
-
-Install as follows:
-
-1. Download from `https://www.blender.org/download/`
-2. Unpack into `<BLENDERPATH>` (e.g. `~/opt/`)
-3. Add to PATH in `.bashrc` or `.profile` (e.g. `export PATH=$HOME/opt/blender-2.79b-linux-glibc219-x86_64:$PATH`)
-4. now running `blender` will work on any terminal with that environment.
-
-When importing the `MHX2` human model, it will appear whithout textures (all white), but this is normal behaviour for the edit mode. Textures will be included in render mode.
-
-Experiments with the Python console (see https://docs.blender.org/manual/en/latest/editors/python_console.html):
+### Experiments with the Python console (see https://docs.blender.org/manual/en/latest/editors/python_console.html):
 
 
 (Blender Python API: `https://docs.blender.org/api/2.79b/`)
@@ -141,3 +142,40 @@ py.data.objects.keys()
 bpy.data.objects["Testmodel"].pose.bones
 
 ```
+
+
+### Pose serialization
+
+The [BVH](https://research.cs.wisc.edu/graphics/Courses/cs-838-1999/Jeff/BVH.html) human pose format is a standard for MH, Blender and other editors. The file `/usr/share/makehuman/data/rigs/default.mhskel` contains the default skeleton definition (a copy is stored in this repo).
+
+Related MH files:
+  * `/usr/share/makehuman/plugins/3_libraries_skeleton/skeletonlibrary.py`
+  * `/usr/share/makehuman/shared/skeleton.py`. The `Bone` class is the node of a tree, and has interesting methods like `getMatrix, get_roll_to, copy_normal...`. Docstring:
+
+```
+General skeleton, rig or armature class.
+A skeleton is a hierarchic structure of bones, defined between a head and tail
+joint position. Bones can be detached from each other (their head joint doesn't
+necessarily need to be at the same position as the tail joint of their parent
+bone).
+
+A pose can be applied to the skeleton by setting a pose matrix for each of the
+bones, allowing static posing or animation playback.
+The skeleton supports skinning of a mesh using a list of vertex-to-bone
+assignments.
+```
+
+
+BVH files are readily available, e.g. `http://www.makehumancommunity.org/content/figure_skating_sit_spin`. The `.mhm` saved models contain the `pose` pointing to the corresponding BVH (built-in poses are in `/usr/share/makehuman/data/poses/`). An example is stored under `makehuman_models/poses`.
+
+There are some OS iniciatives to parse BVH:
+
+* MH itself
+* https://github.com/omimo/PyMO
+
+
+
+Before evaluating which one is best, further assessment about the blender sequence rendering and python integration is needed.
+
+
+### Blender sequences:

@@ -1,0 +1,6 @@
+tag Sport
+tag Figure Skating
+name figure_skating_sit_spin
+description Figure skating pose. The rotation will be done on the front rocker, the round front part of the blade. So this pose is short before or after the rotation itself.
+author punkduck
+license CC0
