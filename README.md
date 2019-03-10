@@ -166,6 +166,7 @@ Load mhx2 into blender:
 
 ```
 bpy.ops.import_scene.makehuman_mhx2(filepath="~/Desktop/myfile.mhx2")
+bpy.ops.import_scene.makehuman_mhx2(filepath="~/github-work/human-renderer/makehuman_data/exported_models/testmodel.mhx2")
 ```
 
 
@@ -207,8 +208,7 @@ Before evaluating which one is best, further assessment about the blender sequen
 
 
 
-
-
+`bpy.ops.import_anim.bvh(filepath="/home/a9fb1e/github-work/human-renderer/makehuman_data/poses/cmu_motion_captures/01/01_06.bvh")`
 
 
 
