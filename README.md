@@ -223,3 +223,16 @@ To control MHX2 models using BHV within Blender, different sources suggest using
     3. 
 
 
+Set frame end:
+
+```
+bpy.data.scenes[0].frame_end = 1234 # the one for the player
+bpy.context.scene.McpEndFrame = 2345 # the one for makewalk?
+```
+
+png images to mp4:
+
+```
+ffmpeg -i %04d.png -vf "transpose=2" output.mp4
+
+```

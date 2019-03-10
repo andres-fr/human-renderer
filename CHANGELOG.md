@@ -31,10 +31,11 @@ All notable changes to this project will be documented in this file.
 * Same goes for the generation and export of MHX2 poses
 * we just got to know makewalk and probably installed it OK
 
-1. Flexible MHX2-BHV workflow:
-   1. Find out how to render bare BHV sequences in blender, and export something like a video with minimal aesthetics
-   2. Render same sequence but with a human from MH: Use makewalk?
 
-2. Integrated workflow:
+
+
+Integrated workflow:
    1. Render sequences in a headless way, from terminal. Using GPU as fast as possible
    2. Store 3D-navigable sequences, then integrate into Qt?
+   3. Editing of sequences within Python (interactively?)
+
