@@ -24,8 +24,17 @@ All notable changes to this project will be documented in this file.
 
 - find the specs for the "default" HM skeleton format, and a Python parser (with JSON schema or similar).
 - find Python functionality for setting an arbitrary skeleton pose and test on blender console
-- learn how sequence system works and how to automate it via python
-- app that takes a number of skeleton sequences (with non-negative time cues) and renders them. as python-integrated as possible.
 
-- data model: tabular format for (multi-person) sequences of people, and I/O
-- minimal human pose rendering example
+
+
+* we have good intuitition about BHV, its sources and the way MH and Blender import it. For poses and sequences
+* Same goes for the generation and export of MHX2 poses
+* we just got to know makewalk and probably installed it OK
+
+1. Flexible MHX2-BHV workflow:
+   1. Find out how to render bare BHV sequences in blender, and export something like a video with minimal aesthetics
+   2. Render same sequence but with a human from MH: Use makewalk?
+
+2. Integrated workflow:
+   1. Render sequences in a headless way, from terminal. Using GPU as fast as possible
+   2. Store 3D-navigable sequences, then integrate into Qt?

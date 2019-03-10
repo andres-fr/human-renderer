@@ -144,9 +144,33 @@ bpy.data.objects["Testmodel"].pose.bones
 ```
 
 
-### Pose serialization
+## Pose serialization
 
-The [BVH](https://research.cs.wisc.edu/graphics/Courses/cs-838-1999/Jeff/BVH.html) human pose format is a standard for MH, Blender and other editors. The file `/usr/share/makehuman/data/rigs/default.mhskel` contains the default skeleton definition (a copy is stored in this repo).
+
+### 1. BVH
+The [BVH](https://research.cs.wisc.edu/graphics/Courses/cs-838-1999/Jeff/BVH.html) (copy of the link stored under `makehuman_data/BVH_format_explanation.html`) is a format for serialization of skeleton poses. It allows different structures, and the specification of sequences. It is a standard for motion capture compatible with MH, Blender and other editors.
+
+Saved models (`.mhm`) include a line beginning with the `pose` keyword, pointing to the corresponding BVH (built-in poses are in `/usr/share/makehuman/data/poses/`). An example of such `.bvh` is stored under `makehuman_data/poses`.
+
+[This link](https://sites.google.com/a/cgspeed.com/cgspeed/motion-capture/cmu-bvh-conversion) also points to thousands of BVH motion captures (small subset copied to this repo). Importing and playing them in Blender works out-of-the-box.
+
+### 2. MHX2
+
+Makehuman features different kinds of skeletons, the "Default" being the most detailled one. The file `/usr/share/makehuman/data/rigs/default.mhskel` contains the default skeleton definition (a copy is stored in this repo). Models exported as `.mhx2` include a `"skeleton"` entry, that implements the schema defined in `default.mhskel`. It provides the following entries for each bone: `name, parent, head_xyz, parent_xyz, roll_coeff`. Note the following:
+    * This file can become very large due to the inefficient storage of the `vertices` information. Saving it as binary helps.
+    * The XYZ system in Blender is `(right, deep, upwards)` (see [here](http://www.makehumancommunity.org/forum/viewtopic.php?p=35265&sid=4593dc12911e0b45b9f0342f6a4828d1#p35265)). **Probably** the 3-element vectors for head and tail stand for `(right, upwards, front)`, given `def zup(co): return Vector((co[0], -co[2], co[1]))` defined in `import_rutine_mhx2/utils.py` and used in `importer.py -> buildSkeleton`. I couldn't find any doc to confirm this, experiments will do.
+    * It is unclear whether this format stores sequences
+
+
+Load mhx2 into blender:
+
+```
+bpy.ops.import_scene.makehuman_mhx2(filepath="~/Desktop/myfile.mhx2")
+```
+
+
+
+
 
 Related MH files:
   * `/usr/share/makehuman/plugins/3_libraries_skeleton/skeletonlibrary.py`
@@ -166,7 +190,7 @@ assignments.
 ```
 
 
-BVH files are readily available, e.g. `http://www.makehumancommunity.org/content/figure_skating_sit_spin`. The `.mhm` saved models contain the `pose` pointing to the corresponding BVH (built-in poses are in `/usr/share/makehuman/data/poses/`). An example is stored under `makehuman_models/poses`.
+BVH files are readily available, e.g. `http://www.makehumancommunity.org/content/figure_skating_sit_spin`. The `.mhm` saved models contain the `pose` pointing to the corresponding BVH (built-in poses are in `/usr/share/makehuman/data/poses/`). An example is stored under `makehuman_data/poses`.
 
 There are some OS iniciatives to parse BVH:
 
@@ -179,3 +203,23 @@ Before evaluating which one is best, further assessment about the blender sequen
 
 
 ### Blender sequences:
+
+
+
+
+
+
+
+
+
+
+
+## Makewalk:
+
+
+To control MHX2 models using BHV within Blender, different sources suggest using the MakeWalk plugin. The PPA doesn't offer it, neither any official page. Older releases seem to have it included: `http://files.jwp.se/archive/releases/1.1.1/` (a copy is saved into this repo):
+    1. Extract the makewalk folder and copy it into Blender's plugins folder (e.g. `~/opt/blender-2.79b-linux-glibc219-x86_64/2.79/scripts/addons_contrib`)
+    2. Activate it in `Blender -> File -> User Preferences -> Add-ons` and save
+    3. 
+
+
