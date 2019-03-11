@@ -236,3 +236,16 @@ png images to mp4:
 ffmpeg -i %04d.png -vf "transpose=2" output.mp4
 
 ```
+
+
+## HEADLESS BLENDER:
+
+See https://blender.stackexchange.com/questions/31255/can-blender-render-on-systems-without-a-gui
+CLI docs: https://docs.blender.org/manual/en/latest/render/workflows/command_line.html
+
+```
+blender --background myblend.blend -x 1 -f $n
+
+blender -b myBlenderFile.blend -a
+
+```

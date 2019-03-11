@@ -22,20 +22,12 @@ All notable changes to this project will be documented in this file.
 
 ## TODO:
 
-- find the specs for the "default" HM skeleton format, and a Python parser (with JSON schema or similar).
-- find Python functionality for setting an arbitrary skeleton pose and test on blender console
-
-
-
-* we have good intuitition about BHV, its sources and the way MH and Blender import it. For poses and sequences
-* Same goes for the generation and export of MHX2 poses
-* we just got to know makewalk and probably installed it OK
-
-
-
+- Get proper specs for Mali data format, and integrate it into MakeWalk via Python parser (with JSON schema or similar).
+- Have shadows and textures be rendered on materials view
 
 Integrated workflow:
-   1. Render sequences in a headless way, from terminal. Using GPU as fast as possible
-   2. Store 3D-navigable sequences, then integrate into Qt?
+   0. See `blender --help` for some CLI interaction
+   1. Render sequences in a headless way, from terminal. Using GPU as fast as possible (headless OpenGL rendering not possible yet? https://developer.blender.org/T54638)
+   2. Store 3D-navigable sequences, then integrate into Qt? https://www.kdab.com/exporting-3d-content-qt-3d-blender/
    3. Editing of sequences within Python (interactively?)
 
