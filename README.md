@@ -249,3 +249,21 @@ blender --background myblend.blend -x 1 -f $n
 blender -b myBlenderFile.blend -a
 
 ```
+
+
+# MORSE
+
+
+[Morse](https://www.openrobots.org/morse/doc/1.2/morse.html) is an academic simulator originally developed for robotics. It is based on blender and its focus is on flexible Python integration and programmatic usage.
+
+
+**Note:**: Morse requires a working installation. Versions must also be identical. This can be bypassed by setting `MORSE_SILENT_PYTHON_CHECK=1`, however, this may break things. In our case, the morse 3.6.3 version didn't work with blender 2.79b (based on 3.5), and worked with 2.80 (based on 3.7).
+
+```
+sudo apt-get install morse-simulator
+sudo apt install python3-morse-simulator # py3 bindings
+export MORSE_SILENT_PYTHON_CHECK=1
+morse create mysim
+morse run mysim
+# morse run '/home/a9fb1e/Desktop/untitled280.blend'
+```
