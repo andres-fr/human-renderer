@@ -1,0 +1,26 @@
+# Written by MakeHuman 1.1.1
+version v1.1.1
+tags tpose_african
+camera 3.5 337.5 1.0 0.809899878252 -0.240931088817 1.1625
+modifier macrodetails-universal/Muscle 0.500000
+modifier macrodetails/African 0.333333
+modifier macrodetails-proportions/BodyProportions 0.500000
+modifier macrodetails/Gender 0.500000
+modifier macrodetails-height/Height 0.500000
+modifier breast/BreastSize 0.500000
+modifier macrodetails/Age 0.500000
+modifier breast/BreastFirmness 0.500000
+modifier macrodetails/Asian 0.333333
+modifier macrodetails/Caucasian 0.333333
+modifier macrodetails-universal/Weight 0.500000
+hair short01 766436e9-63ed-4f6a-afa9-99f3acff70a8
+skeleton cmu_mb.mhskel
+eyes Low-Poly 1cc97a30-85a1-42e6-a9f7-b3e753732baa
+pose tpose.bvh
+clothes female_casualsuit01 a8b0e841-144b-4f03-8b9e-ea8fdce8c863
+clothesHideFaces True
+expression smile01.mhpose
+skinMaterial skins/young_african_female/young_african_female.mhmat
+material short01 766436e9-63ed-4f6a-afa9-99f3acff70a8 short01.mhmat
+material Low-Poly 1cc97a30-85a1-42e6-a9f7-b3e753732baa eyes/materials/brown.mhmat
+subdivide False

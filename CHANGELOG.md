@@ -22,8 +22,9 @@ All notable changes to this project will be documented in this file.
 
 ## TODO:
 
+At this point we have a satisfactory scene with a sequence being rendered reasonably fast within Blender
 - Get proper specs for Mali data format, and integrate it into MakeWalk via Python parser (with JSON schema or similar).
-- Have shadows and textures be rendered on materials view
+
 
 Integrated workflow:
    0. See `blender --help` for some CLI interaction

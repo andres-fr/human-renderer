@@ -65,12 +65,12 @@ xx
 
 Install as follows:
 
-1. Download from `https://www.blender.org/download/`
+1. Download version 2.80 (currently beta) from `https://www.blender.org/download/`
 2. Unpack into `<BLENDERPATH>` (e.g. `~/opt/`)
-3. Add to PATH in `.bashrc` or `.profile` (e.g. `export PATH=$HOME/opt/blender-2.79b-linux-glibc219-x86_64:$PATH`)
+3. Add to PATH in `.bashrc` or `.profile` (e.g. `export PATH=$HOME/opt/<BLENDER_FOLDER>:$PATH`)
 4. now running `blender` will work on any terminal with that environment.
 
-### Makehuman
+### Install Makehuman and MHX2
 
 Install
 
@@ -82,25 +82,25 @@ sudo apt install makehuman
 python2 /usr/share/makehuman/makehuman.py
 ```
 
-Also for best compatibility with render, models should be exported in [MHX2 format](https://thomasmakehuman.wordpress.com/2014/10/09/mhx2/). This is also not straightforward: Download and unpack this software: `https://www.dropbox.com/s/jrscejsv9uk8ch5/mhx2_stable_026.zip` (this repo holds a copy in `legacy`). Further instructions are in the `README` file inside:
+Also for best compatibility with render, models should be exported in [MHX2 format](https://thomasmakehuman.wordpress.com/2014/10/09/mhx2/). The project is hosted at bitbucket: https://bitbucket.org/Diffeomorphic/mhx2-makehuman-exchange
 
+The README contains the installation details. Copy its content directories into MH and blender respectively:
 
 ```
 # copy the export routine into the makehuman plugins folder
 sudo cp -r 9_export_mhx2/ /usr/share/makehuman/plugins/
 
 # Copy the import rutine into the blender addons folder
-cp -r import_runtime_mhx2/ ~/opt/blender-2.79b-linux-glibc219-x86_64/2.79/scripts/addons_contrib
-
-
-# Open Blender and enable the MHX2 importer. Select File > User Preferences. In the window that opens, select the Addons tab and then the MakeHuman category. Enable MakeHuman: Import-Runtime: MakeHuman eXchange 2 (.mhx2), and Save User Settings.
-
-# In the File tab, enable Auto Run Python Scripts and Save User Settings.
-
-# Select File > Import > MakeHuman (.mhx2), and navigate to the mhx2 file exported from MakeHuman.
-
-# By default, the exported character is imported into Blender as it appears in MakeHuman. However, if Override Export Data is selected, the character will be rebuilt according to the options that appear.
+cp -r import_runtime_mhx2/ <BLENDER_PATH>/2.80/scripts/addons
 ```
+
+Then open Blender and enable the MHX2 importer. Select File > User Preferences. In the window that opens, select the Addons tab and then the MakeHuman category. Enable MakeHuman: Import-Runtime: MakeHuman eXchange 2 (.mhx2), and Save User Settings. Make sure the `__init__` file of the plugin points at the `2.80` version, otherwise Blender won't find it. In the File tab, enable Auto Run Python Scripts and Save User Settings.
+
+In Blender, the MH tab can be seen by "pulling" a menu that is on the top left corner of the 3D viewport. MHX2 files can be imported from there.
+
+
+* TODO: add details about MH export: include skeleton, hide textures under clothes, low poly eyes, **T-SHAPE** (important), no shoes, units in meters, export as binary.
+
 
 Also note: at the moment of writing, there is a bug in the official version `1.1.1`, which is incompatible with `numpy>1.12` (see [this post](http://www.makehumancommunity.org/forum/viewtopic.php?p=44716#p44716)) and throws an exception when trying to export a model. For this reason, and because MH runs on Python2, it is convenient to create a virtual environment just for MH usage:
 
@@ -113,12 +113,26 @@ conda install pyqt=4
 conda install numpy=1.12
 ```
 
-Still, this didn't work because a newer version was installed with `pip --user`, and this has precedence in the `sys.path` list, so the newer version was still loading (this can be checked with `import numpy as np; np.__version__; np.__file__`). Removing the `pip` installation worked:
+### Install MakeWalk:
 
-1. Open `makehuman` in the virtual environment
-2. Create a model for a human, select the `Default` skeleton under `Pose/Animate`.
-3. Save and export as `MHX2` format.
-4. Import in blender as described. When importing the `MHX2` human model, it will appear whithout textures (all white), but this is normal behaviour for the edit mode. Textures will be included in render mode.
+https://bitbucket.org/Diffeomorphic/makewalk
+
+TODO: talk about bvh, the approach of MW, existing issues, and how to retarget.
+
+
+
+### Basic scene
+
+
+TODO:
+
+* Sunlight with shadow
+* Camlight attached and without shadow
+* Floor with chess grid
+* Realtime and HD render with OpenGL on GPU
+
+
+
 
 
 # EXPERIMENTS
