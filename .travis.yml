@@ -6,7 +6,7 @@ env:
     # test stage config
     - CODECOV_REQUIRED_PERCENT="0" # for utest+codecov
     # build stage config
-    - DOC_PACKAGE_NAME="humanrenderer"
+    - DOC_PACKAGE_NAME="mpiea_blendertools"
     - DOC_AUTHOR_NAME="Andres Fernandez Rodriguez"
     # deploy stage config
     - GH_RELEASES_ASSET_PATH="dist/*" # all matches for this path will be included into the GitHub release

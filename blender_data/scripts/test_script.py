@@ -33,6 +33,7 @@ D = bpy.data
 
 # custom properties: are saved in the blender files and must be of type
 # int,float,string (or arrays of), and dicts of type {str: int/float/str}
+# example: bpy.props.FloatProperty()
 
 # opposed to global operations, the CONTEXT corresponds to active/visible
 # elements. It is mainly read-only, can only be modified through the API
@@ -145,6 +146,31 @@ D = bpy.data
 
 # Extending Blender UI in scripts is discouraged, because the reference to the
 # defined class gets lost. Best practice is to extend via modules (e.g. addons)
+# note that addons must include a bl_info field in their __init__.py file.
+# see guidelines: https://wiki.blender.org/wiki/Process/Addons/Guidelines
+#
+# Extendable classes are the following from bpy.types: Panel, Menu, Operator,
+# PropertyGroup, KeyingSet, RenderEngine
+# Notice these classes don’t define an __init__ function, because the class
+# instances lifetime only spans the execution. So a panel for example will
+# have a new instance for every redraw. MODAL OPERATORS ARE AN EXCEPTION.
+#
+# If extended classes are present, Blender expects two free functions
+# in the module: register() and unregister(). This allows to toggle on/off
+# the addons while Blender is still running. If only register, works as a
+# startup module. Loaded classes can be accessed via bpy.types, using the
+# bl_idname rather than the classes original name. Classes can be registered
+# individually, or the whole module:
+#    bpy.utils.register_class(clssname)
+#    bpy.utils.register_module(__name__)
+#
+# extending PropertyGroup: Not clear, see "inter classes dependencies" at
+# https://docs.blender.org/api/blender2.8/info_overview.html
+#
+# Props and groups can be dynamically added to existing classes. Classes
+# can also be also dynamically defined, see
+# https://docs.blender.org/api/blender2.8/info_overview.html
+# #dynamic-defined-classes-advanced
 
 
 ###############################################################################
@@ -217,22 +243,23 @@ def delete_selected():
     bpy.ops.object.delete()
 
 
+# ## don't use these, see
+# ## https://docs.blender.org/api/blender2.8/info_overview.html#registration
+# def register_class(op_clss):
+#     """
+#     Call this once to let Blender know about the given class.
+#     Parameter: a class (not an instance) of type bpy.types.
+#     Panel, Menu, Operator, PropertyGroup, KeyingSet, RenderEngine.
+#     """
+#     bpy.utils.register_class(op_clss)
 
-def register_class(op_clss):
-    """
-    Call this once to let Blender know about the given class.
-    Parameter: a class (not an instance) of type bpy.types.
-    Operator, Panel...
-    """
-    bpy.utils.register_class(op_clss)
-
-def unregister_class(op_clss):
-    """
-    Call this once to let Blender forget about the given class.
-    Parameter: a class (not an instance) of type bpy.types.
-    Operator, Panel...
-    """
-    bpy.utils.unregister_class(op_clss)
+# def unregister_class(op_clss):
+#     """
+#     Call this once to let Blender forget about the given class.
+#     Parameter: a class (not an instance) of type bpy.types.
+#     Panel, Menu, Operator, PropertyGroup, KeyingSet, RenderEngine.
+#     """
+#     bpy.utils.unregister_class(op_clss)
 
 
 ###############################################################################
@@ -270,8 +297,9 @@ class HelloWorldPanel(bpy.types.Panel):
 
     def draw(self, context):
         """
-        This method is automatically called by Blender, and refreshed upon any
-        changes.
+        Blender will create and destroy this panel in every redraw cycle.
+        The actual appearance of the panel is defined in this draw method,
+        also automatically called by Blender once the panel is instantiated.
         """
         layout = self.layout
 

@@ -7,7 +7,7 @@ Main app file
 
 # from time import time
 #
-# from humanrenderer.foo_module import Foo
+# from mpiea_blendertools.foo_module import Foo
 
 
 __author__ = "Andres FR"

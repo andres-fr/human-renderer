@@ -18,12 +18,11 @@ def setup():
         long_description = f.read()
     #
     setuptools.setup(
-        name="human-renderer",
+        name="MPIEA Blender Tools",
         version="0.1.1",
         author="Andres FR",
         author_email="andres-fr@users.noreply.github.com",
-        description="Rendering human poses from sequential data using \
-        Python3 and MakeHuman",
+        description="Blender add-on to render humans from sequential data",
         long_description=long_description,
         long_description_content_type="text/markdown",
         url="https://github.com/andres-fr/human-renderer",

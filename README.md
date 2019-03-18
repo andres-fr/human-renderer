@@ -7,7 +7,7 @@
 
 ```
 # with coverage:
-python ci_scripts/utest_with_coverage.py -n humanrenderer -p 99.9
+python ci_scripts/utest_with_coverage.py -n mpiea_blendertools -p 99.9
 # without coverage:
 python -m unittest discover -s utest -t . -p "*_test.py" -v
 ```
@@ -35,7 +35,7 @@ python setup.py sdist bdist_wheel
 
 
 ```
-./ci_scripts/make_sphinx_docs.sh humanrenderer "Andres Fernandez Rodriguez"
+./ci_scripts/make_sphinx_docs.sh mpiea_blendertools "Andres Fernandez Rodriguez"
 ```
 
 
@@ -69,6 +69,25 @@ Install as follows:
 2. Unpack into `<BLENDERPATH>` (e.g. `~/opt/`)
 3. Add to PATH in `.bashrc` or `.profile` (e.g. `export PATH=$HOME/opt/<BLENDER_FOLDER>:$PATH`)
 4. now running `blender` will work on any terminal with that environment.
+
+
+### Blender and pip:
+
+It is possible to install packages into the Blender python via pip:
+
+```
+# install and upgrade pip
+<BLENDER_PYTHONPATH> -m ensurepip
+<BLENDER_PYTHONPATH> -m pip install --upgrade pip
+
+# install the package:
+./python3.7m -m pip install 'PATH/TO/dummypackage_dummyname-1.2.1-py3-none-any.whl'
+
+# blender scripts can now import it
+
+# to remove the package, simply do:
+./python3.7m -m pip uninstall dummypackage_dummyname
+```
 
 ### Install Makehuman and MHX2
 

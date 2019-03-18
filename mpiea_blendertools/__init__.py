@@ -4,4 +4,4 @@
 """
 """
 
-name = "humanrenderer"
+name = "mpiea_blendertools"

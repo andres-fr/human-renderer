@@ -1,4 +1,4 @@
-# usage example: ./make_sphinx_docs "compuglobalhypermeganet" "Homer Simpson"
+# usage example: ./make_sphinx_docs "compuglobalhypermegapackage" "Homer Simpson"
 # FOR THE MOMENT ONLY CALLABLE FROM REPO ROOT
 
 PACKAGE_NAME=$1
