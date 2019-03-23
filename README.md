@@ -89,7 +89,48 @@ It is possible to install packages into the Blender python via pip:
 ./python3.7m -m pip uninstall dummypackage_dummyname
 ```
 
-### Install Makehuman and MHX2
+
+### Blender and custom Python installations:
+
+Blender can execute a Python script upon startup, as follows:
+
+```
+blender --python your_script.py
+```
+
+It is also possible to call blender and the python script with separate command line arguments. It requires a custom argument parser as covered [here](https://blender.stackexchange.com/a/134596):
+
+```
+blender --blender_arg "hello" --python your_script.py -- --script_arg "world"
+```
+
+Regarding add-ons: https://docs.blender.org/manual/en/latest/advanced/scripting/addon_tutorial.html
+
+> "there is nothing inherently different about an add-on that allows it to integrate with Blender, such functionality is just provided by the bpy module for any script to access".
+
+An add-on script has only 3 extra requirements:
+* a `bl_info` dictionary field with at least `"name"` and `"category"` entries.
+* a `def register()` function.
+* a `def unregister()` function.
+
+If the add-on is a package instead of a script, the three elements can be in the `__init__.py` file.
+
+
+To install the add-on, it has to be found by Blender's Python. The paths where it looks can be seen by running the following in the console:
+
+```
+import addon_utils
+print(addon_utils.paths())
+```
+
+To install the add-on,
+1. Copy (or place a link) the add-on module (or script) into any of the add_on paths
+2. Open Blender, and enable the add-on under `Edit -> Preferences -> Add-Ons` and save preferences.
+
+**Note** That if the bl_info dict contains a "blender" entry pointing to a given version, other Blender versions won't be able to "see" the plugin. Make sure your Blender version matches!
+
+
+### Install Makehuman
 
 Install
 
@@ -101,27 +142,7 @@ sudo apt install makehuman
 python2 /usr/share/makehuman/makehuman.py
 ```
 
-Also for best compatibility with render, models should be exported in [MHX2 format](https://thomasmakehuman.wordpress.com/2014/10/09/mhx2/). The project is hosted at bitbucket: https://bitbucket.org/Diffeomorphic/mhx2-makehuman-exchange
-
-The README contains the installation details. Copy its content directories into MH and blender respectively:
-
-```
-# copy the export routine into the makehuman plugins folder
-sudo cp -r 9_export_mhx2/ /usr/share/makehuman/plugins/
-
-# Copy the import rutine into the blender addons folder
-cp -r import_runtime_mhx2/ <BLENDER_PATH>/2.80/scripts/addons
-```
-
-Then open Blender and enable the MHX2 importer. Select File > User Preferences. In the window that opens, select the Addons tab and then the MakeHuman category. Enable MakeHuman: Import-Runtime: MakeHuman eXchange 2 (.mhx2), and Save User Settings. Make sure the `__init__` file of the plugin points at the `2.80` version, otherwise Blender won't find it. In the File tab, enable Auto Run Python Scripts and Save User Settings.
-
-In Blender, the MH tab can be seen by "pulling" a menu that is on the top left corner of the 3D viewport. MHX2 files can be imported from there.
-
-
-* TODO: add details about MH export: include skeleton, hide textures under clothes, low poly eyes, **T-SHAPE** (important), no shoes, units in meters, export as binary.
-
-
-Also note: at the moment of writing, there is a bug in the official version `1.1.1`, which is incompatible with `numpy>1.12` (see [this post](http://www.makehumancommunity.org/forum/viewtopic.php?p=44716#p44716)) and throws an exception when trying to export a model. For this reason, and because MH runs on Python2, it is convenient to create a virtual environment just for MH usage:
+Note that at the moment of writing, there is a bug in the official version `1.1.1`, which is incompatible with `numpy>1.12` (see [this post](http://www.makehumancommunity.org/forum/viewtopic.php?p=44716#p44716)) and throws an exception when trying to export a model. For this reason, and because MH runs on Python2, it is convenient to create a virtual environment just for MH usage:
 
 ```
 conda update -n base -c defaults conda
@@ -132,11 +153,22 @@ conda install pyqt=4
 conda install numpy=1.12
 ```
 
+### Install MHX2 Plugin/Add-On
+
+For best compatibility with Blender, MakeHuman models should be exported in [MHX2 format](https://thomasmakehuman.wordpress.com/2014/10/09/mhx2/). The project is hosted at bitbucket: https://bitbucket.org/Diffeomorphic/mhx2-makehuman-exchange
+
+The README contains the installation details, but basically it involves 2 steps:
+
+1. Copy the export routine into the makehuman plugins folder: `sudo cp -r 9_export_mhx2/ /usr/share/makehuman/plugins/`. This enables exporting MHX2 models from MH.
+
+2. Install the `import_runtime_mhx2` Blender add-on as detailled before.
+
+
 ### Install MakeWalk:
 
-https://bitbucket.org/Diffeomorphic/makewalk
+MakeWalk is a Blender add-on that allows to load human motion capture sequences as BVH format and "retarget" them into MHX2 imported models. It is hosted at bitbucket: https://bitbucket.org/Diffeomorphic/makewalk
 
-TODO: talk about bvh, the approach of MW, existing issues, and how to retarget.
+And can be installed like a regular Blender add-on, as detailled before.
 
 
 
@@ -268,35 +300,4 @@ png images to mp4:
 ```
 ffmpeg -i %04d.png -vf "transpose=2" output.mp4
 
-```
-
-
-## HEADLESS BLENDER:
-
-See https://blender.stackexchange.com/questions/31255/can-blender-render-on-systems-without-a-gui
-CLI docs: https://docs.blender.org/manual/en/latest/render/workflows/command_line.html
-
-```
-blender --background myblend.blend -x 1 -f $n
-
-blender -b myBlenderFile.blend -a
-
-```
-
-
-# MORSE
-
-
-[Morse](https://www.openrobots.org/morse/doc/1.2/morse.html) is an academic simulator originally developed for robotics. It is based on blender and its focus is on flexible Python integration and programmatic usage.
-
-
-**Note:**: Morse requires a working installation. Versions must also be identical. This can be bypassed by setting `MORSE_SILENT_PYTHON_CHECK=1`, however, this may break things. In our case, the morse 3.6.3 version didn't work with blender 2.79b (based on 3.5), and worked with 2.80 (based on 3.7).
-
-```
-sudo apt-get install morse-simulator
-sudo apt install python3-morse-simulator # py3 bindings
-export MORSE_SILENT_PYTHON_CHECK=1
-morse create mysim
-morse run mysim
-# morse run '/home/a9fb1e/Desktop/untitled280.blend'
 ```

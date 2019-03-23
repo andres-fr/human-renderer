@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 ## [[Unreleased](https://github.com/andres-fr/human-renderer/compare/0.1.0...HEAD)]
 
 ### Added
-- 
+- Scene builder script with sun, cam, lightcam, floor, human, textures and bvh sequence.
 
 ## [0.1.0] - 27/02/2019
 
@@ -22,13 +22,33 @@ All notable changes to this project will be documented in this file.
 
 ## TODO:
 
-At this point we have a satisfactory scene with a sequence being rendered reasonably fast within Blender
+- create add-on template for blender, with easiest way of integrating all of CI functionality. Probably just via adding a softlink, and/or running some script at headless blender startup. This shall include:
+  - Usage of all functionality
+  - Unit testing, codecov, benchmarking of all functionality
+  - Also all interactions with Blender like registering classes and draw() should be integrated.
+
+
+- once this is done, check if doing small changes to the package automatically updates upon blender start-up. If positive, we have a clean workflow.
+
+- Then integrate all existing functionality of the script in a structured way. Check that all works on the CI
+
+- probably a good idea to create a standard template for Blender. See https://github.com/osiriswrecks/blender-addon-template/blob/master/ui.py
+also see https://blenderartists.org/t/code-template-for-blender-add-ons/682339
+
+
+
+-----------------------------------------
+
+
+
 - Get proper specs for Mali data format, and integrate it into MakeWalk via Python parser (with JSON schema or similar).
 
 
 Integrated workflow:
    0. See `blender --help` for some CLI interaction
    1. Render sequences in a headless way, from terminal. Using GPU as fast as possible (headless OpenGL rendering not possible yet? https://developer.blender.org/T54638)
-   2. Store 3D-navigable sequences, then integrate into Qt? https://www.kdab.com/exporting-3d-content-qt-3d-blender/
-   3. Editing of sequences within Python (interactively?)
+   
+* TODO: add details about MH export: include skeleton, hide textures under clothes, low poly eyes, **T-SHAPE** (important), no shoes, units in meters, export as binary.
+
+TODO: talk about bvh, the approach of MW, existing issues, and how to retarget.
 
