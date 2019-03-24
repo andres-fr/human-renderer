@@ -22,6 +22,9 @@ All notable changes to this project will be documented in this file.
 
 ## TODO:
 
+
+- autodoc fails because no bpy. fix that (try using SPHINXBUILD   = ~/opt/blender-2.80-6fd11a21f5c5-linux-glibc224-x86_64/2.80/python/bin/sphinx-build # sphinx-build)
+
 - create add-on template for blender, with easiest way of integrating all of CI functionality. Probably just via adding a softlink, and/or running some script at headless blender startup. This shall include:
   - Usage of all functionality
   - Unit testing, codecov, benchmarking of all functionality
