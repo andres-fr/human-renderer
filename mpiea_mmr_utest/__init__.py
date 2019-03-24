@@ -11,9 +11,7 @@ from os.path import dirname, abspath
 import unittest
 
 
-TEST_DIR = dirname(abspath(__file__))  # this directory
-REPO_DIR = dirname(TEST_DIR)  # one step higher than TEST_DIR
-
+UTEST_DIR = dirname(abspath(__file__))
 
 def run_testmethod(moduleclassmethod, verbosity=2):
     """
@@ -91,13 +89,17 @@ def run_modules(modules, verbosity=2):
     return test_results
 
 
-def run_all_tests(test_rootdir=TEST_DIR, verbosity=2):
+def run_all_tests(test_rootdir=UTEST_DIR, verbosity=2):
     """
     This function is the equivalent to
     python3 -m unittest discover -s test_rootdir -t REPO_DIR -p "*_test.py" -v
     with the difference that it returns the test report as an instance of
     unittest.runner.TextTestResult.
     """
-    suite = unittest.TestLoader().discover(test_rootdir, "*_test.py", REPO_DIR)
+    suite = unittest.TestLoader().discover(test_rootdir, "*_test.py", test_rootdir)
     results = unittest.TextTestRunner(verbosity=verbosity).run(suite)
     return results
+
+
+if __name__ == "__main__":
+    run_all_tests()

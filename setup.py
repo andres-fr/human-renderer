@@ -18,11 +18,12 @@ def setup():
         long_description = f.read()
     #
     setuptools.setup(
-        name="MPIEA Blender Tools",
+        name="MPIEA MultiModalRenderer",
         version="0.1.1",
         author="Andres FR",
         author_email="andres-fr@users.noreply.github.com",
-        description="Blender add-on to render humans from sequential data",
+        description="Blender add-on for scene building and rendering of\
+        3D video+audio sequences",
         long_description=long_description,
         long_description_content_type="text/markdown",
         url="https://github.com/andres-fr/human-renderer",

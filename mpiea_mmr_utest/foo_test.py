@@ -7,7 +7,7 @@ https://docs.python.org/3/library/unittest.html#assert-methods
 
 
 import unittest
-from mpiea_blendertools.foo_module import Foo
+from mpiea_mmr.foo_module import Foo
 
 
 class FooTestCaseCpu(unittest.TestCase):

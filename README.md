@@ -3,14 +3,18 @@
 # human-renderer
 
 
-### run all tests:
+### run all tests with coverage:
+
+To be able to run the unit tests within blender, make sure both the module and its utest module are in blender's path (`ln -s <SOURCE> <LINK_PATH>` ). Check allowed paths from Blender with `import addon_utils; print(addon_utils.paths())`.
+
 
 ```
 # with coverage:
-python ci_scripts/utest_with_coverage.py -n mpiea_blendertools -p 99.9
+blender -b --python ci_scripts/utest_with_coverage.py -- -n mpiea_mmr -p 0.9
 # without coverage:
-python -m unittest discover -s utest -t . -p "*_test.py" -v
+blender -b --python mpiea_mmr_utest/__init__.py
 ```
+
 
 ### Bump version:
 
@@ -35,7 +39,7 @@ python setup.py sdist bdist_wheel
 
 
 ```
-./ci_scripts/make_sphinx_docs.sh mpiea_blendertools "Andres Fernandez Rodriguez"
+./ci_scripts/make_sphinx_docs.sh mpiea_mmr "Andres Fernandez Rodriguez"
 ```
 
 
@@ -89,6 +93,15 @@ It is possible to install packages into the Blender python via pip:
 ./python3.7m -m pip uninstall dummypackage_dummyname
 ```
 
+Some packages cannot be installed due to a missing `Python.h` error. To fix that in ubuntu:
+
+```
+# Check the Blender Python version (in our case 3.7)
+sudo apt install python3.7-dev
+cp -r /usr/include/python3.7m <BLENDERPATH>/python/include
+```
+
+Now installing this repository's `requirements.txt` via `<BLENDERPYTHON> -m pip install -r requirements.txt` should work.
 
 ### Blender and custom Python installations:
 
@@ -124,7 +137,7 @@ print(addon_utils.paths())
 ```
 
 To install the add-on,
-1. Copy (or place a link) the add-on module (or script) into any of the add_on paths
+1. Copy (or place a link e.g. with `ln -s <SOURCE> <PLACE>`) the add-on module (or script) into any of the add_on paths.
 2. Open Blender, and enable the add-on under `Edit -> Preferences -> Add-Ons` and save preferences.
 
 **Note** That if the bl_info dict contains a "blender" entry pointing to a given version, other Blender versions won't be able to "see" the plugin. Make sure your Blender version matches!
@@ -225,7 +238,7 @@ Makehuman features different kinds of skeletons, the "Default" being the most de
     * This file can become very large due to the inefficient storage of the `vertices` information. Saving it as binary helps.
     * The XYZ system in Blender is `(right, deep, upwards)` (see [here](http://www.makehumancommunity.org/forum/viewtopic.php?p=35265&sid=4593dc12911e0b45b9f0342f6a4828d1#p35265)). **Probably** the 3-element vectors for head and tail stand for `(right, upwards, front)`, given `def zup(co): return Vector((co[0], -co[2], co[1]))` defined in `import_rutine_mhx2/utils.py` and used in `importer.py -> buildSkeleton`. I couldn't find any doc to confirm this, experiments will do.
     * It is unclear whether this format stores sequences
-
+v
 
 Load mhx2 into blender:
 
@@ -301,3 +314,8 @@ png images to mp4:
 ffmpeg -i %04d.png -vf "transpose=2" output.mp4
 
 ```
+
+
+## ISSUES:
+
+* Time limits: the max nr of frames is about 1 million, i.e. 5 hours at 60 fps. https://docs.blender.org/manual/en/latest/advanced/limits.html

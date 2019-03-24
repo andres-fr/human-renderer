@@ -47,15 +47,15 @@ def update_scene():
     """
     C.scene.update()
 
-def save_blenderfile(filepath=D.filepath):
+def save_blenderfile(filepath):
     """
-    Saves blender file
+    Saves blender file (usually to D.filepath)
     """
     O.wm.save_as_mainfile(filepath=filepath)
 
-def open_blenderfile(filepath=D.filepath):
+def open_blenderfile(filepath):
     """
-    Saves blender file
+     blender file
     """
     O.wm.open_mainfile(filepath=filepath)
 

@@ -10,25 +10,23 @@ the number given as parameter, the script exits with 0, otherwise 1.
 import os
 import sys
 import coverage
-import argparse
+
 #
-import environment  # noqa: F401
-import utest
+import mpiea_mmr_utest as utest
+from mpiea_mmr.blender_utils import ArgumentParserForBlender
 
 
 if __name__ == "__main__":
-    # We have to cd into this module's directory because coverage.Coverage
+    # We have to cd into this module's directory because coverage
     # won't find the module data otherwise
     relative_path = os.path.dirname(__file__)
-    if relative_path:
-        os.chdir(relative_path)
-    #
+
     print("\n\n")
     print("==================================================================")
     print("               STARTED UTEST WITH COVERAGE")
     print("==================================================================")
     #
-    parser = argparse.ArgumentParser()
+    parser = ArgumentParserForBlender()
     parser.add_argument("-n", "--package_name",
                         type=str, required=True,
                         help="A string matching the name of the directory \
