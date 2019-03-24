@@ -19,7 +19,7 @@ def setup():
     #
     setuptools.setup(
         name="MPIEA MultiModalRenderer",
-        version="0.1.1",
+        version="0.1.2",
         author="Andres FR",
         author_email="andres-fr@users.noreply.github.com",
         description="Blender add-on for scene building and rendering of\

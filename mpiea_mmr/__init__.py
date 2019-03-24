@@ -19,7 +19,7 @@ import bpy
 # from . import dance_scene as ds
 
 name = "mpiea_mmr"  # for packaging via setup.py
-VERSION = "0.1.1"  # automatically managed by bumpversion
+VERSION = "0.1.2"  # automatically managed by bumpversion
 
 # required by blender plugins
 # (see https://wiki.blender.org/wiki/Process/Addons/Guidelines/metainfo)
