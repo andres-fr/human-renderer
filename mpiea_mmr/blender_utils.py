@@ -32,8 +32,8 @@ class ArgumentParserForBlender(argparse.ArgumentParser):
     def _get_argv_after_doubledash(self):
         """
         Given the sys.argv as a list of strings, this method returns the
-        sublist right after the '--' element (if present, otherwise returns
-        an empty list).
+        sublist right after the first match of the '--' element (if present,
+        otherwise returns an empty list).
         """
         try:
             idx = sys.argv.index("--")

@@ -16,6 +16,7 @@ import ast
 #
 import bpy
 #
+from . import blender_utils
 # from . import dance_scene as ds
 
 name = "mpiea_mmr"  # for packaging via setup.py

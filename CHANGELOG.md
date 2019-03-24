@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Scene builder script with sun, cam, lightcam, floor, human, textures and bvh sequence.
+- converted script to an add-on with all infrastructure working [ONGOING]
 
 ## [0.1.0] - 27/02/2019
 
@@ -25,10 +26,7 @@ All notable changes to this project will be documented in this file.
 
 - autodoc fails because no bpy. fix that (try using SPHINXBUILD   = ~/opt/blender-2.80-6fd11a21f5c5-linux-glibc224-x86_64/2.80/python/bin/sphinx-build # sphinx-build)
 
-- create add-on template for blender, with easiest way of integrating all of CI functionality. Probably just via adding a softlink, and/or running some script at headless blender startup. This shall include:
-  - Usage of all functionality
-  - Unit testing, codecov, benchmarking of all functionality
-  - Also all interactions with Blender like registering classes and draw() should be integrated.
+- rewrite docstrings in extended "rich-syntax" style
 
 
 - once this is done, check if doing small changes to the package automatically updates upon blender start-up. If positive, we have a clean workflow.
