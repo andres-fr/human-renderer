@@ -8,6 +8,7 @@ env:
     # build stage config
     - DOC_PACKAGE_NAME="mpiea_mmr"
     - DOC_AUTHOR_NAME="Andres FR"
+    - BUMPVERSION_FILE=".bumpversion.cfg"
     # deploy stage config
     - GH_RELEASES_ASSET_PATH="dist/*" # all matches for this path will be included into the GitHub release
     - REPO_NAME="andres-fr/human-renderer" # releases will only work under this name
@@ -67,7 +68,7 @@ jobs:
     - stage: build
       script: python setup.py sdist bdist_wheel
       name: "Build Package"
-    - script: bash ci_scripts/make_sphinx_docs.sh "$DOC_PACKAGE_NAME" "$DOC_AUTHOR_NAME"
+    - script:  python ci_scripts/make_sphinx_docs.py -n "$DOC_PACKAGE_NAME" -a "$DOC_AUTHOR_NAME" -f "$BUMPVERSION_FILE" -o "docs" -l
       name: "Build Autodocs"
 
     # If building was successful, deploy to various platforms

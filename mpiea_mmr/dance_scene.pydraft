@@ -14,6 +14,9 @@ Scene builder script for Blender. It performs the following tasks:
 """
 
 
+__author__ = "Andres FR"
+
+
 import argparse
 import sys
 from math import radians, degrees
@@ -22,9 +25,6 @@ from mathutils import Vector, Euler  # mathutils is a blender package
 import bpy
 C = bpy.context
 D = bpy.data
-
-
-__author__ = "Andres FR"
 
 
 ###############################################################################

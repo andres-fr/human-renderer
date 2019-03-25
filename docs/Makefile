@@ -3,7 +3,7 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD   = ~/opt/blender-2.80-6fd11a21f5c5-linux-glibc224-x86_64/2.80/python/bin/sphinx-build # sphinx-build
+SPHINXBUILD   = sphinx-build
 SOURCEDIR     = .
 BUILDDIR      = _build
 

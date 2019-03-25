@@ -1,0 +1,262 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mpiea_mmr.blender_utils &mdash; mpiea_mmr 0.1.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> mpiea_mmr
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../mpiea_mmr.html">mpiea_mmr package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">mpiea_mmr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../mpiea_mmr.html">mpiea_mmr</a> &raquo;</li>
+        
+      <li>mpiea_mmr.blender_utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mpiea_mmr.blender_utils</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding:utf-8 -*-</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utilities for interaction with Blender</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Andres FR&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<div class="viewcode-block" id="ArgumentParserForBlender"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.ArgumentParserForBlender">[docs]</a><span class="k">class</span> <span class="nc">ArgumentParserForBlender</span><span class="p">(</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is identical to its superclass, except for the parse_args</span>
+<span class="sd">    method (see docstring). It resolves the ambiguity generated when calling</span>
+<span class="sd">    Blender from the CLI with a python script, and both Blender and the script</span>
+<span class="sd">    have arguments. E.g., the following call will make Blender crash because</span>
+<span class="sd">    it will try to process the script&#39;s -a and -b flags:</span>
+<span class="sd">    ::</span>
+
+<span class="sd">       blender --python my_script.py -a 1 -b 2</span>
+
+<span class="sd">    To bypass this issue this class uses the fact that Blender will ignore all</span>
+<span class="sd">    arguments given after a double-dash (&#39;--&#39;). The approach is that all</span>
+<span class="sd">    arguments before &#39;--&#39; go to Blender, arguments after go to the script.</span>
+<span class="sd">    The following CLI calls work fine:</span>
+<span class="sd">    ::</span>
+
+<span class="sd">       blender --python my_script.py -- -a 1 -b 2</span>
+<span class="sd">       blender --python my_script.py --</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ArgumentParserForBlender.get_argv_after_doubledash"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.ArgumentParserForBlender.get_argv_after_doubledash">[docs]</a>    <span class="k">def</span> <span class="nf">get_argv_after_doubledash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argv</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param argv: Expected to be sys.argv (or alike).</span>
+<span class="sd">        :returns: The argv sublist after the first ``&#39;--&#39;`` element (if</span>
+<span class="sd">           present, otherwise returns an empty list).</span>
+<span class="sd">        :type argv: list of str</span>
+<span class="sd">        :rtype: list of str</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">           Works with any *ordered* collection of strings (e.g. list, tuple).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">argv</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;--&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">argv</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># the list after &#39;--&#39;</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>  <span class="c1"># &#39;--&#39; not in the list:</span>
+            <span class="k">return</span> <span class="p">[]</span></div>
+
+    <span class="c1"># overrides superclass</span>
+<div class="viewcode-block" id="ArgumentParserForBlender.parse_args"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.ArgumentParserForBlender.parse_args">[docs]</a>    <span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method is expected to behave identically as in the superclass,</span>
+<span class="sd">        except that the sys.argv list will be pre-processed using</span>
+<span class="sd">        get_argv_after_doubledash before. See the docstring of the class for</span>
+<span class="sd">        usage examples and details.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">           By default, `argparse.ArgumentParser` will call `sys.exit()` when</span>
+<span class="sd">           encountering an error. Blender will react to that shutting down,</span>
+<span class="sd">           making it look like a crash. Make sure the arguments are correct!</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">argv_after_dd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_argv_after_doubledash</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">argv_after_dd</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Andres FR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

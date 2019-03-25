@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from os.path import abspath, dirname
 import sys
 MODULE_ROOT_DIR = dirname(dirname(abspath(__file__)))
@@ -7,6 +8,7 @@ if MODULE_ROOT_DIR not in sys.path:
     sys.path.insert(0, MODULE_ROOT_DIR)
 
 html_theme = "sphinx_rtd_theme"
+
 #
 # Configuration file for the Sphinx documentation builder.
 #
@@ -28,8 +30,8 @@ html_theme = "sphinx_rtd_theme"
 # -- Project information -----------------------------------------------------
 
 project = 'mpiea_mmr'
-copyright = '2019, Andres Fernandez Rodriguez'
-author = 'Andres Fernandez Rodriguez'
+copyright = '2019, Andres FR'
+author = 'Andres FR'
 
 # The short X.Y version
 version = '0.1.2'
@@ -91,6 +93,7 @@ pygments_style = None
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
+# html_theme_options = {}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -139,7 +142,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'mpiea_mmr.tex', 'mpiea\\_mmr Documentation',
-     'Andres Fernandez Rodriguez', 'manual'),
+     'Andres FR', 'manual'),
 ]
 
 
@@ -184,4 +187,5 @@ epub_exclude_files = ['search.html']
 
 
 # -- Extension configuration -------------------------------------------------
+
 latex_elements = {'extraclassoptions': 'openany,oneside'}

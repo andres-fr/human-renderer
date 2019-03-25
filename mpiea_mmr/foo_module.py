@@ -5,7 +5,6 @@
 Module containing a simple class with low memory and runtime requirements.
 """
 
-
 __author__ = "Andres FR"
 
 

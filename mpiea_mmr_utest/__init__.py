@@ -7,11 +7,16 @@ It can be used to run specific tests within Python. Doc:
 https://docs.python.org/3/library/unittest.html#assert-methods
 """
 
+
+__author__ = "Andres FR"
+
+
 from os.path import dirname, abspath
 import unittest
 
 
 UTEST_DIR = dirname(abspath(__file__))
+
 
 def run_testmethod(moduleclassmethod, verbosity=2):
     """
@@ -96,7 +101,8 @@ def run_all_tests(test_rootdir=UTEST_DIR, verbosity=2):
     with the difference that it returns the test report as an instance of
     unittest.runner.TextTestResult.
     """
-    suite = unittest.TestLoader().discover(test_rootdir, "*_test.py", test_rootdir)
+    suite = unittest.TestLoader().discover(test_rootdir, "*_test.py",
+                                           test_rootdir)
     results = unittest.TextTestRunner(verbosity=verbosity).run(suite)
     return results
 

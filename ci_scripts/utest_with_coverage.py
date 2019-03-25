@@ -3,7 +3,7 @@
 
 """
 Small script that runs all unit tests and checks their coverage for the
-dummypackage module. If all tests pass, and coverage PERCENTAGE is above
+specified module. If all tests pass, and coverage PERCENTAGE is above
 the number given as parameter, the script exits with 0, otherwise 1.
 """
 

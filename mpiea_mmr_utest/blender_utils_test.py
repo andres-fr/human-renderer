@@ -5,12 +5,16 @@
 https://docs.python.org/3/library/unittest.html#assert-methods
 """
 
+
+__author__ = "Andres FR"
+
+
 import sys
 import unittest
 # mock sys.argv with "patch": https://stackoverflow.com/a/27765993
 from unittest.mock import patch
 from mpiea_mmr.blender_utils import ArgumentParserForBlender
-from argparse import ArgumentError
+
 
 class ArgparserTest(unittest.TestCase):
     """
@@ -27,7 +31,7 @@ class ArgparserTest(unittest.TestCase):
         with patch.object(sys, 'argv', testargv):
             # in this context sys.argv is testargv
             apfb = self.APFB()
-            argv_after = apfb._get_argv_after_doubledash()
+            argv_after = apfb.get_argv_after_doubledash()
             self.assertEqual(argv_after, [])
 
     def test_one_doubledash(self):
@@ -40,7 +44,7 @@ class ArgparserTest(unittest.TestCase):
         with patch.object(sys, 'argv', testargv):
             # in this context sys.argv is testargv
             apfb = self.APFB()
-            argv_after = apfb._get_argv_after_doubledash()
+            argv_after = apfb.get_argv_after_doubledash()
             self.assertEqual(argv_after, self.NUMBERS[p+1:])
 
     def test_two_doubledashes(self):
@@ -55,7 +59,7 @@ class ArgparserTest(unittest.TestCase):
         with patch.object(sys, 'argv', testargv):
             # in this context sys.argv is testargv
             apfb = self.APFB()
-            argv_after = apfb._get_argv_after_doubledash()
+            argv_after = apfb.get_argv_after_doubledash()
             self.assertEqual(argv_after, self.NUMBERS[p1+1:])
 
     def test_undefined_call(self):
@@ -69,7 +73,6 @@ class ArgparserTest(unittest.TestCase):
             # in this context sys.argv is testargv
             apfb = self.APFB()
             self.assertRaises(SystemExit, apfb.parse_args)
-
 
     def test_defined_call(self):
         """
@@ -85,5 +88,3 @@ class ArgparserTest(unittest.TestCase):
             apfb.add_argument("-b", type=int)
             arg_dict = vars(apfb.parse_args())
             self.assertEqual(arg_dict, python_args)
-
-

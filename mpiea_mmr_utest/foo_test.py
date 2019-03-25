@@ -6,6 +6,9 @@ https://docs.python.org/3/library/unittest.html#assert-methods
 """
 
 
+__author__ = "Andres FR"
+
+
 import unittest
 from mpiea_mmr.foo_module import Foo
 

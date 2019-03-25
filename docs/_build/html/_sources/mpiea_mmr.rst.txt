@@ -12,14 +12,6 @@ mpiea\_mmr.blender\_utils module
     :undoc-members:
     :show-inheritance:
 
-mpiea\_mmr.dance\_scene module
-------------------------------
-
-.. automodule:: mpiea_mmr.dance_scene
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 mpiea\_mmr.foo\_module module
 -----------------------------
 

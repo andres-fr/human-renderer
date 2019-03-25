@@ -11,23 +11,25 @@ installable.
 Alternatively, run this init file as a script from Blender.
 """
 
-from packaging.version import parse
-import ast
-#
+
+__author__ = "Andres FR"
+
 import bpy
 #
-from . import blender_utils
+# from . import blender_utils
 # from . import dance_scene as ds
+
 
 name = "mpiea_mmr"  # for packaging via setup.py
 VERSION = "0.1.2"  # automatically managed by bumpversion
+
 
 # required by blender plugins
 # (see https://wiki.blender.org/wiki/Process/Addons/Guidelines/metainfo)
 bl_info = {
     "name": "MPIEA MultiModalRenderer",
     "author": "Andres FR",
-    "support":"TESTING",
+    "support": "TESTING",
     "blender": (2, 80, 0),
     # "location": "View3D > Tools > MakeWalk",
     "description": "Scene building and rendering of 3D video+audio sequences",
@@ -36,16 +38,16 @@ bl_info = {
     "category": "MPIEA"}
 
 
-
-###############################################################################
-### INITIALIZE/REGISTER
-###############################################################################
+# #############################################################################
+# ## INITIALIZE/REGISTER
+# #############################################################################
 
 classes = [
     # MCP_PT_Main,
     # MCP_PT_Utility,
     # utils.ErrorOperator
 ]
+
 
 def register():
     """

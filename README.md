@@ -3,6 +3,9 @@
 # human-renderer
 
 
+This repository hosts the `mpiea_mmr` (MPIEA MultiModalRenderer) add-on for Blender 2.80, as well as CI facilities to test, document and package it. It also includes related MakeHumand and Blender files.
+
+
 ### run all tests with coverage:
 
 To be able to run the unit tests within blender, make sure both the module and its utest module are in blender's path (`ln -s <SOURCE> <LINK_PATH>` ). Check allowed paths from Blender with `import addon_utils; print(addon_utils.paths())`.
@@ -18,12 +21,10 @@ blender -b --python mpiea_mmr_utest/__init__.py
 
 ### Bump version:
 
-Regular work is performed on the `dev` branch. After a milestone commit, merge into `master` and tag it before pushing with:
-
+Regular work is performed on the `dev` branch. After a milestone commit (and optional merge into `master`), tag it before pushing with:
 ```
 bump2version {major | minor | patch}
 ```
-
 And then a push will automatically trigger the tagged release.
 
 ### Build package:
@@ -37,9 +38,10 @@ python setup.py sdist bdist_wheel
 
 ### Build docs:
 
+Run this on repo root:
 
 ```
-./ci_scripts/make_sphinx_docs.sh mpiea_mmr "Andres Fernandez Rodriguez"
+blender -b --python ci_scripts/make_sphinx_docs.py -- -n mpiea_mmr -a "Andres FR" -f .bumpversion.cfg -o docs -l
 ```
 
 
