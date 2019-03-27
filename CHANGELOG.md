@@ -13,12 +13,13 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Scene builder script with sun, cam, lightcam, floor, human, textures and bvh sequence.
-- converted script to an add-on with all infrastructure working [ONGOING]
+- Custom Blender UI creator
+- converted script to an add-on with all infrastructure working, including Travis CI [ONGOING]
 
 ## [0.1.0] - 27/02/2019
 
 ### Added
-- Provided CI structure for testing, build, autodoc, and GH releases
+- Provided python structure for testing, build, autodoc, and GH releases
 
 
 ## TODO:
@@ -26,6 +27,7 @@ All notable changes to this project will be documented in this file.
 
 - Travis script, from fresh OS to utest, coverage, autodoc. TEST ON AN OPEN REPO! (make dummy blender repo?):
   1. Download Blender 2.80 into home, and set .bashrc env variable so `blender` command works
+  2. Run script that checks Blender up: py version, existence of folders... all assumptions must be represented and needed info gathered
   2. Install Python3-DEV (matching version) and copy the python include into blender. Also install other apt packages
   3. Install pip for blender and pip install requirements
   4. Pull the add-on repo (automatic?) and create symlinks on the addon folder, for the addon and utest.

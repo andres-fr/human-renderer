@@ -66,3 +66,69 @@ class ArgumentParserForBlender(argparse.ArgumentParser):
         """
         argv_after_dd = self.get_argv_after_doubledash(sys.argv)
         return super().parse_args(args=argv_after_dd)
+
+
+
+# #############################################################################
+# ## EYE ICON
+# ## See https://blenderartists.org/t/show-hide-collection-blender-beta-2-80/1141768
+# #############################################################################
+
+def get_viewport_ordered_collections(context):
+    def fn(c, out, addme):
+        if addme:
+            out.append(c)
+        for c1 in c.children:
+            out.append(c1)
+        for c1 in c.children:
+            fn(c1, out, False)
+    collections = []
+    fn(context.scene.collection, collections, True)
+    return collections
+
+def get_area_from_context(context, area_type):
+    area = None
+    for a in context.screen.areas:
+        if a.type == area_type:
+            area = a
+            break
+    return area
+
+def set_collection_viewport_visibility(context, collection_name, visibility=True):
+    collections = get_viewport_ordered_collections(context)
+
+    collection = None
+    index = 0
+    for c in collections:
+        if c.name == collection_name:
+            collection = c
+            break
+        index += 1
+
+    if collection is None:
+        return
+
+    first_object = None
+    if len(collection.objects) > 0:
+        first_object = collection.objects[0]
+
+    try:
+        bpy.ops.object.hide_collection(context, collection_index=index, toggle=True)
+
+        if first_object.visible_get() != visibility:
+            bpy.ops.object.hide_collection(context, collection_index=index, toggle=True)
+    except:
+        context_override = context.copy()
+        context_override['area'] = get_area_from_context(context, 'VIEW_3D')
+
+        bpy.ops.object.hide_collection(context_override, collection_index=index, toggle=True)
+
+        if first_object.visible_get() != visibility:
+            bpy.ops.object.hide_collection(context_override, collection_index=index, toggle=True)
+
+    return collection
+
+
+# #############################################################################
+# ##
+# #############################################################################

@@ -119,7 +119,11 @@ It is also possible to call blender and the python script with separate command 
 blender --blender_arg "hello" --python your_script.py -- --script_arg "world"
 ```
 
-Regarding add-ons: https://docs.blender.org/manual/en/latest/advanced/scripting/addon_tutorial.html
+Regarding add-ons:
+https://docs.blender.org/manual/en/latest/advanced/scripting/addon_tutorial.html
+
+Important: changes to the API in Blender 2.80
+https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API
 
 > "there is nothing inherently different about an add-on that allows it to integrate with Blender, such functionality is just provided by the bpy module for any script to access".
 
@@ -251,8 +255,6 @@ bpy.ops.import_scene.makehuman_mhx2(filepath="~/github-work/human-renderer/makeh
 
 
 
-
-
 Related MH files:
   * `/usr/share/makehuman/plugins/3_libraries_skeleton/skeletonlibrary.py`
   * `/usr/share/makehuman/shared/skeleton.py`. The `Bone` class is the node of a tree, and has interesting methods like `getMatrix, get_roll_to, copy_normal...`. Docstring:
@@ -286,15 +288,10 @@ Before evaluating which one is best, further assessment about the blender sequen
 ### Blender sequences:
 
 
-
-
 `bpy.ops.import_anim.bvh(filepath="/home/a9fb1e/github-work/human-renderer/makehuman_data/poses/cmu_motion_captures/01/01_06.bvh")`
 
 
-
-
-
-## Makewalk:
+### Makewalk:
 
 
 To control MHX2 models using BHV within Blender, different sources suggest using the MakeWalk plugin. The PPA doesn't offer it, neither any official page. Older releases seem to have it included: `http://files.jwp.se/archive/releases/1.1.1/` (a copy is saved into this repo):
@@ -317,6 +314,33 @@ ffmpeg -i %04d.png -vf "transpose=2" output.mp4
 
 ```
 
+
+### UI:
+
+https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/Addons
+
+* Header: `_HT_`
+* Menu: `_MT_`
+* Operator: `_OT_`
+* Panel: `_PT_`
+* UIList: `_UL_`
+
+Valid examples:
+
+```
+class OBJECT_OT_fancy_tool (and bl_idname = "object.fancy_tool")
+class MyFancyTool (and bl_idname = "MYADDON_MT_MyFancyTool")
+class SOME_HEADER_HT_my_header
+class PANEL123_PT_myPanel (lower case is preferred but mixed case is supported).
+```
+
+
+Properties should be annotations:
+
+```
+class MyOperator(Operator):
+    value: IntProperty()
+```
 
 ## ISSUES:
 
