@@ -188,10 +188,9 @@
 
 <div class="viewcode-block" id="ArgumentParserForBlender.get_argv_after_doubledash"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.ArgumentParserForBlender.get_argv_after_doubledash">[docs]</a>    <span class="k">def</span> <span class="nf">get_argv_after_doubledash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argv</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        :param argv: Expected to be sys.argv (or alike).</span>
+<span class="sd">        :param list&lt;str&gt; argv: Expected to be sys.argv (or alike).</span>
 <span class="sd">        :returns: The argv sublist after the first ``&#39;--&#39;`` element (if</span>
 <span class="sd">           present, otherwise returns an empty list).</span>
-<span class="sd">        :type argv: list of str</span>
 <span class="sd">        :rtype: list of str</span>
 
 <span class="sd">        .. note::</span>
@@ -218,6 +217,72 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">argv_after_dd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_argv_after_doubledash</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">argv_after_dd</span><span class="p">)</span></div></div>
+
+
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># ## EYE ICON</span>
+<span class="c1"># ## See https://blenderartists.org/t/show-hide-collection-blender-beta-2-80/1141768</span>
+<span class="c1"># #############################################################################</span>
+
+<div class="viewcode-block" id="get_viewport_ordered_collections"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.get_viewport_ordered_collections">[docs]</a><span class="k">def</span> <span class="nf">get_viewport_ordered_collections</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">addme</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">addme</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c1</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c1</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="n">fn</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">collections</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">fn</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">collection</span><span class="p">,</span> <span class="n">collections</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">collections</span></div>
+
+<div class="viewcode-block" id="get_area_from_context"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.get_area_from_context">[docs]</a><span class="k">def</span> <span class="nf">get_area_from_context</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">area_type</span><span class="p">):</span>
+    <span class="n">area</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">context</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">areas</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">area_type</span><span class="p">:</span>
+            <span class="n">area</span> <span class="o">=</span> <span class="n">a</span>
+            <span class="k">break</span>
+    <span class="k">return</span> <span class="n">area</span></div>
+
+<div class="viewcode-block" id="set_collection_viewport_visibility"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.set_collection_viewport_visibility">[docs]</a><span class="k">def</span> <span class="nf">set_collection_viewport_visibility</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">visibility</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">collections</span> <span class="o">=</span> <span class="n">get_viewport_ordered_collections</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+    <span class="n">collection</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">collections</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">collection_name</span><span class="p">:</span>
+            <span class="n">collection</span> <span class="o">=</span> <span class="n">c</span>
+            <span class="k">break</span>
+        <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">collection</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">first_object</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">collection</span><span class="o">.</span><span class="n">objects</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">first_object</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">hide_collection</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">collection_index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">toggle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">first_object</span><span class="o">.</span><span class="n">visible_get</span><span class="p">()</span> <span class="o">!=</span> <span class="n">visibility</span><span class="p">:</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">hide_collection</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">collection_index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">toggle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">context_override</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">context_override</span><span class="p">[</span><span class="s1">&#39;area&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_area_from_context</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="s1">&#39;VIEW_3D&#39;</span><span class="p">)</span>
+
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">hide_collection</span><span class="p">(</span><span class="n">context_override</span><span class="p">,</span> <span class="n">collection_index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">toggle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">first_object</span><span class="o">.</span><span class="n">visible_get</span><span class="p">()</span> <span class="o">!=</span> <span class="n">visibility</span><span class="p">:</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">hide_collection</span><span class="p">(</span><span class="n">context_override</span><span class="p">,</span> <span class="n">collection_index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">toggle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">collection</span></div>
+
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># ##</span>
+<span class="c1"># #############################################################################</span>
 </pre></div>
 
            </div>

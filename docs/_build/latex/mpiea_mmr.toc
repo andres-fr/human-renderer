@@ -1,9 +1,0 @@
-\select@language {english}
-\contentsline {chapter}{\numberline {1}mpiea\_mmr package}{1}{chapter.1}
-\contentsline {section}{\numberline {1.1}Submodules}{1}{section.1.1}
-\contentsline {section}{\numberline {1.2}mpiea\_mmr.blender\_utils module}{1}{section.1.2}
-\contentsline {section}{\numberline {1.3}mpiea\_mmr.foo\_module module}{2}{section.1.3}
-\contentsline {section}{\numberline {1.4}Module contents}{2}{section.1.4}
-\contentsline {chapter}{\numberline {2}Indices and tables}{3}{chapter.2}
-\contentsline {chapter}{Python Module Index}{4}{section*.11}
-\contentsline {chapter}{Index}{5}{section*.12}

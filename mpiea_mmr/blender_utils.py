@@ -36,10 +36,9 @@ class ArgumentParserForBlender(argparse.ArgumentParser):
 
     def get_argv_after_doubledash(self, argv):
         """
-        :param argv: Expected to be sys.argv (or alike).
+        :param list<str> argv: Expected to be sys.argv (or alike).
         :returns: The argv sublist after the first ``'--'`` element (if
            present, otherwise returns an empty list).
-        :type argv: list of str
         :rtype: list of str
 
         .. note::

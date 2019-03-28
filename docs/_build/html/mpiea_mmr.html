@@ -191,7 +191,7 @@ The following CLI calls work fine:</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>argv</strong> (<em>list of str</em>) – Expected to be sys.argv (or alike).</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>argv</strong> (<em>list&lt;str&gt;</em>) – Expected to be sys.argv (or alike).</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The argv sublist after the first <code class="docutils literal notranslate"><span class="pre">'--'</span></code> element (if
 present, otherwise returns an empty list).</td>
@@ -222,6 +222,21 @@ making it look like a crash. Make sure the arguments are correct!</p>
 </dd></dl>
 
 </dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.blender_utils.get_area_from_context">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">get_area_from_context</code><span class="sig-paren">(</span><em>context</em>, <em>area_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#get_area_from_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.get_area_from_context" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.blender_utils.get_viewport_ordered_collections">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">get_viewport_ordered_collections</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#get_viewport_ordered_collections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.get_viewport_ordered_collections" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.blender_utils.set_collection_viewport_visibility">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">set_collection_viewport_visibility</code><span class="sig-paren">(</span><em>context</em>, <em>collection_name</em>, <em>visibility=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#set_collection_viewport_visibility"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.set_collection_viewport_visibility" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 <div class="section" id="module-mpiea_mmr.foo_module">
@@ -254,10 +269,81 @@ making it look like a crash. Make sure the arguments are correct!</p>
 addon_utils.paths(), and that the Blender version matches to make it
 installable.</p>
 <p>Alternatively, run this init file as a script from Blender.</p>
+<dl class="class">
+<dt id="mpiea_mmr.ObjectCursorArray">
+<em class="property">class </em><code class="descclassname">mpiea_mmr.</code><code class="descname">ObjectCursorArray</code><a class="reference internal" href="_modules/mpiea_mmr.html#ObjectCursorArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ObjectCursorArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">bpy_types.Operator</span></code></p>
+<p>Object Cursor Array</p>
+<p>API:
+&lt;API_URL&gt;/bpy.types.Operator.html#bpy.types.Operator.bl_options</p>
+<dl class="attribute">
+<dt id="mpiea_mmr.ObjectCursorArray.bl_idname">
+<code class="descname">bl_idname</code><em class="property"> = 'object.cursor_array'</em><a class="headerlink" href="#mpiea_mmr.ObjectCursorArray.bl_idname" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mpiea_mmr.ObjectCursorArray.bl_label">
+<code class="descname">bl_label</code><em class="property"> = 'Cursor Array Label'</em><a class="headerlink" href="#mpiea_mmr.ObjectCursorArray.bl_label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mpiea_mmr.ObjectCursorArray.bl_options">
+<code class="descname">bl_options</code><em class="property"> = {'REGISTER', 'UNDO'}</em><a class="headerlink" href="#mpiea_mmr.ObjectCursorArray.bl_options" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mpiea_mmr.ObjectCursorArray.bl_rna">
+<code class="descname">bl_rna</code><em class="property"> = &lt;bpy_struct, Struct(&quot;OBJECT_OT_cursor_array&quot;)&gt;</em><a class="headerlink" href="#mpiea_mmr.ObjectCursorArray.bl_rna" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mpiea_mmr.ObjectCursorArray.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#ObjectCursorArray.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ObjectCursorArray.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.menu_func">
+<code class="descclassname">mpiea_mmr.</code><code class="descname">menu_func</code><span class="sig-paren">(</span><em>self</em>, <em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#menu_func"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.menu_func" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="function">
 <dt id="mpiea_mmr.register">
 <code class="descclassname">mpiea_mmr.</code><code class="descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.register" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.register_keymap">
+<code class="descclassname">mpiea_mmr.</code><code class="descname">register_keymap</code><span class="sig-paren">(</span><em>context</em>, <em>key</em>, <em>stroke_mode</em>, <em>op_name</em>, <em>ctrl=True</em>, <em>shift=True</em>, <em>alt=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#register_keymap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.register_keymap" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line">See the API for details:</div>
+<div class="line"><a class="reference external" href="https://docs.blender.org/api/blender2.8/bpy.types.KeyMap.html">https://docs.blender.org/api/blender2.8/bpy.types.KeyMap.html</a></div>
+<div class="line"><a class="reference external" href="https://docs.blender.org/api/blender2.8/bpy.types.KeyMapItem.html">https://docs.blender.org/api/blender2.8/bpy.types.KeyMapItem.html</a></div>
+</div>
+<p>Usage example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">register_keymap</span><span class="p">(</span><span class="n">bpycontext</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;PRESS&quot;</span><span class="p">,</span> <span class="n">MyOperator</span><span class="o">.</span><span class="n">bl_idname</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>context</strong> (<em>bpy.types.Context</em>) – A context like <code class="docutils literal notranslate"><span class="pre">bpy.context</span></code>.</li>
+<li><strong>key</strong> (<em>str</em>) – See bpy.types.KeyMapItem.key_modifier</li>
+<li><strong>stroke_mode</strong> (<em>str</em>) – See bpy.types.KeyMapItem.value</li>
+<li><strong>op_name</strong> (<em>str</em>) – Name of a valid operation in <code class="docutils literal notranslate"><span class="pre">bpy.ops</span></code> (usually the <code class="docutils literal notranslate"><span class="pre">bl_idname</span></code>)</li>
+<li><strong>ctrl</strong><strong>, </strong><strong>shift</strong><strong>, </strong><strong>alt</strong> (<em>booleans</em>) – Modifiers of the <code class="docutils literal notranslate"><span class="pre">key</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="mpiea_mmr.unregister">
