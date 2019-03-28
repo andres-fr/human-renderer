@@ -270,11 +270,83 @@ addon_utils.paths(), and that the Blender version matches to make it
 installable.</p>
 <p>Alternatively, run this init file as a script from Blender.</p>
 <dl class="class">
+<dt id="mpiea_mmr.KeymapManager">
+<em class="property">class </em><code class="descclassname">mpiea_mmr.</code><code class="descname">KeymapManager</code><a class="reference internal" href="_modules/mpiea_mmr.html#KeymapManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.KeymapManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></p>
+<p>This class implements functionality for registering/deregistering keymaps
+into Blender. It also behaves like a regular list, holding the keymaps
+currently registered.</p>
+<p>To inspect the registered keymaps:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">wm</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">window_manager</span>
+ <span class="n">km_items</span> <span class="o">=</span> <span class="n">wm</span><span class="o">.</span><span class="n">keyconfigs</span><span class="o">.</span><span class="n">addon</span><span class="o">.</span><span class="n">keymaps</span><span class="p">[</span><span class="n">KEYMAP_NAME</span><span class="p">]</span><span class="o">.</span><span class="n">keymap_items</span>
+ <span class="c1"># km_items is a dict containing the op_name -&gt; km binding.</span>
+ <span class="c1"># To see the key and stroke_mode:</span>
+ <span class="n">km_item</span> <span class="o">=</span> <span class="n">km_items</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># some item</span>
+ <span class="n">key</span><span class="p">,</span> <span class="n">stroke</span> <span class="o">=</span> <span class="n">km_item</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">km_item</span><span class="o">.</span><span class="n">value</span>
+<span class="c1"># Default operator properties can be customized for a specific keymap:</span>
+ <span class="n">km_item</span><span class="o">.</span><span class="n">properties</span><span class="o">.&lt;</span><span class="n">PROP</span><span class="o">&gt;</span> <span class="o">=</span> <span class="mf">3.14</span>  <span class="c1"># &lt;PROP&gt; was defined in the Operator</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="mpiea_mmr.KeymapManager.KEYMAP_NAME">
+<code class="descname">KEYMAP_NAME</code><em class="property"> = 'Object Mode'</em><a class="headerlink" href="#mpiea_mmr.KeymapManager.KEYMAP_NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mpiea_mmr.KeymapManager.KEYMAP_SPACE_TYPE">
+<code class="descname">KEYMAP_SPACE_TYPE</code><em class="property"> = 'EMPTY'</em><a class="headerlink" href="#mpiea_mmr.KeymapManager.KEYMAP_SPACE_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mpiea_mmr.KeymapManager.register">
+<code class="descname">register</code><span class="sig-paren">(</span><em>context</em>, <em>key</em>, <em>stroke_mode</em>, <em>op_name</em>, <em>ctrl=True</em>, <em>shift=True</em>, <em>alt=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#KeymapManager.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.KeymapManager.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new keymap to this collection, and to the config in
+<code class="docutils literal notranslate"><span class="pre">context.window_manager.keyconfigs.addon</span></code>. See the API for details:</p>
+<div class="line-block">
+<div class="line"><a class="reference external" href="https://docs.blender.org/api/blender2.8/bpy.types.KeyMap.html">https://docs.blender.org/api/blender2.8/bpy.types.KeyMap.html</a></div>
+<div class="line"><a class="reference external" href="https://docs.blender.org/api/blender2.8/bpy.types.KeyMapItem.html">https://docs.blender.org/api/blender2.8/bpy.types.KeyMapItem.html</a></div>
+<div class="line"><a class="reference external" href="https://docs.blender.org/manual/de/dev/advanced/keymap_editing.html">https://docs.blender.org/manual/de/dev/advanced/keymap_editing.html</a></div>
+</div>
+<p>Usage example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">register_keymap</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;PRESS&quot;</span><span class="p">,</span> <span class="n">MyOperator</span><span class="o">.</span><span class="n">bl_idname</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>context</strong> (<em>bpy.types.Context</em>) – A context like <code class="docutils literal notranslate"><span class="pre">bpy.context</span></code>.</li>
+<li><strong>key</strong> (<em>str</em>) – See bpy.types.KeyMapItem.key_modifier</li>
+<li><strong>stroke_mode</strong> (<em>str</em>) – See bpy.types.KeyMapItem.value</li>
+<li><strong>op_name</strong> (<em>str</em>) – Name of a valid operation in <code class="docutils literal notranslate"><span class="pre">bpy.ops</span></code>
+(usually the <code class="docutils literal notranslate"><span class="pre">bl_idname</span></code>)</li>
+<li><strong>ctrl</strong><strong>, </strong><strong>shift</strong><strong>, </strong><strong>alt</strong> (<em>booleans</em>) – Modifiers of the <code class="docutils literal notranslate"><span class="pre">key</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mpiea_mmr.KeymapManager.unregister">
+<code class="descname">unregister</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#KeymapManager.unregister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.KeymapManager.unregister" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes every mapped item from every keymap in this collection, and
+then empties the collection.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="mpiea_mmr.ObjectCursorArray">
 <em class="property">class </em><code class="descclassname">mpiea_mmr.</code><code class="descname">ObjectCursorArray</code><a class="reference internal" href="_modules/mpiea_mmr.html#ObjectCursorArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ObjectCursorArray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">bpy_types.Operator</span></code></p>
-<p>Object Cursor Array</p>
-<p>API:
+<p>Duplicates selected object N times between its position and the cursor’s.</p>
+<p>More info:
 &lt;API_URL&gt;/bpy.types.Operator.html#bpy.types.Operator.bl_options</p>
 <dl class="attribute">
 <dt id="mpiea_mmr.ObjectCursorArray.bl_idname">
@@ -303,52 +375,63 @@ installable.</p>
 
 </dd></dl>
 
-<dl class="function">
-<dt id="mpiea_mmr.menu_func">
-<code class="descclassname">mpiea_mmr.</code><code class="descname">menu_func</code><span class="sig-paren">(</span><em>self</em>, <em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#menu_func"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.menu_func" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="mpiea_mmr.register">
-<code class="descclassname">mpiea_mmr.</code><code class="descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.register" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="mpiea_mmr.register_keymap">
-<code class="descclassname">mpiea_mmr.</code><code class="descname">register_keymap</code><span class="sig-paren">(</span><em>context</em>, <em>key</em>, <em>stroke_mode</em>, <em>op_name</em>, <em>ctrl=True</em>, <em>shift=True</em>, <em>alt=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#register_keymap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.register_keymap" title="Permalink to this definition">¶</a></dt>
-<dd><div class="line-block">
-<div class="line">See the API for details:</div>
-<div class="line"><a class="reference external" href="https://docs.blender.org/api/blender2.8/bpy.types.KeyMap.html">https://docs.blender.org/api/blender2.8/bpy.types.KeyMap.html</a></div>
-<div class="line"><a class="reference external" href="https://docs.blender.org/api/blender2.8/bpy.types.KeyMapItem.html">https://docs.blender.org/api/blender2.8/bpy.types.KeyMapItem.html</a></div>
-</div>
-<p>Usage example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">register_keymap</span><span class="p">(</span><span class="n">bpycontext</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;PRESS&quot;</span><span class="p">,</span> <span class="n">MyOperator</span><span class="o">.</span><span class="n">bl_idname</span><span class="p">)</span>
+<dl class="class">
+<dt id="mpiea_mmr.OperatorToMenuManager">
+<em class="property">class </em><code class="descclassname">mpiea_mmr.</code><code class="descname">OperatorToMenuManager</code><a class="reference internal" href="_modules/mpiea_mmr.html#OperatorToMenuManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.OperatorToMenuManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></p>
+<p>This class implements functionality for adding/removing operators
+into Blender UI menus. It also behaves like a regular list, holding
+the currently registered items. Usage example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">omm</span> <span class="o">=</span> <span class="n">OperatorToMenuManager</span><span class="p">()</span>
+<span class="c1"># In register():</span>
+<span class="n">omm</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">MyOperator</span><span class="p">,</span> <span class="n">bpy</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">VIEW3D_MT_object</span><span class="p">)</span>
+<span class="c1"># ... in unregister():</span>
+<span class="n">omm</span><span class="o">.</span><span class="n">unregister</span>
 </pre></div>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
+<dl class="method">
+<dt id="mpiea_mmr.OperatorToMenuManager.register">
+<code class="descname">register</code><span class="sig-paren">(</span><em>op_class</em>, <em>menu_class</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#OperatorToMenuManager.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.OperatorToMenuManager.register" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>context</strong> (<em>bpy.types.Context</em>) – A context like <code class="docutils literal notranslate"><span class="pre">bpy.context</span></code>.</li>
-<li><strong>key</strong> (<em>str</em>) – See bpy.types.KeyMapItem.key_modifier</li>
-<li><strong>stroke_mode</strong> (<em>str</em>) – See bpy.types.KeyMapItem.value</li>
-<li><strong>op_name</strong> (<em>str</em>) – Name of a valid operation in <code class="docutils literal notranslate"><span class="pre">bpy.ops</span></code> (usually the <code class="docutils literal notranslate"><span class="pre">bl_idname</span></code>)</li>
-<li><strong>ctrl</strong><strong>, </strong><strong>shift</strong><strong>, </strong><strong>alt</strong> (<em>booleans</em>) – Modifiers of the <code class="docutils literal notranslate"><span class="pre">key</span></code></li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>op_class</strong> (<em>bpy.types.Operator</em>) – (Sub)class handle with desired
+functionality.</li>
+<li><strong>menu_class</strong> (<a href="#id1"><span class="problematic" id="id2">``</span></a>bpy.types.{Header, Panel, …}) – Class handle for the Blender GUI where the
+functionality can be triggered.</li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
 </td>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><code class="docutils literal notranslate"><span class="pre">op_class</span></code> must define the <code class="docutils literal notranslate"><span class="pre">bl_idname</span></code> and <code class="docutils literal notranslate"><span class="pre">bl_label</span></code> fields.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="mpiea_mmr.OperatorToMenuManager.unregister">
+<code class="descname">unregister</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#OperatorToMenuManager.unregister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.OperatorToMenuManager.unregister" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes every mapped operator from every menu class in this collection,
+then empties the collection.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.register">
+<code class="descclassname">mpiea_mmr.</code><code class="descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main register function, called on startup by Blender</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="mpiea_mmr.unregister">
 <code class="descclassname">mpiea_mmr.</code><code class="descname">unregister</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#unregister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.unregister" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Main unregister function, called on shutdown by Blender</p>
+</dd></dl>
 
 </div>
 </div>

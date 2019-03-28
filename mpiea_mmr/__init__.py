@@ -44,37 +44,57 @@ bl_info = {
 # ## UI
 # #############################################################################
 
-# class ObjectSelectPanel(bpy.types.Panel):
-#     bl_idname = "OBJECT_PT_select"
-#     bl_label = "Select"
-#     bl_space_type = 'PROPERTIES'
-#     bl_region_type = 'WINDOW'
-#     bl_context = "object"
-#     bl_options = {'DEFAULT_CLOSED'}
 
-#     @classmethod
-#     def poll(cls, context):
-#         return (context.object is not None)
+# class DAZ_PT_Setup(bpy.types.Panel):
+#     bl_label = "Setup"
+#     bl_space_type = "VIEW_3D"
+#     bl_region_type = "UI"
+#     bl_category = "DAZ Runtime"
 
-#     def draw_header(self, context):
-#         layout = self.layout
-#         obj = context.object
-#         layout.prop(obj, "select", text="")
 
-#     def draw(self, context):
-#         layout = self.layout
 
-#         obj = context.object
-#         row = layout.row()
-#         row.prop(obj, "hide_select")
-#         row.prop(obj, "hide_render")
+class MY_PANEL_PT_MyPanel(bpy.types.Panel):
+    # bl_idname = "MY_PANEL_PT_MyPanel"
+    bl_label = "Selection Manager"
+    bl_space_type = "VIEW_3D" # 'PROPERTIES'
+    bl_region_type = "UI" # 'WINDOW'
+    # bl_context = "object"
+    # bl_options = {'DEFAULT_CLOSED'}
+    # bl_options = {'REGISTER', 'UNDO'}
+    bl_category = "DAZ Runtime"
 
-#         box = layout.box()
-#         box.label("Selection Tools")
-#         box.operator("object.select_all").action = 'TOGGLE'
-#         row = box.row()
-#         row.operator("object.select_all").action = 'INVERT'
-#         row.operator("object.select_random")
+    @classmethod
+    def poll(cls, context):
+        return (context.object is not None)
+
+    def draw_header(self, context):
+        """
+        Draw UI elements into the panel’s header UI layout
+        """
+        layout = self.layout
+        obj = context.object
+        fn = lambda self, context: obj.select_set(state=True)
+        self.append(fn)
+        ###layout.prop(fn, text="quackkk")
+        # layout.prop(obj, "select_set", text="")
+        # bpy.ops.object.select_all(action="DESELECT")
+
+    def draw(self, context):
+        layout = self.layout
+
+        obj = context.object
+        row = layout.row()
+        row.prop(obj, "hide_select")
+        row.prop(obj, "hide_render")
+
+        box = layout.box()
+        box.label(text="Selection Tools")
+        box.operator("object.select_all").action = 'TOGGLE'
+        row = box.row()
+        row.operator("object.select_all").action = 'INVERT'
+        row.operator("object.select_random")
+
+
 
 class ObjectCursorArray(bpy.types.Operator):
     """
@@ -112,24 +132,22 @@ class OperatorToMenuManager(list):
     This class implements functionality for adding/removing operators
     into Blender UI menus. It also behaves like a regular list, holding
     the currently registered items. Usage example:
-        ::
-           omm = OperatorToMenuManager()
-           # In register():
-               omm.register(MyOperator, bpy.types.VIEW3D_MT_object)
-           # ... in unregister():
-               omm.unregister
+    ::
+       omm = OperatorToMenuManager()
+       # In register():
+       omm.register(MyOperator, bpy.types.VIEW3D_MT_object)
+       # ... in unregister():
+       omm.unregister
     """
 
     def register(self, op_class, menu_class):
         """
         :param bpy.types.Operator op_class: (Sub)class handle with desired
            functionality.
-        :param menu_class: Class handle for the Blender UI element where the
+        :param menu_class: Class handle for the Blender GUI where the
            functionality can be triggered.
         :type menu_class: ``bpy.types.{Header, Panel, ...}
-        :param bool remove_instead_of_append: If false, element is added
-           (usually at ``register`` time). If true, element is removed
-           (usually at ``unregister`` time).
+
         .. note::
            ``op_class`` must define the ``bl_idname`` and ``bl_label`` fields.
         """
@@ -158,6 +176,18 @@ class KeymapManager(list):
     This class implements functionality for registering/deregistering keymaps
     into Blender. It also behaves like a regular list, holding the keymaps
     currently registered.
+
+    To inspect the registered keymaps:
+    ::
+
+       wm = context.window_manager
+       km_items = wm.keyconfigs.addon.keymaps[KEYMAP_NAME].keymap_items
+       # km_items is a dict containing the op_name -> km binding.
+       # To see the key and stroke_mode:
+       km_item = km_items.values()[0]  # some item
+       key, stroke = km_item.type, km_item.value
+      # Default operator properties can be customized for a specific keymap:
+       km_item.properties.<PROP> = 3.14  # <PROP> was defined in the Operator
     """
 
     KEYMAP_NAME = "Object Mode"  # ATM not well documented in the API
@@ -180,7 +210,7 @@ class KeymapManager(list):
         Usage example:
         ::
 
-           register_keymap(bpycontext, "D", "PRESS", MyOperator.bl_idname)
+           register_keymap(bpy.context, "D", "PRESS", MyOperator.bl_idname)
 
         :param bpy.types.Context context: A context like ``bpy.context``.
         :param str key: See bpy.types.KeyMapItem.key_modifier
@@ -213,13 +243,14 @@ class KeymapManager(list):
 # ## INITIALIZE/REGISTER
 # #############################################################################
 
-classes = [ObjectCursorArray]
+classes = [ObjectCursorArray, MY_PANEL_PT_MyPanel]
 register_cl, unregister_cl = bpy.utils.register_classes_factory(classes)
 kmm = KeymapManager()
 omm = OperatorToMenuManager()
 
 def register():
     """
+    Main register function, called on startup by Blender
     """
     register_cl()
     omm.register(ObjectCursorArray, bpy.types.VIEW3D_MT_object)
@@ -228,17 +259,11 @@ def register():
 
 def unregister():
     """
+    Main unregister function, called on shutdown by Blender
     """
     kmm.unregister()
     omm.unregister()
     unregister_cl()
-
-# classes = [
-#     # MCP_PT_Main,
-#     # MCP_PT_Utility,
-#     # utils.ErrorOperator
-# ]
-
 
 
 if __name__ == "__main__":
@@ -247,157 +272,3 @@ if __name__ == "__main__":
 
 
 print("[Add-on loaded]: ", bl_info["name"], "version", VERSION)
-
-
-
-
-
-
-
-#######
-#######
-#######
-#######
-#######
-
-
-
-
-# bl_info = {
-#     "name": "Simple Add-on Template",
-#     "author": "Marco Mameli",
-#     # "location": "View3D > Add > Mesh > Generate",  # in 3D viewport, add->mesh-"Generate Point Cloud"
-#     "version": (1, 2, 3),
-#     "blender": (2, 80, 0),
-#     "description": "Starting point for new add-ons.",
-#     "category": "Add Mesh"
-#     }
-# import bpy
-# import bmesh
-# from bpy.types import Operator
-# from bpy.types import Panel
-
-# def add_pointcloud(self, context, naming):
-#     # qui scrivo i miei calcoli
-#     obj = context.active_object
-#     mycollection = bpy.data.collections.new("MyPointCloudCollection")
-#     bpy.context.scene.collection.children.link(mycollection)
-#     me = obj.data
-#     bm = bmesh.new()
-#     bm.from_mesh(me)
-#     bmFaces = []
-
-#     for face in bm.faces:
-#         faceLocation = face.calc_center_median()
-#         print(faceLocation)
-#         bmFaces.append(obj.matrix_world @ faceLocation) # la @ è il prodotto vettoriale
-#     for vertex in bm.verts:
-#         print(vertex.co)
-#         bmFaces.append(obj.matrix_world @ vertex.co)
-#     me = bpy.data.meshes.new(obj.name + 'Mesh' + naming)
-#     ob = bpy.data.objects.new(obj.name + '_PointCloud_' + naming, me)
-#     ob.show_name = True
-#     bpy.data.collections['MyPointCloudCollection'].objects.link(ob)
-#     me.from_pydata(bmFaces, [], [])
-#     me.update()
-#     ob.select_set(True)
-
-# class OBJECT_OT_add_PointCloud_with_noise(Operator):
-#     """ Create a Point Cloud """
-#     bl_idname = "object.add_pointcloud_with_noise"
-#     bl_label = "Add Mesh object that represent a Point Cloud"
-#     bl_options = {'REGISTER', 'UNDO'}
-
-#     def execute(self,context): # operazioni da eseguire
-#         # MAI METTERE IL CODICE QUI DENTRO DIRETTAMENTE
-#         print("Sono in with noise")
-#         add_pointcloud(self, context, "with_noise")
-
-#         return {'FINISHED'}
-
-# class OBJECT_OT_add_PointCloud(Operator):
-#     """ Create a Point Cloud """
-#     bl_idname = "object.add_mesh_pointcloud"
-#     bl_label = "Add Mesh object that represent a Point Cloud"
-#     bl_options = {'REGISTER', 'UNDO'}
-
-#     def execute(self,context): # operazioni da eseguire
-#         # MAI METTERE IL CODICE QUI DENTRO DIRETTAMENTE
-#         print("sono in no noise")
-#         add_pointcloud(self, context, "no_noise")
-
-#         return {'FINISHED'}
-
-#     def draw(self,context):
-#         layout = self.layout
-
-#         scene = context.scene
-
-#         layout.label(text="Pointcloud option")
-
-#         row = layout.row()
-#         row.prop(scene, "frame_star")
-
-#         layout.label(text="Big Button:")
-#         row = layout.row()
-#         row.scale_y = 1.0
-#         row.operator("object.add_pointcloud_with_noise")
-
-# # creo il bottone da aggiungere al menu di blender
-# def add_pointcloud_button(self, context):
-#     print(">>>>>>>>>>>>>>>>>>", self)
-#     self.layout.operator(OBJECT_OT_add_PointCloud.bl_idname, text="Generate Point Cloud",
-#                          icon='PLUGIN')
-
-# # creo il link al manuale
-# def add_pointcloud_manual_map():
-#         url_manual_prefix=""
-#         url_manual_mapping = (("bpy.ops.mesh.add_pointcloud", "editors/edview/object"),)
-#         return url_manual_prefix, url_manual_mapping
-
-# # Options panel for addon
-# class OBJECT_PT_add_PointCloud_properties(Panel):
-#     bl_label = "Properties Layout"
-#     bl_idname = "SCENE_PT_layout_PointCloud_properties"
-#     bl_space_type = 'PROPERTIES'
-#     bl_region_type = 'WINDOW'
-#     bl_context = "scene"
-
-#     def draw(self,context):
-#         layout = self.layout
-
-#         scene = context.scene
-
-#         layout.label(text="Pointcloud option")
-
-#         row = layout.row()
-#         row.prop(scene, "frame_star")
-
-#         layout.label(text="Big Button:")
-#         row = layout.row()
-#         row.scale_y = 3.0
-#         row.operator("render.render")
-
-
-# classes = (OBJECT_OT_add_PointCloud, OBJECT_PT_add_PointCloud_properties, OBJECT_OT_add_PointCloud_with_noise)
-# def register():
-#     for cls in classes:
-#         bpy.utils.register_class(cls)
-#     bpy.utils.register_manual_map(add_pointcloud_manual_map)
-#     bpy.types.VIEW3D_MT_mesh_add.append(add_pointcloud_button)
-
-
-# def unregister():
-#     for cls in classes:
-#         bpy.utils.unregister_class(cls)
-#     bpy.utils.register_manual_map(add_pointcloud_manual_map)
-#     bpy.types.VIEW3D_MT_mesh_add.remove(add_pointcloud_button)
-
-
-# if __name__ == "__main__":
-#     register()
-
-
-
-
-# print("[Add-on loaded]: ", bl_info["name"], "version", bl_info["version"])
