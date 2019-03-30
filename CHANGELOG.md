@@ -24,6 +24,14 @@ All notable changes to this project will be documented in this file.
 
 ## TODO:
 
+- reimplement scene_builder script:
+  * Plugin-neutral functionality goes to the blender utils as regular python
+  * Ops that are potentially exposed to the user go as Operators
+  * Modularize UI as a collection of Panels, hosting Operators
+  * Plugin-specific scene building etc goes in the scene_builder.main function. It grabs Operators, utils and other specific functionality defined in the builder module itself.
+
+
+- utest everything, codecov >90%?
 
 - Travis script, from fresh OS to utest, coverage, autodoc. TEST ON AN OPEN REPO! (make dummy blender repo?):
   1. Download Blender 2.80 into home, and set .bashrc env variable so `blender` command works
@@ -36,10 +44,12 @@ All notable changes to this project will be documented in this file.
 Regarding OPEN REPO probably a good idea to create a standard template for Blender. See https://github.com/osiriswrecks/blender-addon-template/blob/master/ui.py
 also see https://blenderartists.org/t/code-template-for-blender-add-ons/682339
 
-- learn about custom UI
+
 - insert sound sources in scene
 - Get proper specs for Mali data format, and integrate it into MakeWalk via Python parser (with JSON schema or similar).
-
+- Make Blender "standalone": define proper UI to work on maximized 3d view only?
+  * add panel (or pop-up) with "tips" and any useful info for the user
+  
 
 -----------------------------------------
 
@@ -50,3 +60,8 @@ also see https://blenderartists.org/t/code-template-for-blender-add-ons/682339
 
 TODO: talk about bvh, the approach of MW, existing issues, and how to retarget.
 
+
+* Proper usage of poll in UI (operators, panels).
+
+
+* Advanced UI example: `2.80/scripts/startup/bl_ui/space_view3d.py`

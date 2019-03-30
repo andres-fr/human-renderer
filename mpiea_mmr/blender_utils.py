@@ -139,6 +139,7 @@ class OperatorToMenuManager(list):
     into Blender UI menus. It also behaves like a regular list, holding
     the currently registered items. Usage example:
     ::
+
        omm = OperatorToMenuManager()
        # In register():
        omm.register(MyOperator, bpy.types.VIEW3D_MT_object)
@@ -152,7 +153,7 @@ class OperatorToMenuManager(list):
            functionality.
         :param menu_class: Class handle for the Blender GUI where the
            functionality can be triggered.
-        :type menu_class: ``bpy.types.{Header, Panel, ...}
+        :type menu_class: bpy.types.{Header, Panel, ...}
 
         .. note::
            ``op_class`` must define the ``bl_idname`` and ``bl_label`` fields.

@@ -12,10 +12,10 @@ mpiea\_mmr.blender\_utils module
     :undoc-members:
     :show-inheritance:
 
-mpiea\_mmr.foo\_module module
------------------------------
+mpiea\_mmr.ui module
+--------------------
 
-.. automodule:: mpiea_mmr.foo_module
+.. automodule:: mpiea_mmr.ui
     :members:
     :undoc-members:
     :show-inheritance:

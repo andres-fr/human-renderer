@@ -88,7 +88,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">mpiea_mmr package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-mpiea_mmr.blender_utils">mpiea_mmr.blender_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-mpiea_mmr.foo_module">mpiea_mmr.foo_module module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-mpiea_mmr.ui">mpiea_mmr.ui module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-mpiea_mmr">Module contents</a></li>
 </ul>
 </li>
@@ -223,55 +223,9 @@ making it look like a crash. Make sure the arguments are correct!</p>
 
 </dd></dl>
 
-<dl class="function">
-<dt id="mpiea_mmr.blender_utils.get_area_from_context">
-<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">get_area_from_context</code><span class="sig-paren">(</span><em>context</em>, <em>area_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#get_area_from_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.get_area_from_context" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="mpiea_mmr.blender_utils.get_viewport_ordered_collections">
-<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">get_viewport_ordered_collections</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#get_viewport_ordered_collections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.get_viewport_ordered_collections" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="mpiea_mmr.blender_utils.set_collection_viewport_visibility">
-<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">set_collection_viewport_visibility</code><span class="sig-paren">(</span><em>context</em>, <em>collection_name</em>, <em>visibility=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#set_collection_viewport_visibility"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.set_collection_viewport_visibility" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</div>
-<div class="section" id="module-mpiea_mmr.foo_module">
-<span id="mpiea-mmr-foo-module-module"></span><h2>mpiea_mmr.foo_module module<a class="headerlink" href="#module-mpiea_mmr.foo_module" title="Permalink to this headline">¶</a></h2>
-<p>Module containing a simple class with low memory and runtime requirements.</p>
 <dl class="class">
-<dt id="mpiea_mmr.foo_module.Foo">
-<em class="property">class </em><code class="descclassname">mpiea_mmr.foo_module.</code><code class="descname">Foo</code><span class="sig-paren">(</span><em>size=1000000</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/foo_module.html#Foo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.foo_module.Foo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A simple class with low memory and runtime requirements.</p>
-<dl class="method">
-<dt id="mpiea_mmr.foo_module.Foo.get_result">
-<code class="descname">get_result</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/foo_module.html#Foo.get_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.foo_module.Foo.get_result" title="Permalink to this definition">¶</a></dt>
-<dd><p>Basic getter.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="mpiea_mmr.foo_module.Foo.loop">
-<code class="descname">loop</code><span class="sig-paren">(</span><em>times</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/foo_module.html#Foo.loop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.foo_module.Foo.loop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Restart result and run computation a number of times.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-mpiea_mmr">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mpiea_mmr" title="Permalink to this headline">¶</a></h2>
-<p>Init file for the add-on.</p>
-<p>To install it, make sure Blender’s Python is able to find it under
-addon_utils.paths(), and that the Blender version matches to make it
-installable.</p>
-<p>Alternatively, run this init file as a script from Blender.</p>
-<dl class="class">
-<dt id="mpiea_mmr.KeymapManager">
-<em class="property">class </em><code class="descclassname">mpiea_mmr.</code><code class="descname">KeymapManager</code><a class="reference internal" href="_modules/mpiea_mmr.html#KeymapManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.KeymapManager" title="Permalink to this definition">¶</a></dt>
+<dt id="mpiea_mmr.blender_utils.KeymapManager">
+<em class="property">class </em><code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">KeymapManager</code><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#KeymapManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.KeymapManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></p>
 <p>This class implements functionality for registering/deregistering keymaps
 into Blender. It also behaves like a regular list, holding the keymaps
@@ -288,18 +242,18 @@ currently registered.</p>
 </pre></div>
 </div>
 <dl class="attribute">
-<dt id="mpiea_mmr.KeymapManager.KEYMAP_NAME">
-<code class="descname">KEYMAP_NAME</code><em class="property"> = 'Object Mode'</em><a class="headerlink" href="#mpiea_mmr.KeymapManager.KEYMAP_NAME" title="Permalink to this definition">¶</a></dt>
+<dt id="mpiea_mmr.blender_utils.KeymapManager.KEYMAP_NAME">
+<code class="descname">KEYMAP_NAME</code><em class="property"> = 'Object Mode'</em><a class="headerlink" href="#mpiea_mmr.blender_utils.KeymapManager.KEYMAP_NAME" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="mpiea_mmr.KeymapManager.KEYMAP_SPACE_TYPE">
-<code class="descname">KEYMAP_SPACE_TYPE</code><em class="property"> = 'EMPTY'</em><a class="headerlink" href="#mpiea_mmr.KeymapManager.KEYMAP_SPACE_TYPE" title="Permalink to this definition">¶</a></dt>
+<dt id="mpiea_mmr.blender_utils.KeymapManager.KEYMAP_SPACE_TYPE">
+<code class="descname">KEYMAP_SPACE_TYPE</code><em class="property"> = 'EMPTY'</em><a class="headerlink" href="#mpiea_mmr.blender_utils.KeymapManager.KEYMAP_SPACE_TYPE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="mpiea_mmr.KeymapManager.register">
-<code class="descname">register</code><span class="sig-paren">(</span><em>context</em>, <em>key</em>, <em>stroke_mode</em>, <em>op_name</em>, <em>ctrl=True</em>, <em>shift=True</em>, <em>alt=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#KeymapManager.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.KeymapManager.register" title="Permalink to this definition">¶</a></dt>
+<dt id="mpiea_mmr.blender_utils.KeymapManager.register">
+<code class="descname">register</code><span class="sig-paren">(</span><em>key</em>, <em>stroke_mode</em>, <em>op_name</em>, <em>ctrl=True</em>, <em>shift=True</em>, <em>alt=False</em>, <em>context=&lt;bpy_restrict_state._RestrictContext object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#KeymapManager.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.KeymapManager.register" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new keymap to this collection, and to the config in
 <code class="docutils literal notranslate"><span class="pre">context.window_manager.keyconfigs.addon</span></code>. See the API for details:</p>
 <div class="line-block">
@@ -333,8 +287,8 @@ currently registered.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="mpiea_mmr.KeymapManager.unregister">
-<code class="descname">unregister</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#KeymapManager.unregister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.KeymapManager.unregister" title="Permalink to this definition">¶</a></dt>
+<dt id="mpiea_mmr.blender_utils.KeymapManager.unregister">
+<code class="descname">unregister</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#KeymapManager.unregister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.KeymapManager.unregister" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes every mapped item from every keymap in this collection, and
 then empties the collection.</p>
 </dd></dl>
@@ -342,42 +296,8 @@ then empties the collection.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="mpiea_mmr.ObjectCursorArray">
-<em class="property">class </em><code class="descclassname">mpiea_mmr.</code><code class="descname">ObjectCursorArray</code><a class="reference internal" href="_modules/mpiea_mmr.html#ObjectCursorArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ObjectCursorArray" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">bpy_types.Operator</span></code></p>
-<p>Duplicates selected object N times between its position and the cursor’s.</p>
-<p>More info:
-&lt;API_URL&gt;/bpy.types.Operator.html#bpy.types.Operator.bl_options</p>
-<dl class="attribute">
-<dt id="mpiea_mmr.ObjectCursorArray.bl_idname">
-<code class="descname">bl_idname</code><em class="property"> = 'object.cursor_array'</em><a class="headerlink" href="#mpiea_mmr.ObjectCursorArray.bl_idname" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="mpiea_mmr.ObjectCursorArray.bl_label">
-<code class="descname">bl_label</code><em class="property"> = 'Cursor Array Label'</em><a class="headerlink" href="#mpiea_mmr.ObjectCursorArray.bl_label" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="mpiea_mmr.ObjectCursorArray.bl_options">
-<code class="descname">bl_options</code><em class="property"> = {'REGISTER', 'UNDO'}</em><a class="headerlink" href="#mpiea_mmr.ObjectCursorArray.bl_options" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="mpiea_mmr.ObjectCursorArray.bl_rna">
-<code class="descname">bl_rna</code><em class="property"> = &lt;bpy_struct, Struct(&quot;OBJECT_OT_cursor_array&quot;)&gt;</em><a class="headerlink" href="#mpiea_mmr.ObjectCursorArray.bl_rna" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="mpiea_mmr.ObjectCursorArray.execute">
-<code class="descname">execute</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#ObjectCursorArray.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ObjectCursorArray.execute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="mpiea_mmr.OperatorToMenuManager">
-<em class="property">class </em><code class="descclassname">mpiea_mmr.</code><code class="descname">OperatorToMenuManager</code><a class="reference internal" href="_modules/mpiea_mmr.html#OperatorToMenuManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.OperatorToMenuManager" title="Permalink to this definition">¶</a></dt>
+<dt id="mpiea_mmr.blender_utils.OperatorToMenuManager">
+<em class="property">class </em><code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">OperatorToMenuManager</code><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#OperatorToMenuManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.OperatorToMenuManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></p>
 <p>This class implements functionality for adding/removing operators
 into Blender UI menus. It also behaves like a regular list, holding
@@ -390,8 +310,8 @@ the currently registered items. Usage example:</p>
 </pre></div>
 </div>
 <dl class="method">
-<dt id="mpiea_mmr.OperatorToMenuManager.register">
-<code class="descname">register</code><span class="sig-paren">(</span><em>op_class</em>, <em>menu_class</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#OperatorToMenuManager.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.OperatorToMenuManager.register" title="Permalink to this definition">¶</a></dt>
+<dt id="mpiea_mmr.blender_utils.OperatorToMenuManager.register">
+<code class="descname">register</code><span class="sig-paren">(</span><em>op_class</em>, <em>menu_class</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#OperatorToMenuManager.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.OperatorToMenuManager.register" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -399,7 +319,7 @@ the currently registered items. Usage example:</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>op_class</strong> (<em>bpy.types.Operator</em>) – (Sub)class handle with desired
 functionality.</li>
-<li><strong>menu_class</strong> (<a href="#id1"><span class="problematic" id="id2">``</span></a>bpy.types.{Header, Panel, …}) – Class handle for the Blender GUI where the
+<li><strong>menu_class</strong> (<em>bpy.types.{Header</em><em>, </em><em>Panel</em><em>, </em><em>..}</em>) – Class handle for the Blender GUI where the
 functionality can be triggered.</li>
 </ul>
 </td>
@@ -413,14 +333,200 @@ functionality can be triggered.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="mpiea_mmr.OperatorToMenuManager.unregister">
-<code class="descname">unregister</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#OperatorToMenuManager.unregister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.OperatorToMenuManager.unregister" title="Permalink to this definition">¶</a></dt>
+<dt id="mpiea_mmr.blender_utils.OperatorToMenuManager.unregister">
+<code class="descname">unregister</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#OperatorToMenuManager.unregister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.OperatorToMenuManager.unregister" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes every mapped operator from every menu class in this collection,
 then empties the collection.</p>
 </dd></dl>
 
 </dd></dl>
 
+<dl class="function">
+<dt id="mpiea_mmr.blender_utils.get_area_from_context">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">get_area_from_context</code><span class="sig-paren">(</span><em>context</em>, <em>area_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#get_area_from_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.get_area_from_context" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.blender_utils.get_viewport_ordered_collections">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">get_viewport_ordered_collections</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#get_viewport_ordered_collections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.get_viewport_ordered_collections" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.blender_utils.set_collection_viewport_visibility">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">set_collection_viewport_visibility</code><span class="sig-paren">(</span><em>context</em>, <em>collection_name</em>, <em>visibility=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#set_collection_viewport_visibility"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.set_collection_viewport_visibility" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-mpiea_mmr.ui">
+<span id="mpiea-mmr-ui-module"></span><h2>mpiea_mmr.ui module<a class="headerlink" href="#module-mpiea_mmr.ui" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the functionality related to user-interaction (UI)
+with Blender, i.e.:</p>
+<ul class="simple">
+<li>Subclasses from <code class="docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code> defining user-callable functors.</li>
+<li>Subclasses from <code class="docutils literal notranslate"><span class="pre">bpy.types.Panel</span></code> that contain GUI widgets and functionality.</li>
+</ul>
+<dl class="class">
+<dt id="mpiea_mmr.ui.MPIEA_MMR_PT_ExportPanel">
+<em class="property">class </em><code class="descclassname">mpiea_mmr.ui.</code><code class="descname">MPIEA_MMR_PT_ExportPanel</code><a class="reference internal" href="_modules/mpiea_mmr/ui.html#MPIEA_MMR_PT_ExportPanel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ui.MPIEA_MMR_PT_ExportPanel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">bpy_types.Panel</span></code>, <a class="reference internal" href="#mpiea_mmr.ui.MpieaMmrPanel" title="mpiea_mmr.ui.MpieaMmrPanel"><code class="xref py py-class docutils literal notranslate"><span class="pre">mpiea_mmr.ui.MpieaMmrPanel</span></code></a></p>
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.MPIEA_MMR_PT_ExportPanel.bl_label">
+<code class="descname">bl_label</code><em class="property"> = 'Export'</em><a class="headerlink" href="#mpiea_mmr.ui.MPIEA_MMR_PT_ExportPanel.bl_label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.MPIEA_MMR_PT_ExportPanel.bl_rna">
+<code class="descname">bl_rna</code><em class="property"> = &lt;bpy_struct, Struct(&quot;MPIEA_MMR_PT_ExportPanel&quot;)&gt;</em><a class="headerlink" href="#mpiea_mmr.ui.MPIEA_MMR_PT_ExportPanel.bl_rna" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mpiea_mmr.ui.MPIEA_MMR_PT_ExportPanel.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/ui.html#MPIEA_MMR_PT_ExportPanel.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ui.MPIEA_MMR_PT_ExportPanel.draw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mpiea_mmr.ui.MY_PANEL_PT_MyPanel1">
+<em class="property">class </em><code class="descclassname">mpiea_mmr.ui.</code><code class="descname">MY_PANEL_PT_MyPanel1</code><a class="reference internal" href="_modules/mpiea_mmr/ui.html#MY_PANEL_PT_MyPanel1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ui.MY_PANEL_PT_MyPanel1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">bpy_types.Panel</span></code>, <a class="reference internal" href="#mpiea_mmr.ui.MpieaMmrPanel" title="mpiea_mmr.ui.MpieaMmrPanel"><code class="xref py py-class docutils literal notranslate"><span class="pre">mpiea_mmr.ui.MpieaMmrPanel</span></code></a></p>
+<div class="line-block">
+<div class="line">Tutorial on layout:</div>
+<div class="line"><a class="reference external" href="https://blender.stackexchange.com/a/44064">https://blender.stackexchange.com/a/44064</a></div>
+</div>
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.MY_PANEL_PT_MyPanel1.bl_label">
+<code class="descname">bl_label</code><em class="property"> = 'Panel Name 1'</em><a class="headerlink" href="#mpiea_mmr.ui.MY_PANEL_PT_MyPanel1.bl_label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.MY_PANEL_PT_MyPanel1.bl_rna">
+<code class="descname">bl_rna</code><em class="property"> = &lt;bpy_struct, Struct(&quot;MY_PANEL_PT_MyPanel1&quot;)&gt;</em><a class="headerlink" href="#mpiea_mmr.ui.MY_PANEL_PT_MyPanel1.bl_rna" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mpiea_mmr.ui.MY_PANEL_PT_MyPanel1.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/ui.html#MY_PANEL_PT_MyPanel1.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ui.MY_PANEL_PT_MyPanel1.draw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mpiea_mmr.ui.MY_PANEL_PT_MyPanel2">
+<em class="property">class </em><code class="descclassname">mpiea_mmr.ui.</code><code class="descname">MY_PANEL_PT_MyPanel2</code><a class="reference internal" href="_modules/mpiea_mmr/ui.html#MY_PANEL_PT_MyPanel2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ui.MY_PANEL_PT_MyPanel2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">bpy_types.Panel</span></code>, <a class="reference internal" href="#mpiea_mmr.ui.MpieaMmrPanel" title="mpiea_mmr.ui.MpieaMmrPanel"><code class="xref py py-class docutils literal notranslate"><span class="pre">mpiea_mmr.ui.MpieaMmrPanel</span></code></a></p>
+<div class="line-block">
+<div class="line">Tutorial on layout:</div>
+<div class="line"><a class="reference external" href="https://blender.stackexchange.com/a/44064">https://blender.stackexchange.com/a/44064</a></div>
+</div>
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.MY_PANEL_PT_MyPanel2.bl_label">
+<code class="descname">bl_label</code><em class="property"> = 'Panel Name 2'</em><a class="headerlink" href="#mpiea_mmr.ui.MY_PANEL_PT_MyPanel2.bl_label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.MY_PANEL_PT_MyPanel2.bl_rna">
+<code class="descname">bl_rna</code><em class="property"> = &lt;bpy_struct, Struct(&quot;MY_PANEL_PT_MyPanel2&quot;)&gt;</em><a class="headerlink" href="#mpiea_mmr.ui.MY_PANEL_PT_MyPanel2.bl_rna" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mpiea_mmr.ui.MY_PANEL_PT_MyPanel2.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/ui.html#MY_PANEL_PT_MyPanel2.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ui.MY_PANEL_PT_MyPanel2.draw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mpiea_mmr.ui.MpieaMmrPanel">
+<em class="property">class </em><code class="descclassname">mpiea_mmr.ui.</code><code class="descname">MpieaMmrPanel</code><a class="reference internal" href="_modules/mpiea_mmr/ui.html#MpieaMmrPanel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ui.MpieaMmrPanel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Mix-in to be inherited by every Panel that belongs to the ‘MPIEA
+MultiModalRenderer’ tab, to avoid verbosity and potential inconsistencies.</p>
+<p><strong>Attributes:</strong></p>
+<dl class="docutils">
+<dt>bl_category</dt>
+<dd>The tab name. Blender will place the Panel in the tab
+given by its bl_category (i.e. all Panels extending this class will
+belong to the same tab).</dd>
+<dt>bl_space_type</dt>
+<dd>The tab will show up in the specified space (e.g. TEXT_EDITOR,
+IMAGE_EDITOR, VIEW_3D). If the tab is desired in multiple spaces,
+multiple classes have to be defined, each with their respective
+<code class="docutils literal notranslate"><span class="pre">bl_space_type</span></code>.</dd>
+<dt>bl_region_type</dt>
+<dd>Value set to <code class="docutils literal notranslate"><span class="pre">UI</span></code>, alternatives not known.</dd>
+</dl>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Whether a Panel appears in a tab or not, and the ordering among panels
+is specified in the <code class="docutils literal notranslate"><span class="pre">register()</span></code> function (by simply registering all
+the desired panels in order).</p>
+</div>
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.MpieaMmrPanel.bl_category">
+<code class="descname">bl_category</code><em class="property"> = 'MPIEA MultiModalRenderer'</em><a class="headerlink" href="#mpiea_mmr.ui.MpieaMmrPanel.bl_category" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.MpieaMmrPanel.bl_region_type">
+<code class="descname">bl_region_type</code><em class="property"> = 'UI'</em><a class="headerlink" href="#mpiea_mmr.ui.MpieaMmrPanel.bl_region_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.MpieaMmrPanel.bl_space_type">
+<code class="descname">bl_space_type</code><em class="property"> = 'VIEW_3D'</em><a class="headerlink" href="#mpiea_mmr.ui.MpieaMmrPanel.bl_space_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="mpiea_mmr.ui.MpieaMmrPanel.poll">
+<em class="property">classmethod </em><code class="descname">poll</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/ui.html#MpieaMmrPanel.poll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ui.MpieaMmrPanel.poll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dummy implementation, returns True always.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mpiea_mmr.ui.ObjectCursorArray">
+<em class="property">class </em><code class="descclassname">mpiea_mmr.ui.</code><code class="descname">ObjectCursorArray</code><a class="reference internal" href="_modules/mpiea_mmr/ui.html#ObjectCursorArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ui.ObjectCursorArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">bpy_types.Operator</span></code></p>
+<p>Duplicates selected object N times between its position and the cursor’s.</p>
+<p>More info:
+&lt;API_URL&gt;/bpy.types.Operator.html#bpy.types.Operator.bl_options</p>
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.ObjectCursorArray.bl_idname">
+<code class="descname">bl_idname</code><em class="property"> = 'object.cursor_array'</em><a class="headerlink" href="#mpiea_mmr.ui.ObjectCursorArray.bl_idname" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.ObjectCursorArray.bl_label">
+<code class="descname">bl_label</code><em class="property"> = 'Cursor Array Label'</em><a class="headerlink" href="#mpiea_mmr.ui.ObjectCursorArray.bl_label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.ObjectCursorArray.bl_options">
+<code class="descname">bl_options</code><em class="property"> = {'REGISTER', 'UNDO'}</em><a class="headerlink" href="#mpiea_mmr.ui.ObjectCursorArray.bl_options" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.ObjectCursorArray.bl_rna">
+<code class="descname">bl_rna</code><em class="property"> = &lt;bpy_struct, Struct(&quot;OBJECT_OT_cursor_array&quot;)&gt;</em><a class="headerlink" href="#mpiea_mmr.ui.ObjectCursorArray.bl_rna" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mpiea_mmr.ui.ObjectCursorArray.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/ui.html#ObjectCursorArray.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ui.ObjectCursorArray.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mpiea_mmr">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mpiea_mmr" title="Permalink to this headline">¶</a></h2>
+<p>Init file for the add-on.</p>
+<p>To install it, make sure Blender’s Python is able to find it under
+addon_utils.paths(), and that the Blender version matches to make it
+installable.</p>
+<p>Alternatively, run this init file as a script from Blender.</p>
 <dl class="function">
 <dt id="mpiea_mmr.register">
 <code class="descclassname">mpiea_mmr.</code><code class="descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr.html#register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.register" title="Permalink to this definition">¶</a></dt>

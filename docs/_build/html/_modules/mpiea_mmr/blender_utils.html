@@ -163,7 +163,8 @@
 
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-
+<span class="c1">#</span>
+<span class="kn">import</span> <span class="nn">bpy</span>
 
 <div class="viewcode-block" id="ArgumentParserForBlender"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.ArgumentParserForBlender">[docs]</a><span class="k">class</span> <span class="nc">ArgumentParserForBlender</span><span class="p">(</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -278,6 +279,124 @@
             <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">hide_collection</span><span class="p">(</span><span class="n">context_override</span><span class="p">,</span> <span class="n">collection_index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">toggle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">collection</span></div>
+
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># ##</span>
+<span class="c1"># #############################################################################</span>
+
+<div class="viewcode-block" id="OperatorToMenuManager"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.OperatorToMenuManager">[docs]</a><span class="k">class</span> <span class="nc">OperatorToMenuManager</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class implements functionality for adding/removing operators</span>
+<span class="sd">    into Blender UI menus. It also behaves like a regular list, holding</span>
+<span class="sd">    the currently registered items. Usage example:</span>
+<span class="sd">    ::</span>
+
+<span class="sd">       omm = OperatorToMenuManager()</span>
+<span class="sd">       # In register():</span>
+<span class="sd">       omm.register(MyOperator, bpy.types.VIEW3D_MT_object)</span>
+<span class="sd">       # ... in unregister():</span>
+<span class="sd">       omm.unregister</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="OperatorToMenuManager.register"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.OperatorToMenuManager.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op_class</span><span class="p">,</span> <span class="n">menu_class</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param bpy.types.Operator op_class: (Sub)class handle with desired</span>
+<span class="sd">           functionality.</span>
+<span class="sd">        :param menu_class: Class handle for the Blender GUI where the</span>
+<span class="sd">           functionality can be triggered.</span>
+<span class="sd">        :type menu_class: bpy.types.{Header, Panel, ...}</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">           ``op_class`` must define the ``bl_idname`` and ``bl_label`` fields.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">op_name</span><span class="p">,</span> <span class="n">op_label</span> <span class="o">=</span> <span class="n">op_class</span><span class="o">.</span><span class="n">bl_idname</span><span class="p">,</span> <span class="n">op_class</span><span class="o">.</span><span class="n">bl_label</span>
+
+        <span class="k">def</span> <span class="nf">menu_fn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Small wrapper needed by the API&quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="n">op_name</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">op_label</span><span class="p">)</span>
+
+        <span class="n">menu_class</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">menu_fn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">menu_class</span><span class="p">,</span> <span class="n">menu_fn</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="OperatorToMenuManager.unregister"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.OperatorToMenuManager.unregister">[docs]</a>    <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes every mapped operator from every menu class in this collection,</span>
+<span class="sd">        then empties the collection.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">menu_class</span><span class="p">,</span> <span class="n">menu_fn</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">menu_class</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">menu_fn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="KeymapManager"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.KeymapManager">[docs]</a><span class="k">class</span> <span class="nc">KeymapManager</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class implements functionality for registering/deregistering keymaps</span>
+<span class="sd">    into Blender. It also behaves like a regular list, holding the keymaps</span>
+<span class="sd">    currently registered.</span>
+
+<span class="sd">    To inspect the registered keymaps:</span>
+<span class="sd">    ::</span>
+
+<span class="sd">       wm = context.window_manager</span>
+<span class="sd">       km_items = wm.keyconfigs.addon.keymaps[KEYMAP_NAME].keymap_items</span>
+<span class="sd">       # km_items is a dict containing the op_name -&gt; km binding.</span>
+<span class="sd">       # To see the key and stroke_mode:</span>
+<span class="sd">       km_item = km_items.values()[0]  # some item</span>
+<span class="sd">       key, stroke = km_item.type, km_item.value</span>
+<span class="sd">      # Default operator properties can be customized for a specific keymap:</span>
+<span class="sd">       km_item.properties.&lt;PROP&gt; = 3.14  # &lt;PROP&gt; was defined in the Operator</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">KEYMAP_NAME</span> <span class="o">=</span> <span class="s2">&quot;Object Mode&quot;</span>  <span class="c1"># ATM not well documented in the API</span>
+    <span class="n">KEYMAP_SPACE_TYPE</span> <span class="o">=</span> <span class="s2">&quot;EMPTY&quot;</span>  <span class="c1"># ATM not well documented in the API</span>
+
+<div class="viewcode-block" id="KeymapManager.register"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.KeymapManager.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">stroke_mode</span><span class="p">,</span> <span class="n">op_name</span><span class="p">,</span>
+                 <span class="n">ctrl</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">context</span><span class="o">=</span><span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a new keymap to this collection, and to the config in</span>
+<span class="sd">        ``context.window_manager.keyconfigs.addon``. See the API for details:</span>
+
+<span class="sd">        | https://docs.blender.org/api/blender2.8/bpy.types.KeyMap.html</span>
+<span class="sd">        | https://docs.blender.org/api/blender2.8/bpy.types.KeyMapItem.html</span>
+<span class="sd">        | https://docs.blender.org/manual/de/dev/advanced/keymap_editing.html</span>
+
+<span class="sd">        .. warning:</span>
+<span class="sd">           For the moment, the keymap was confirmed to work only if</span>
+<span class="sd">           ``name=&quot;Object Mode&quot;`` and ``space_type=&quot;EMPTY&quot;``</span>
+
+<span class="sd">        Usage example:</span>
+<span class="sd">        ::</span>
+
+<span class="sd">           register_keymap(bpy.context, &quot;D&quot;, &quot;PRESS&quot;, MyOperator.bl_idname)</span>
+
+<span class="sd">        :param bpy.types.Context context: A context like ``bpy.context``.</span>
+<span class="sd">        :param str key: See bpy.types.KeyMapItem.key_modifier</span>
+<span class="sd">        :param str stroke_mode: See bpy.types.KeyMapItem.value</span>
+<span class="sd">        :param str op_name: Name of a valid operation in ``bpy.ops``</span>
+<span class="sd">           (usually the ``bl_idname``)</span>
+<span class="sd">        :param booleans ctrl, shift, alt: Modifiers of the ``key``</span>
+<span class="sd">        :returns: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">wm</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">window_manager</span>
+        <span class="n">kc</span> <span class="o">=</span> <span class="n">wm</span><span class="o">.</span><span class="n">keyconfigs</span><span class="o">.</span><span class="n">addon</span> <span class="c1"># this is None in background mode</span>
+        <span class="k">if</span> <span class="n">kc</span><span class="p">:</span>
+            <span class="n">km</span> <span class="o">=</span> <span class="n">kc</span><span class="o">.</span><span class="n">keymaps</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">KEYMAP_NAME</span><span class="p">,</span>
+                                <span class="n">space_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">KEYMAP_SPACE_TYPE</span><span class="p">)</span>
+            <span class="n">kmi</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">keymap_items</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">op_name</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">stroke_mode</span><span class="p">,</span>
+                                      <span class="n">ctrl</span><span class="o">=</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="n">shift</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="n">alt</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">km</span><span class="p">,</span> <span class="n">kmi</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="KeymapManager.unregister"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.KeymapManager.unregister">[docs]</a>    <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes every mapped item from every keymap in this collection, and</span>
+<span class="sd">        then empties the collection.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">km</span><span class="p">,</span> <span class="n">kmi</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">km</span><span class="o">.</span><span class="n">keymap_items</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">kmi</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div></div>
 
 
 <span class="c1"># #############################################################################</span>

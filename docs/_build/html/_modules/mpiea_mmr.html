@@ -151,6 +151,7 @@
 <span></span><span class="ch">#!/usr/bin/python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
+
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Init file for the add-on.</span>
 
@@ -164,15 +165,23 @@
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Andres FR&quot;</span>
 
+
 <span class="kn">import</span> <span class="nn">bpy</span>
 <span class="c1">#</span>
-<span class="c1"># from . import blender_utils</span>
-<span class="c1"># from . import dance_scene as ds</span>
+<span class="kn">from</span> <span class="nn">.blender_utils</span> <span class="k">import</span> <span class="n">OperatorToMenuManager</span><span class="p">,</span> <span class="n">KeymapManager</span>
+<span class="c1"># import operators</span>
+<span class="kn">from</span> <span class="nn">.ui</span> <span class="k">import</span> <span class="n">ObjectCursorArray</span>
+<span class="c1"># import panels</span>
+<span class="kn">from</span> <span class="nn">.ui</span> <span class="k">import</span> <span class="n">MY_PANEL_PT_MyPanel1</span><span class="p">,</span> <span class="n">MY_PANEL_PT_MyPanel2</span>
+<span class="kn">from</span> <span class="nn">.ui</span> <span class="k">import</span> <span class="n">MPIEA_MMR_PT_ExportPanel</span>
 
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># ## CONFIG</span>
+<span class="c1"># #############################################################################</span>
 
 <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;mpiea_mmr&quot;</span>  <span class="c1"># for packaging via setup.py</span>
 <span class="n">VERSION</span> <span class="o">=</span> <span class="s2">&quot;0.1.2&quot;</span>  <span class="c1"># automatically managed by bumpversion</span>
-
 
 <span class="c1"># required by blender plugins</span>
 <span class="c1"># (see https://wiki.blender.org/wiki/Process/Addons/Guidelines/metainfo)</span>
@@ -181,202 +190,22 @@
     <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Andres FR&quot;</span><span class="p">,</span>
     <span class="s2">&quot;support&quot;</span><span class="p">:</span> <span class="s2">&quot;TESTING&quot;</span><span class="p">,</span>
     <span class="s2">&quot;blender&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-    <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;View3D &gt; Add &gt; Mesh &gt; Generate&quot;</span><span class="p">,</span>
-    <span class="c1"># &quot;location&quot;: &quot;View3D &gt; Tools &gt; MakeWalk&quot;,</span>
     <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Scene building and rendering of 3D video+audio sequences&quot;</span><span class="p">,</span>
     <span class="c1"># &quot;warning&quot;: &quot;&quot;,</span>
     <span class="c1"># &#39;wiki_url&#39;: &quot;&quot;,</span>
     <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;MPIEA&quot;</span><span class="p">}</span>
 
 
-
 <span class="c1"># #############################################################################</span>
-<span class="c1"># ## UI</span>
-<span class="c1"># #############################################################################</span>
-
-<span class="c1"># class ObjectSelectPanel(bpy.types.Panel):</span>
-<span class="c1">#     bl_idname = &quot;OBJECT_PT_select&quot;</span>
-<span class="c1">#     bl_label = &quot;Select&quot;</span>
-<span class="c1">#     bl_space_type = &#39;PROPERTIES&#39;</span>
-<span class="c1">#     bl_region_type = &#39;WINDOW&#39;</span>
-<span class="c1">#     bl_context = &quot;object&quot;</span>
-<span class="c1">#     bl_options = {&#39;DEFAULT_CLOSED&#39;}</span>
-
-<span class="c1">#     @classmethod</span>
-<span class="c1">#     def poll(cls, context):</span>
-<span class="c1">#         return (context.object is not None)</span>
-
-<span class="c1">#     def draw_header(self, context):</span>
-<span class="c1">#         layout = self.layout</span>
-<span class="c1">#         obj = context.object</span>
-<span class="c1">#         layout.prop(obj, &quot;select&quot;, text=&quot;&quot;)</span>
-
-<span class="c1">#     def draw(self, context):</span>
-<span class="c1">#         layout = self.layout</span>
-
-<span class="c1">#         obj = context.object</span>
-<span class="c1">#         row = layout.row()</span>
-<span class="c1">#         row.prop(obj, &quot;hide_select&quot;)</span>
-<span class="c1">#         row.prop(obj, &quot;hide_render&quot;)</span>
-
-<span class="c1">#         box = layout.box()</span>
-<span class="c1">#         box.label(&quot;Selection Tools&quot;)</span>
-<span class="c1">#         box.operator(&quot;object.select_all&quot;).action = &#39;TOGGLE&#39;</span>
-<span class="c1">#         row = box.row()</span>
-<span class="c1">#         row.operator(&quot;object.select_all&quot;).action = &#39;INVERT&#39;</span>
-<span class="c1">#         row.operator(&quot;object.select_random&quot;)</span>
-
-<div class="viewcode-block" id="ObjectCursorArray"><a class="viewcode-back" href="../mpiea_mmr.html#mpiea_mmr.ObjectCursorArray">[docs]</a><span class="k">class</span> <span class="nc">ObjectCursorArray</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Operator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Duplicates selected object N times between its position and the cursor&#39;s.</span>
-
-<span class="sd">    More info:</span>
-<span class="sd">    &lt;API_URL&gt;/bpy.types.Operator.html#bpy.types.Operator.bl_options</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.cursor_array&quot;</span>  <span class="c1"># This comes after &#39;bpy.ops&#39;</span>
-    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Cursor Array Label&quot;</span>
-    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;REGISTER&#39;</span><span class="p">,</span> <span class="s1">&#39;UNDO&#39;</span><span class="p">}</span>
-
-    <span class="n">tot1</span><span class="p">:</span> <span class="n">bpy</span><span class="o">.</span><span class="n">props</span><span class="o">.</span><span class="n">IntProperty</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Steps1&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-    <span class="n">tot2</span><span class="p">:</span> <span class="n">bpy</span><span class="o">.</span><span class="n">props</span><span class="o">.</span><span class="n">IntProperty</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Steps2&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-
-<div class="viewcode-block" id="ObjectCursorArray.execute"><a class="viewcode-back" href="../mpiea_mmr.html#mpiea_mmr.ObjectCursorArray.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">scene</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">scene</span>
-        <span class="n">cursor</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">location</span>
-        <span class="n">obj</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
-        <span class="n">tot_all</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tot1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">tot2</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tot_all</span><span class="p">):</span>
-            <span class="n">obj_new</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-            <span class="n">scene</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">obj_new</span><span class="p">)</span>
-
-            <span class="n">factor</span> <span class="o">=</span> <span class="n">i</span> <span class="o">/</span> <span class="n">tot_all</span>
-            <span class="n">obj_new</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">location</span> <span class="o">*</span> <span class="n">factor</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">cursor</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">factor</span><span class="p">))</span>
-
-        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">}</span></div></div>
-
-
-<div class="viewcode-block" id="OperatorToMenuManager"><a class="viewcode-back" href="../mpiea_mmr.html#mpiea_mmr.OperatorToMenuManager">[docs]</a><span class="k">class</span> <span class="nc">OperatorToMenuManager</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This class implements functionality for adding/removing operators</span>
-<span class="sd">    into Blender UI menus. It also behaves like a regular list, holding</span>
-<span class="sd">    the currently registered items. Usage example:</span>
-<span class="sd">    ::</span>
-<span class="sd">       omm = OperatorToMenuManager()</span>
-<span class="sd">       # In register():</span>
-<span class="sd">       omm.register(MyOperator, bpy.types.VIEW3D_MT_object)</span>
-<span class="sd">       # ... in unregister():</span>
-<span class="sd">       omm.unregister</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-<div class="viewcode-block" id="OperatorToMenuManager.register"><a class="viewcode-back" href="../mpiea_mmr.html#mpiea_mmr.OperatorToMenuManager.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op_class</span><span class="p">,</span> <span class="n">menu_class</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        :param bpy.types.Operator op_class: (Sub)class handle with desired</span>
-<span class="sd">           functionality.</span>
-<span class="sd">        :param menu_class: Class handle for the Blender GUI where the</span>
-<span class="sd">           functionality can be triggered.</span>
-<span class="sd">        :type menu_class: ``bpy.types.{Header, Panel, ...}</span>
-
-<span class="sd">        .. note::</span>
-<span class="sd">           ``op_class`` must define the ``bl_idname`` and ``bl_label`` fields.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">op_name</span><span class="p">,</span> <span class="n">op_label</span> <span class="o">=</span> <span class="n">op_class</span><span class="o">.</span><span class="n">bl_idname</span><span class="p">,</span> <span class="n">op_class</span><span class="o">.</span><span class="n">bl_label</span>
-
-        <span class="k">def</span> <span class="nf">menu_fn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Small wrapper needed by the API&quot;&quot;&quot;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="n">op_name</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">op_label</span><span class="p">)</span>
-
-        <span class="n">menu_class</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">menu_fn</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">menu_class</span><span class="p">,</span> <span class="n">menu_fn</span><span class="p">))</span></div>
-
-<div class="viewcode-block" id="OperatorToMenuManager.unregister"><a class="viewcode-back" href="../mpiea_mmr.html#mpiea_mmr.OperatorToMenuManager.unregister">[docs]</a>    <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Removes every mapped operator from every menu class in this collection,</span>
-<span class="sd">        then empties the collection.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">for</span> <span class="n">menu_class</span><span class="p">,</span> <span class="n">menu_fn</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-            <span class="n">menu_class</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">menu_fn</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div></div>
-
-
-<div class="viewcode-block" id="KeymapManager"><a class="viewcode-back" href="../mpiea_mmr.html#mpiea_mmr.KeymapManager">[docs]</a><span class="k">class</span> <span class="nc">KeymapManager</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This class implements functionality for registering/deregistering keymaps</span>
-<span class="sd">    into Blender. It also behaves like a regular list, holding the keymaps</span>
-<span class="sd">    currently registered.</span>
-
-<span class="sd">    To inspect the registered keymaps:</span>
-<span class="sd">    ::</span>
-
-<span class="sd">       wm = context.window_manager</span>
-<span class="sd">       km_items = wm.keyconfigs.addon.keymaps[KEYMAP_NAME].keymap_items</span>
-<span class="sd">       # km_items is a dict containing the op_name -&gt; km binding.</span>
-<span class="sd">       # To see the key and stroke_mode:</span>
-<span class="sd">       km_item = km_items.values()[0]  # some item</span>
-<span class="sd">       key, stroke = km_item.type, km_item.value</span>
-<span class="sd">      # Default operator properties can be customized for a specific keymap:</span>
-<span class="sd">       km_item.properties.&lt;PROP&gt; = 3.14  # &lt;PROP&gt; was defined in the Operator</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">KEYMAP_NAME</span> <span class="o">=</span> <span class="s2">&quot;Object Mode&quot;</span>  <span class="c1"># ATM not well documented in the API</span>
-    <span class="n">KEYMAP_SPACE_TYPE</span> <span class="o">=</span> <span class="s2">&quot;EMPTY&quot;</span>  <span class="c1"># ATM not well documented in the API</span>
-
-<div class="viewcode-block" id="KeymapManager.register"><a class="viewcode-back" href="../mpiea_mmr.html#mpiea_mmr.KeymapManager.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">stroke_mode</span><span class="p">,</span> <span class="n">op_name</span><span class="p">,</span>
-                 <span class="n">ctrl</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Adds a new keymap to this collection, and to the config in</span>
-<span class="sd">        ``context.window_manager.keyconfigs.addon``. See the API for details:</span>
-
-<span class="sd">        | https://docs.blender.org/api/blender2.8/bpy.types.KeyMap.html</span>
-<span class="sd">        | https://docs.blender.org/api/blender2.8/bpy.types.KeyMapItem.html</span>
-<span class="sd">        | https://docs.blender.org/manual/de/dev/advanced/keymap_editing.html</span>
-
-<span class="sd">        .. warning:</span>
-<span class="sd">           For the moment, the keymap was confirmed to work only if</span>
-<span class="sd">           ``name=&quot;Object Mode&quot;`` and ``space_type=&quot;EMPTY&quot;``</span>
-
-<span class="sd">        Usage example:</span>
-<span class="sd">        ::</span>
-
-<span class="sd">           register_keymap(bpy.context, &quot;D&quot;, &quot;PRESS&quot;, MyOperator.bl_idname)</span>
-
-<span class="sd">        :param bpy.types.Context context: A context like ``bpy.context``.</span>
-<span class="sd">        :param str key: See bpy.types.KeyMapItem.key_modifier</span>
-<span class="sd">        :param str stroke_mode: See bpy.types.KeyMapItem.value</span>
-<span class="sd">        :param str op_name: Name of a valid operation in ``bpy.ops``</span>
-<span class="sd">           (usually the ``bl_idname``)</span>
-<span class="sd">        :param booleans ctrl, shift, alt: Modifiers of the ``key``</span>
-<span class="sd">        :returns: None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">wm</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">window_manager</span>
-        <span class="n">kc</span> <span class="o">=</span> <span class="n">wm</span><span class="o">.</span><span class="n">keyconfigs</span><span class="o">.</span><span class="n">addon</span> <span class="c1"># this is None in background mode</span>
-        <span class="k">if</span> <span class="n">kc</span><span class="p">:</span>
-            <span class="n">km</span> <span class="o">=</span> <span class="n">kc</span><span class="o">.</span><span class="n">keymaps</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">KEYMAP_NAME</span><span class="p">,</span>
-                                <span class="n">space_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">KEYMAP_SPACE_TYPE</span><span class="p">)</span>
-            <span class="n">kmi</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">keymap_items</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">op_name</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">stroke_mode</span><span class="p">,</span>
-                                      <span class="n">ctrl</span><span class="o">=</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="n">shift</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="n">alt</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">km</span><span class="p">,</span> <span class="n">kmi</span><span class="p">))</span></div>
-
-<div class="viewcode-block" id="KeymapManager.unregister"><a class="viewcode-back" href="../mpiea_mmr.html#mpiea_mmr.KeymapManager.unregister">[docs]</a>    <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Removes every mapped item from every keymap in this collection, and</span>
-<span class="sd">        then empties the collection.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">km</span><span class="p">,</span> <span class="n">kmi</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-            <span class="n">km</span><span class="o">.</span><span class="n">keymap_items</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">kmi</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div></div>
-
-
-<span class="c1"># #############################################################################</span>
-<span class="c1"># ## INITIALIZE/REGISTER</span>
+<span class="c1"># ## MAIN ROUTINE</span>
 <span class="c1"># #############################################################################</span>
 
-<span class="n">classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ObjectCursorArray</span><span class="p">]</span>
+<span class="n">classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ObjectCursorArray</span><span class="p">,</span> <span class="n">MY_PANEL_PT_MyPanel1</span><span class="p">,</span> <span class="n">MY_PANEL_PT_MyPanel2</span><span class="p">,</span>
+           <span class="n">MPIEA_MMR_PT_ExportPanel</span><span class="p">]</span>
 <span class="n">register_cl</span><span class="p">,</span> <span class="n">unregister_cl</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">register_classes_factory</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span>
 <span class="n">kmm</span> <span class="o">=</span> <span class="n">KeymapManager</span><span class="p">()</span>
 <span class="n">omm</span> <span class="o">=</span> <span class="n">OperatorToMenuManager</span><span class="p">()</span>
+
 
 <div class="viewcode-block" id="register"><a class="viewcode-back" href="../mpiea_mmr.html#mpiea_mmr.register">[docs]</a><span class="k">def</span> <span class="nf">register</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -384,7 +213,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">register_cl</span><span class="p">()</span>
     <span class="n">omm</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">ObjectCursorArray</span><span class="p">,</span> <span class="n">bpy</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">VIEW3D_MT_object</span><span class="p">)</span>
-    <span class="n">kmm</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;PRESS&quot;</span><span class="p">,</span> <span class="n">ObjectCursorArray</span><span class="o">.</span><span class="n">bl_idname</span><span class="p">)</span></div>
+    <span class="n">kmm</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;PRESS&quot;</span><span class="p">,</span> <span class="n">ObjectCursorArray</span><span class="o">.</span><span class="n">bl_idname</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="unregister"><a class="viewcode-back" href="../mpiea_mmr.html#mpiea_mmr.unregister">[docs]</a><span class="k">def</span> <span class="nf">unregister</span><span class="p">():</span>
@@ -402,160 +231,6 @@
 
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[Add-on loaded]: &quot;</span><span class="p">,</span> <span class="n">bl_info</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="n">VERSION</span><span class="p">)</span>
-
-
-
-
-
-
-
-<span class="c1">#######</span>
-<span class="c1">#######</span>
-<span class="c1">#######</span>
-<span class="c1">#######</span>
-<span class="c1">#######</span>
-
-
-
-
-<span class="c1"># bl_info = {</span>
-<span class="c1">#     &quot;name&quot;: &quot;Simple Add-on Template&quot;,</span>
-<span class="c1">#     &quot;author&quot;: &quot;Marco Mameli&quot;,</span>
-<span class="c1">#     # &quot;location&quot;: &quot;View3D &gt; Add &gt; Mesh &gt; Generate&quot;,  # in 3D viewport, add-&gt;mesh-&quot;Generate Point Cloud&quot;</span>
-<span class="c1">#     &quot;version&quot;: (1, 2, 3),</span>
-<span class="c1">#     &quot;blender&quot;: (2, 80, 0),</span>
-<span class="c1">#     &quot;description&quot;: &quot;Starting point for new add-ons.&quot;,</span>
-<span class="c1">#     &quot;category&quot;: &quot;Add Mesh&quot;</span>
-<span class="c1">#     }</span>
-<span class="c1"># import bpy</span>
-<span class="c1"># import bmesh</span>
-<span class="c1"># from bpy.types import Operator</span>
-<span class="c1"># from bpy.types import Panel</span>
-
-<span class="c1"># def add_pointcloud(self, context, naming):</span>
-<span class="c1">#     # qui scrivo i miei calcoli</span>
-<span class="c1">#     obj = context.active_object</span>
-<span class="c1">#     mycollection = bpy.data.collections.new(&quot;MyPointCloudCollection&quot;)</span>
-<span class="c1">#     bpy.context.scene.collection.children.link(mycollection)</span>
-<span class="c1">#     me = obj.data</span>
-<span class="c1">#     bm = bmesh.new()</span>
-<span class="c1">#     bm.from_mesh(me)</span>
-<span class="c1">#     bmFaces = []</span>
-
-<span class="c1">#     for face in bm.faces:</span>
-<span class="c1">#         faceLocation = face.calc_center_median()</span>
-<span class="c1">#         print(faceLocation)</span>
-<span class="c1">#         bmFaces.append(obj.matrix_world @ faceLocation) # la @ è il prodotto vettoriale</span>
-<span class="c1">#     for vertex in bm.verts:</span>
-<span class="c1">#         print(vertex.co)</span>
-<span class="c1">#         bmFaces.append(obj.matrix_world @ vertex.co)</span>
-<span class="c1">#     me = bpy.data.meshes.new(obj.name + &#39;Mesh&#39; + naming)</span>
-<span class="c1">#     ob = bpy.data.objects.new(obj.name + &#39;_PointCloud_&#39; + naming, me)</span>
-<span class="c1">#     ob.show_name = True</span>
-<span class="c1">#     bpy.data.collections[&#39;MyPointCloudCollection&#39;].objects.link(ob)</span>
-<span class="c1">#     me.from_pydata(bmFaces, [], [])</span>
-<span class="c1">#     me.update()</span>
-<span class="c1">#     ob.select_set(True)</span>
-
-<span class="c1"># class OBJECT_OT_add_PointCloud_with_noise(Operator):</span>
-<span class="c1">#     &quot;&quot;&quot; Create a Point Cloud &quot;&quot;&quot;</span>
-<span class="c1">#     bl_idname = &quot;object.add_pointcloud_with_noise&quot;</span>
-<span class="c1">#     bl_label = &quot;Add Mesh object that represent a Point Cloud&quot;</span>
-<span class="c1">#     bl_options = {&#39;REGISTER&#39;, &#39;UNDO&#39;}</span>
-
-<span class="c1">#     def execute(self,context): # operazioni da eseguire</span>
-<span class="c1">#         # MAI METTERE IL CODICE QUI DENTRO DIRETTAMENTE</span>
-<span class="c1">#         print(&quot;Sono in with noise&quot;)</span>
-<span class="c1">#         add_pointcloud(self, context, &quot;with_noise&quot;)</span>
-
-<span class="c1">#         return {&#39;FINISHED&#39;}</span>
-
-<span class="c1"># class OBJECT_OT_add_PointCloud(Operator):</span>
-<span class="c1">#     &quot;&quot;&quot; Create a Point Cloud &quot;&quot;&quot;</span>
-<span class="c1">#     bl_idname = &quot;object.add_mesh_pointcloud&quot;</span>
-<span class="c1">#     bl_label = &quot;Add Mesh object that represent a Point Cloud&quot;</span>
-<span class="c1">#     bl_options = {&#39;REGISTER&#39;, &#39;UNDO&#39;}</span>
-
-<span class="c1">#     def execute(self,context): # operazioni da eseguire</span>
-<span class="c1">#         # MAI METTERE IL CODICE QUI DENTRO DIRETTAMENTE</span>
-<span class="c1">#         print(&quot;sono in no noise&quot;)</span>
-<span class="c1">#         add_pointcloud(self, context, &quot;no_noise&quot;)</span>
-
-<span class="c1">#         return {&#39;FINISHED&#39;}</span>
-
-<span class="c1">#     def draw(self,context):</span>
-<span class="c1">#         layout = self.layout</span>
-
-<span class="c1">#         scene = context.scene</span>
-
-<span class="c1">#         layout.label(text=&quot;Pointcloud option&quot;)</span>
-
-<span class="c1">#         row = layout.row()</span>
-<span class="c1">#         row.prop(scene, &quot;frame_star&quot;)</span>
-
-<span class="c1">#         layout.label(text=&quot;Big Button:&quot;)</span>
-<span class="c1">#         row = layout.row()</span>
-<span class="c1">#         row.scale_y = 1.0</span>
-<span class="c1">#         row.operator(&quot;object.add_pointcloud_with_noise&quot;)</span>
-
-<span class="c1"># # creo il bottone da aggiungere al menu di blender</span>
-<span class="c1"># def add_pointcloud_button(self, context):</span>
-<span class="c1">#     print(&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&quot;, self)</span>
-<span class="c1">#     self.layout.operator(OBJECT_OT_add_PointCloud.bl_idname, text=&quot;Generate Point Cloud&quot;,</span>
-<span class="c1">#                          icon=&#39;PLUGIN&#39;)</span>
-
-<span class="c1"># # creo il link al manuale</span>
-<span class="c1"># def add_pointcloud_manual_map():</span>
-<span class="c1">#         url_manual_prefix=&quot;&quot;</span>
-<span class="c1">#         url_manual_mapping = ((&quot;bpy.ops.mesh.add_pointcloud&quot;, &quot;editors/edview/object&quot;),)</span>
-<span class="c1">#         return url_manual_prefix, url_manual_mapping</span>
-
-<span class="c1"># # Options panel for addon</span>
-<span class="c1"># class OBJECT_PT_add_PointCloud_properties(Panel):</span>
-<span class="c1">#     bl_label = &quot;Properties Layout&quot;</span>
-<span class="c1">#     bl_idname = &quot;SCENE_PT_layout_PointCloud_properties&quot;</span>
-<span class="c1">#     bl_space_type = &#39;PROPERTIES&#39;</span>
-<span class="c1">#     bl_region_type = &#39;WINDOW&#39;</span>
-<span class="c1">#     bl_context = &quot;scene&quot;</span>
-
-<span class="c1">#     def draw(self,context):</span>
-<span class="c1">#         layout = self.layout</span>
-
-<span class="c1">#         scene = context.scene</span>
-
-<span class="c1">#         layout.label(text=&quot;Pointcloud option&quot;)</span>
-
-<span class="c1">#         row = layout.row()</span>
-<span class="c1">#         row.prop(scene, &quot;frame_star&quot;)</span>
-
-<span class="c1">#         layout.label(text=&quot;Big Button:&quot;)</span>
-<span class="c1">#         row = layout.row()</span>
-<span class="c1">#         row.scale_y = 3.0</span>
-<span class="c1">#         row.operator(&quot;render.render&quot;)</span>
-
-
-<span class="c1"># classes = (OBJECT_OT_add_PointCloud, OBJECT_PT_add_PointCloud_properties, OBJECT_OT_add_PointCloud_with_noise)</span>
-<span class="c1"># def register():</span>
-<span class="c1">#     for cls in classes:</span>
-<span class="c1">#         bpy.utils.register_class(cls)</span>
-<span class="c1">#     bpy.utils.register_manual_map(add_pointcloud_manual_map)</span>
-<span class="c1">#     bpy.types.VIEW3D_MT_mesh_add.append(add_pointcloud_button)</span>
-
-
-<span class="c1"># def unregister():</span>
-<span class="c1">#     for cls in classes:</span>
-<span class="c1">#         bpy.utils.unregister_class(cls)</span>
-<span class="c1">#     bpy.utils.register_manual_map(add_pointcloud_manual_map)</span>
-<span class="c1">#     bpy.types.VIEW3D_MT_mesh_add.remove(add_pointcloud_button)</span>
-
-
-<span class="c1"># if __name__ == &quot;__main__&quot;:</span>
-<span class="c1">#     register()</span>
-
-
-
-
-<span class="c1"># print(&quot;[Add-on loaded]: &quot;, bl_info[&quot;name&quot;], &quot;version&quot;, bl_info[&quot;version&quot;])</span>
 </pre></div>
 
            </div>
