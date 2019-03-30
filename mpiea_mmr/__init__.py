@@ -45,20 +45,46 @@ bl_info = {
 # ## UI
 # #############################################################################
 
+# class VIEW3D_PT_view3d_cursor(bpy.types.Panel):
 
-class MyPanel(bpy.types.Panel):
+#     bl_space_type = 'VIEW_3D'
+#     bl_region_type = 'UI'
+#     bl_category = "View"
+#     bl_label = "3D Cursor"
+
+#     def draw(self, context):
+#         layout = self.layout
+
+#         cursor = context.scene.cursor
+
+#         layout.column().prop(cursor, "location", text="Location")  ### asdf
+#         rotation_mode = cursor.rotation_mode
+#         if rotation_mode == 'QUATERNION':
+#             layout.column().prop(cursor, "rotation_quaternion", text="Rotation")
+#         elif rotation_mode == 'AXIS_ANGLE':
+#             layout.column().prop(cursor, "rotation_axis_angle", text="Rotation")
+#         else:
+#             layout.column().prop(cursor, "rotation_euler", text="Rotation")
+#         layout.prop(cursor, "rotation_mode", text="")
+
+
+class MpieaMmrPanel():
+    """
+    Mix-in to be inherited by every MPIEA MMR Panel.
+    """
+    bl_category = "MPIEA MultiModalRenderer"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+    #bl_context = "object"  # This makes the top right tab show up.
+    # bl_options = {'UNDO'}  # {'HIDE_HEADER', 'UNDO', 'REGISTER', 'DEFAULT_CLOSED'}
+
+
+class MY_PANEL_PT_MyPanel1(bpy.types.Panel, MpieaMmrPanel):
     """
     | Tutorial on layout:
     | https://blender.stackexchange.com/a/44064
     """
-
-    bl_idname = "MY_PANEL_PT_MyPanel"
-    bl_label = "Selection Manager"
-    bl_space_type = "VIEW_3D" # 'PROPERTIES'
-    bl_region_type = "UI" # 'WINDOW'
-    # bl_context = "object"
-    # bl_options = {'REGISTER', 'UNDO'} {'DEFAULT_CLOSED'}
-    bl_category = "DAZ Runtime"
+    bl_label = "Panel Name 1"
 
     @classmethod
     def poll(cls, context):
@@ -66,29 +92,38 @@ class MyPanel(bpy.types.Panel):
         """
         return (context.object is not None)
 
-    def draw_header(self, context):
+    def draw(self, context):
         """
-        Draw UI elements into the panel’s header UI layout
         """
         layout = self.layout
         scene = context.scene
         # obj = context.object
-        # fn = lambda self, context: obj.select_set(state=True)
-        # self.append(fn)
-
-        ###layout.prop(fn, text="quackkk")
-        # layout.prop(obj, "select_set", text="")
-        # bpy.ops.object.select_all(action="DESELECT")
+        # row.prop(obj, "hide_select")
+        # row.prop(obj, "hide_render")
 
         box = layout.box()
         row = box.row()
-        row.label(text='some label')
+        row.label(text='1111111 LABEL')
         row = box.row()
         row.prop(scene, "frame_start")
         row.prop(scene, "frame_end")
         row = box.row()
         row.prop(scene, "frame_start")
         row.prop(scene, "frame_end")
+
+
+class MY_PANEL_PT_MyPanel2(bpy.types.Panel, MpieaMmrPanel):
+    """
+    | Tutorial on layout:
+    | https://blender.stackexchange.com/a/44064
+    """
+    bl_label = "Panel Name 2"
+
+    @classmethod
+    def poll(cls, context):
+        """
+        """
+        return (context.object is not None)
 
     def draw(self, context):
         """
@@ -96,17 +131,8 @@ class MyPanel(bpy.types.Panel):
         layout = self.layout
         scene = context.scene
         # obj = context.object
-        # row = layout.row()
         # row.prop(obj, "hide_select")
         # row.prop(obj, "hide_render")
-
-        # box = layout.box()
-        # box.label(text="Selection Tools")
-        # box.operator("object.select_all").action = 'TOGGLE'
-        # row = box.row()
-        # row.operator("object.select_all").action = 'INVERT'
-        # row.operator("object.select_random")
-
 
         box = layout.box()
         row = box.row()
@@ -120,12 +146,11 @@ class MyPanel(bpy.types.Panel):
 
 
 
-
 # #############################################################################
 # ## MAIN ROUTINE
 # #############################################################################
 
-classes = [ObjectCursorArray, MyPanel]
+classes = [ObjectCursorArray, MY_PANEL_PT_MyPanel2, MY_PANEL_PT_MyPanel1]
 register_cl, unregister_cl = bpy.utils.register_classes_factory(classes)
 kmm = KeymapManager()
 omm = OperatorToMenuManager()
