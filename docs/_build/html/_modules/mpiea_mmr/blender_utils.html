@@ -163,8 +163,17 @@
 
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">radians</span>  <span class="c1"># degrees</span>
 <span class="c1">#</span>
+<span class="kn">from</span> <span class="nn">mathutils</span> <span class="k">import</span> <span class="n">Euler</span>  <span class="c1"># mathutils is a blender package</span>
 <span class="kn">import</span> <span class="nn">bpy</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span>
+
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># ## USER INTERACTION</span>
+<span class="c1"># #############################################################################</span>
 
 <div class="viewcode-block" id="ArgumentParserForBlender"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.ArgumentParserForBlender">[docs]</a><span class="k">class</span> <span class="nc">ArgumentParserForBlender</span><span class="p">(</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -219,71 +228,6 @@
         <span class="n">argv_after_dd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_argv_after_doubledash</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">argv_after_dd</span><span class="p">)</span></div></div>
 
-
-
-<span class="c1"># #############################################################################</span>
-<span class="c1"># ## EYE ICON</span>
-<span class="c1"># ## See https://blenderartists.org/t/show-hide-collection-blender-beta-2-80/1141768</span>
-<span class="c1"># #############################################################################</span>
-
-<div class="viewcode-block" id="get_viewport_ordered_collections"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.get_viewport_ordered_collections">[docs]</a><span class="k">def</span> <span class="nf">get_viewport_ordered_collections</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">addme</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">addme</span><span class="p">:</span>
-            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">c1</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
-            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">c1</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
-            <span class="n">fn</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-    <span class="n">collections</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">fn</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">collection</span><span class="p">,</span> <span class="n">collections</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">collections</span></div>
-
-<div class="viewcode-block" id="get_area_from_context"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.get_area_from_context">[docs]</a><span class="k">def</span> <span class="nf">get_area_from_context</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">area_type</span><span class="p">):</span>
-    <span class="n">area</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">context</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">areas</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">area_type</span><span class="p">:</span>
-            <span class="n">area</span> <span class="o">=</span> <span class="n">a</span>
-            <span class="k">break</span>
-    <span class="k">return</span> <span class="n">area</span></div>
-
-<div class="viewcode-block" id="set_collection_viewport_visibility"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.set_collection_viewport_visibility">[docs]</a><span class="k">def</span> <span class="nf">set_collection_viewport_visibility</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">visibility</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="n">collections</span> <span class="o">=</span> <span class="n">get_viewport_ordered_collections</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
-
-    <span class="n">collection</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">collections</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">collection_name</span><span class="p">:</span>
-            <span class="n">collection</span> <span class="o">=</span> <span class="n">c</span>
-            <span class="k">break</span>
-        <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
-
-    <span class="k">if</span> <span class="n">collection</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span>
-
-    <span class="n">first_object</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">collection</span><span class="o">.</span><span class="n">objects</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">first_object</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">hide_collection</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">collection_index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">toggle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">first_object</span><span class="o">.</span><span class="n">visible_get</span><span class="p">()</span> <span class="o">!=</span> <span class="n">visibility</span><span class="p">:</span>
-            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">hide_collection</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">collection_index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">toggle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="n">context_override</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">context_override</span><span class="p">[</span><span class="s1">&#39;area&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_area_from_context</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="s1">&#39;VIEW_3D&#39;</span><span class="p">)</span>
-
-        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">hide_collection</span><span class="p">(</span><span class="n">context_override</span><span class="p">,</span> <span class="n">collection_index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">toggle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">first_object</span><span class="o">.</span><span class="n">visible_get</span><span class="p">()</span> <span class="o">!=</span> <span class="n">visibility</span><span class="p">:</span>
-            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">hide_collection</span><span class="p">(</span><span class="n">context_override</span><span class="p">,</span> <span class="n">collection_index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">toggle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">collection</span></div>
-
-
-<span class="c1"># #############################################################################</span>
-<span class="c1"># ##</span>
-<span class="c1"># #############################################################################</span>
 
 <div class="viewcode-block" id="OperatorToMenuManager"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.OperatorToMenuManager">[docs]</a><span class="k">class</span> <span class="nc">OperatorToMenuManager</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -400,8 +344,223 @@
 
 
 <span class="c1"># #############################################################################</span>
-<span class="c1"># ##</span>
+<span class="c1"># ## EYE ICON</span>
+<span class="c1"># ## See https://blenderartists.org/t/show-hide-collection-blender-beta-2-80/1141768</span>
 <span class="c1"># #############################################################################</span>
+
+<div class="viewcode-block" id="get_viewport_ordered_collections"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.get_viewport_ordered_collections">[docs]</a><span class="k">def</span> <span class="nf">get_viewport_ordered_collections</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">addme</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">addme</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c1</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c1</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="n">fn</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">collections</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">fn</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">collection</span><span class="p">,</span> <span class="n">collections</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">collections</span></div>
+
+<div class="viewcode-block" id="get_area_from_context"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.get_area_from_context">[docs]</a><span class="k">def</span> <span class="nf">get_area_from_context</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">area_type</span><span class="p">):</span>
+    <span class="n">area</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">context</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">areas</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">area_type</span><span class="p">:</span>
+            <span class="n">area</span> <span class="o">=</span> <span class="n">a</span>
+            <span class="k">break</span>
+    <span class="k">return</span> <span class="n">area</span></div>
+
+<div class="viewcode-block" id="set_collection_viewport_visibility"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.set_collection_viewport_visibility">[docs]</a><span class="k">def</span> <span class="nf">set_collection_viewport_visibility</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">visibility</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">collections</span> <span class="o">=</span> <span class="n">get_viewport_ordered_collections</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+    <span class="n">collection</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">collections</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">collection_name</span><span class="p">:</span>
+            <span class="n">collection</span> <span class="o">=</span> <span class="n">c</span>
+            <span class="k">break</span>
+        <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">collection</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">first_object</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">collection</span><span class="o">.</span><span class="n">objects</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">first_object</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">hide_collection</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">collection_index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">toggle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">first_object</span><span class="o">.</span><span class="n">visible_get</span><span class="p">()</span> <span class="o">!=</span> <span class="n">visibility</span><span class="p">:</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">hide_collection</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">collection_index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">toggle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">context_override</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">context_override</span><span class="p">[</span><span class="s2">&quot;area&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_area_from_context</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="s1">&#39;VIEW_3D&#39;</span><span class="p">)</span>
+
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">hide_collection</span><span class="p">(</span><span class="n">context_override</span><span class="p">,</span> <span class="n">collection_index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">toggle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">first_object</span><span class="o">.</span><span class="n">visible_get</span><span class="p">()</span> <span class="o">!=</span> <span class="n">visibility</span><span class="p">:</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">hide_collection</span><span class="p">(</span><span class="n">context_override</span><span class="p">,</span> <span class="n">collection_index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">toggle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">collection</span></div>
+
+
+<span class="c1">#############################################################################</span>
+<span class="c1">## MATH</span>
+<span class="c1">#############################################################################</span>
+
+<div class="viewcode-block" id="rot_euler_degrees"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.rot_euler_degrees">[docs]</a><span class="k">def</span> <span class="nf">rot_euler_degrees</span><span class="p">(</span><span class="n">rot_x</span><span class="p">,</span> <span class="n">rot_y</span><span class="p">,</span> <span class="n">rot_z</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s2">&quot;XYZ&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns an Euler rotation object with the given rotations (in degrees)</span>
+<span class="sd">    and rotation order.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Euler</span><span class="p">((</span><span class="n">radians</span><span class="p">(</span><span class="n">rot_x</span><span class="p">),</span> <span class="n">radians</span><span class="p">(</span><span class="n">rot_y</span><span class="p">),</span> <span class="n">radians</span><span class="p">(</span><span class="n">rot_z</span><span class="p">)),</span> <span class="n">order</span><span class="p">)</span></div>
+
+
+<span class="c1">#############################################################################</span>
+<span class="c1">## MISC</span>
+<span class="c1">#############################################################################</span>
+
+<div class="viewcode-block" id="update_scene"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.update_scene">[docs]</a><span class="k">def</span> <span class="nf">update_scene</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sometimes changes don&#39;t show up due to lazy evaluation. This function</span>
+<span class="sd">    triggers scene update and recalculation of all changes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">C</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="save_blenderfile"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.save_blenderfile">[docs]</a><span class="k">def</span> <span class="nf">save_blenderfile</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Saves blender file (usually to D.filepath)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">O</span><span class="o">.</span><span class="n">wm</span><span class="o">.</span><span class="n">save_as_mainfile</span><span class="p">(</span><span class="n">filepath</span><span class="o">=</span><span class="n">filepath</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="open_blenderfile"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.open_blenderfile">[docs]</a><span class="k">def</span> <span class="nf">open_blenderfile</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     blender file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">O</span><span class="o">.</span><span class="n">wm</span><span class="o">.</span><span class="n">open_mainfile</span><span class="p">(</span><span class="n">filepath</span><span class="o">=</span><span class="n">filepath</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="set_render_resolution_percentage"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.set_render_resolution_percentage">[docs]</a><span class="k">def</span> <span class="nf">set_render_resolution_percentage</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">D</span><span class="o">.</span><span class="n">scenes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">render</span><span class="o">.</span><span class="n">resolution_percentage</span> <span class="o">=</span> <span class="n">p</span></div>
+
+
+<div class="viewcode-block" id="get_obj"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.get_obj">[docs]</a><span class="k">def</span> <span class="nf">get_obj</span><span class="p">(</span><span class="n">obj_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Actions like undo or entering edit mode invalidate the object references.</span>
+<span class="sd">    This function returns a reference that is always valid, assuming that the</span>
+<span class="sd">    given obj_name is a key of bpy.data.objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">D</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">obj_name</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="select_by_name"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.select_by_name">[docs]</a><span class="k">def</span> <span class="nf">select_by_name</span><span class="p">(</span><span class="o">*</span><span class="n">names</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a variable number of names as strings, tries to select all existing</span>
+<span class="sd">    objects in D.objects by their name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">D</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="deselect_by_name"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.deselect_by_name">[docs]</a><span class="k">def</span> <span class="nf">deselect_by_name</span><span class="p">(</span><span class="o">*</span><span class="n">names</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a variable number of names as strings, tries to select all existing</span>
+<span class="sd">    objects in D.objects by their name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">D</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="select_all"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.select_all">[docs]</a><span class="k">def</span> <span class="nf">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;SELECT&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Action can be SELECT, DESELECT, INVERT, TOGGLE</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="delete_selected"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.delete_selected">[docs]</a><span class="k">def</span> <span class="nf">delete_selected</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="set_mode"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.set_mode">[docs]</a><span class="k">def</span> <span class="nf">set_mode</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;OBJECT&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">mode_set</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span></div>
+
+
+<span class="c1"># def purge_unused_data(categories=[D.meshes, D.materials, D.textures, D.images,</span>
+<span class="c1">#                                   D.curves, D.lights, D.cameras, D.screens]):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     Blender objects point to data. E.g., a lamp points to a given data lamp</span>
+<span class="c1">#     object. Removing the objects doesn&#39;t remove the data, which may lead to</span>
+<span class="c1">#     data blocks that aren&#39;t being used by anyone. Given an ORDERED collection</span>
+<span class="c1">#     of categories, this function removes all unused datablocks.</span>
+<span class="c1">#     See https://blender.stackexchange.com/a/102046</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     for cat in categories:</span>
+<span class="c1">#         for block in cat:</span>
+<span class="c1">#             if block.users == 0:</span>
+<span class="c1">#                 cat.remove(block)</span>
+
+
+<div class="viewcode-block" id="set_shading_mode"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.set_shading_mode">[docs]</a><span class="k">def</span> <span class="nf">set_shading_mode</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;SOLID&quot;</span><span class="p">,</span> <span class="n">screens</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Performs an action analogous to clicking on the display/shade button of</span>
+<span class="sd">    the 3D view. Mode is one of &quot;RENDERED&quot;, &quot;MATERIAL&quot;, &quot;SOLID&quot;, &quot;WIREFRAME&quot;.</span>
+<span class="sd">    The change is applied to the given collection of bpy.data.screens.</span>
+<span class="sd">    If none is given, the function is applied to bpy.context.screen (the</span>
+<span class="sd">    active screen) only. E.g. set all screens to rendered mode::</span>
+
+<span class="sd">       set_shading_mode(&quot;RENDERED&quot;, D.screens)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">screens</span> <span class="o">=</span> <span class="n">screens</span> <span class="k">if</span> <span class="n">screens</span> <span class="k">else</span> <span class="p">[</span><span class="n">C</span><span class="o">.</span><span class="n">screen</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">screens</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">areas</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">spc</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;VIEW_3D&quot;</span><span class="p">:</span>
+                <span class="n">spc</span><span class="o">.</span><span class="n">spaces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shading</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">mode</span>
+                <span class="k">break</span> <span class="c1"># we expect at most 1 VIEW_3D space</span></div>
+
+
+<span class="c1"># def maximize_area(screen_name=&quot;Layout&quot;, area_name=&quot;VIEW_3D&quot;):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     This function does the following:</span>
+<span class="c1">#     1. If there is an area with the given name:</span>
+<span class="c1">#        1.1. Minimizes any other maximized window</span>
+<span class="c1">#        1.2. Maximizes the desired area</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     screen = D.screens[screen_name]</span>
+<span class="c1">#     for a in screen.areas:</span>
+<span class="c1">#         if a.type == area_name:</span>
+<span class="c1">#             # If screen is already in some fullscreen mode, revert it</span>
+<span class="c1">#             if screen.show_fullscreen:</span>
+<span class="c1">#                 bpy.ops.screen.back_to_previous()</span>
+<span class="c1">#             # Set area to fullscreen (dict admits &quot;window&quot;,&quot;screen&quot;,&quot;area&quot;)</span>
+<span class="c1">#             bpy.ops.screen.screen_full_area({&quot;screen&quot;: screen, &quot;area&quot;: a})</span>
+<span class="c1">#             break</span>
+
+
+<div class="viewcode-block" id="maximize_area"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.maximize_area">[docs]</a><span class="k">def</span> <span class="nf">maximize_area</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">area_name</span><span class="o">=</span><span class="s2">&quot;VIEW_3D&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    If the current context has an area of type self.AREA_TYPE, that area gets</span>
+<span class="sd">    maximized. Otherwise does nothing. Supported types can be seen here::</span>
+
+<span class="sd">       https://docs.blender.org/api/blender2.8/bpy.types.Area.html</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">context</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">areas</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">area_name</span><span class="p">:</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">screen_full_area</span><span class="p">({</span><span class="s2">&quot;area&quot;</span><span class="p">:</span> <span class="n">a</span><span class="p">})</span>
+            <span class="k">break</span></div>
 </pre></div>
 
            </div>

@@ -16,7 +16,8 @@ __author__ = "Andres FR"
 
 from bpy.types import Operator, Panel
 from bpy.props import IntProperty
-
+#
+from .blender_utils import maximize_area
 
 # #############################################################################
 # ## OPERATORS
@@ -51,6 +52,63 @@ class ObjectCursorArray(Operator):
             obj_new.location = (obj.location * factor) + (cursor * (1.0 - factor))
 
         return {'FINISHED'}
+
+
+# ###############################################
+
+class AbstractMaximizeArea():
+    """
+    Mixin to allow operators to easily wrap the ``maximize_area`` function
+    from the blender utils.
+
+    .. warning::
+
+      This is an **abstract class**. It is not expected to be directly
+      used. Instead, extend it before as shown.
+
+    To create an Operator for a specific area type, simply extend this class
+    as follows::
+
+       class MaximizeAreaView3d(Operator, AbstractMaximizeArea):
+           AREA_TYPE = "VIEW_3D"
+           bl_idname = "screen.maximize_view_3d"  # path after 'bpy.ops'
+           bl_label = "Maximize VIEW_3D (if present)"
+
+    | Supported types can be seen here:
+    | https://docs.blender.org/api/blender2.8/bpy.types.Area.html
+    """
+
+    @classmethod
+    def poll(cls, context):
+        """
+        Predicate, returns True iff context.screen.areas contains an area
+        of self.AREA_TYPE
+        """
+        for a in context.screen.areas:
+            if a.type == cls.AREA_TYPE:
+                return True
+        # if no area was of type VIEW_3D
+        return False
+
+    def execute(self, context):
+        """
+        """
+        maximize_area(context, self.AREA_TYPE)
+        return {"FINISHED"}
+
+
+class MaximizeAreaView3d(Operator, AbstractMaximizeArea):
+    AREA_TYPE = "VIEW_3D"
+    bl_idname = "screen.maximize_view_3d"  # path after 'bpy.ops'
+    bl_label = "Maximize VIEW_3D (if present)"
+
+
+class MaximizeAreaConsole(Operator, AbstractMaximizeArea):
+    AREA_TYPE = "CONSOLE"
+    bl_idname = "screen.maximize_console"  # path after 'bpy.ops'
+    bl_label = "Maximize Python console (if present)"
+
+# ###############################################
 
 
 # #############################################################################

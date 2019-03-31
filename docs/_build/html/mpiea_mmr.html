@@ -88,6 +88,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">mpiea_mmr package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-mpiea_mmr.blender_utils">mpiea_mmr.blender_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-mpiea_mmr.scene_builder">mpiea_mmr.scene_builder module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-mpiea_mmr.ui">mpiea_mmr.ui module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-mpiea_mmr">Module contents</a></li>
 </ul>
@@ -342,9 +343,29 @@ then empties the collection.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="mpiea_mmr.blender_utils.delete_selected">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">delete_selected</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#delete_selected"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.delete_selected" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.blender_utils.deselect_by_name">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">deselect_by_name</code><span class="sig-paren">(</span><em>*names</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#deselect_by_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.deselect_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a variable number of names as strings, tries to select all existing
+objects in D.objects by their name.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="mpiea_mmr.blender_utils.get_area_from_context">
 <code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">get_area_from_context</code><span class="sig-paren">(</span><em>context</em>, <em>area_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#get_area_from_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.get_area_from_context" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.blender_utils.get_obj">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">get_obj</code><span class="sig-paren">(</span><em>obj_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#get_obj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.get_obj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Actions like undo or entering edit mode invalidate the object references.
+This function returns a reference that is always valid, assuming that the
+given obj_name is a key of bpy.data.objects.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="mpiea_mmr.blender_utils.get_viewport_ordered_collections">
@@ -352,8 +373,90 @@ then empties the collection.</p>
 <dd></dd></dl>
 
 <dl class="function">
+<dt id="mpiea_mmr.blender_utils.maximize_area">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">maximize_area</code><span class="sig-paren">(</span><em>context</em>, <em>area_name='VIEW_3D'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#maximize_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.maximize_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the current context has an area of type self.AREA_TYPE, that area gets
+maximized. Otherwise does nothing. Supported types can be seen here:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">docs</span><span class="o">.</span><span class="n">blender</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">blender2</span><span class="o">.</span><span class="mi">8</span><span class="o">/</span><span class="n">bpy</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Area</span><span class="o">.</span><span class="n">html</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.blender_utils.open_blenderfile">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">open_blenderfile</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#open_blenderfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.open_blenderfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>blender file</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.blender_utils.rot_euler_degrees">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">rot_euler_degrees</code><span class="sig-paren">(</span><em>rot_x</em>, <em>rot_y</em>, <em>rot_z</em>, <em>order='XYZ'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#rot_euler_degrees"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.rot_euler_degrees" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an Euler rotation object with the given rotations (in degrees)
+and rotation order.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.blender_utils.save_blenderfile">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">save_blenderfile</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#save_blenderfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.save_blenderfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves blender file (usually to D.filepath)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.blender_utils.select_all">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">select_all</code><span class="sig-paren">(</span><em>action='SELECT'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#select_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.select_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Action can be SELECT, DESELECT, INVERT, TOGGLE</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.blender_utils.select_by_name">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">select_by_name</code><span class="sig-paren">(</span><em>*names</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#select_by_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.select_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a variable number of names as strings, tries to select all existing
+objects in D.objects by their name.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="mpiea_mmr.blender_utils.set_collection_viewport_visibility">
 <code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">set_collection_viewport_visibility</code><span class="sig-paren">(</span><em>context</em>, <em>collection_name</em>, <em>visibility=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#set_collection_viewport_visibility"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.set_collection_viewport_visibility" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.blender_utils.set_mode">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">set_mode</code><span class="sig-paren">(</span><em>mode='OBJECT'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#set_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.set_mode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.blender_utils.set_render_resolution_percentage">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">set_render_resolution_percentage</code><span class="sig-paren">(</span><em>p=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#set_render_resolution_percentage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.set_render_resolution_percentage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.blender_utils.set_shading_mode">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">set_shading_mode</code><span class="sig-paren">(</span><em>mode='SOLID'</em>, <em>screens=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#set_shading_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.set_shading_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs an action analogous to clicking on the display/shade button of
+the 3D view. Mode is one of “RENDERED”, “MATERIAL”, “SOLID”, “WIREFRAME”.
+The change is applied to the given collection of bpy.data.screens.
+If none is given, the function is applied to bpy.context.screen (the
+active screen) only. E.g. set all screens to rendered mode:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">set_shading_mode</span><span class="p">(</span><span class="s2">&quot;RENDERED&quot;</span><span class="p">,</span> <span class="n">D</span><span class="o">.</span><span class="n">screens</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mpiea_mmr.blender_utils.update_scene">
+<code class="descclassname">mpiea_mmr.blender_utils.</code><code class="descname">update_scene</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/blender_utils.html#update_scene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.blender_utils.update_scene" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sometimes changes don’t show up due to lazy evaluation. This function
+triggers scene update and recalculation of all changes.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mpiea_mmr.scene_builder">
+<span id="mpiea-mmr-scene-builder-module"></span><h2>mpiea_mmr.scene_builder module<a class="headerlink" href="#module-mpiea_mmr.scene_builder" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the functionality related to scene building, i.e.
+creating/importing/modifying objects, etc.</p>
+<dl class="function">
+<dt id="mpiea_mmr.scene_builder.main">
+<code class="descclassname">mpiea_mmr.scene_builder.</code><code class="descname">main</code><span class="sig-paren">(</span><em>view3d_maximized</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/scene_builder.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.scene_builder.main" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -365,6 +468,43 @@ with Blender, i.e.:</p>
 <li>Subclasses from <code class="docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code> defining user-callable functors.</li>
 <li>Subclasses from <code class="docutils literal notranslate"><span class="pre">bpy.types.Panel</span></code> that contain GUI widgets and functionality.</li>
 </ul>
+<dl class="class">
+<dt id="mpiea_mmr.ui.AbstractMaximizeArea">
+<em class="property">class </em><code class="descclassname">mpiea_mmr.ui.</code><code class="descname">AbstractMaximizeArea</code><a class="reference internal" href="_modules/mpiea_mmr/ui.html#AbstractMaximizeArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ui.AbstractMaximizeArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Mixin to allow operators to easily wrap the <code class="docutils literal notranslate"><span class="pre">maximize_area</span></code> function
+from the blender utils.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This is an <strong>abstract class</strong>. It is not expected to be directly
+used. Instead, extend it before as shown.</p>
+</div>
+<p>To create an Operator for a specific area type, simply extend this class
+as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MaximizeAreaView3d</span><span class="p">(</span><span class="n">Operator</span><span class="p">,</span> <span class="n">AbstractMaximizeArea</span><span class="p">):</span>
+    <span class="n">AREA_TYPE</span> <span class="o">=</span> <span class="s2">&quot;VIEW_3D&quot;</span>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;screen.maximize_view_3d&quot;</span>  <span class="c1"># path after &#39;bpy.ops&#39;</span>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Maximize VIEW_3D (if present)&quot;</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">Supported types can be seen here:</div>
+<div class="line"><a class="reference external" href="https://docs.blender.org/api/blender2.8/bpy.types.Area.html">https://docs.blender.org/api/blender2.8/bpy.types.Area.html</a></div>
+</div>
+<dl class="method">
+<dt id="mpiea_mmr.ui.AbstractMaximizeArea.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/ui.html#AbstractMaximizeArea.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ui.AbstractMaximizeArea.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="mpiea_mmr.ui.AbstractMaximizeArea.poll">
+<em class="property">classmethod </em><code class="descname">poll</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/ui.html#AbstractMaximizeArea.poll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ui.AbstractMaximizeArea.poll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predicate, returns True iff context.screen.areas contains an area
+of self.AREA_TYPE</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="class">
 <dt id="mpiea_mmr.ui.MPIEA_MMR_PT_ExportPanel">
 <em class="property">class </em><code class="descclassname">mpiea_mmr.ui.</code><code class="descname">MPIEA_MMR_PT_ExportPanel</code><a class="reference internal" href="_modules/mpiea_mmr/ui.html#MPIEA_MMR_PT_ExportPanel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ui.MPIEA_MMR_PT_ExportPanel" title="Permalink to this definition">¶</a></dt>
@@ -432,6 +572,58 @@ with Blender, i.e.:</p>
 <dl class="method">
 <dt id="mpiea_mmr.ui.MY_PANEL_PT_MyPanel2.draw">
 <code class="descname">draw</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mpiea_mmr/ui.html#MY_PANEL_PT_MyPanel2.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ui.MY_PANEL_PT_MyPanel2.draw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mpiea_mmr.ui.MaximizeAreaConsole">
+<em class="property">class </em><code class="descclassname">mpiea_mmr.ui.</code><code class="descname">MaximizeAreaConsole</code><a class="reference internal" href="_modules/mpiea_mmr/ui.html#MaximizeAreaConsole"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ui.MaximizeAreaConsole" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">bpy_types.Operator</span></code>, <a class="reference internal" href="#mpiea_mmr.ui.AbstractMaximizeArea" title="mpiea_mmr.ui.AbstractMaximizeArea"><code class="xref py py-class docutils literal notranslate"><span class="pre">mpiea_mmr.ui.AbstractMaximizeArea</span></code></a></p>
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.MaximizeAreaConsole.AREA_TYPE">
+<code class="descname">AREA_TYPE</code><em class="property"> = 'CONSOLE'</em><a class="headerlink" href="#mpiea_mmr.ui.MaximizeAreaConsole.AREA_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.MaximizeAreaConsole.bl_idname">
+<code class="descname">bl_idname</code><em class="property"> = 'screen.maximize_console'</em><a class="headerlink" href="#mpiea_mmr.ui.MaximizeAreaConsole.bl_idname" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.MaximizeAreaConsole.bl_label">
+<code class="descname">bl_label</code><em class="property"> = 'Maximize Python console (if present)'</em><a class="headerlink" href="#mpiea_mmr.ui.MaximizeAreaConsole.bl_label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.MaximizeAreaConsole.bl_rna">
+<code class="descname">bl_rna</code><em class="property"> = &lt;bpy_struct, Struct(&quot;SCREEN_OT_maximize_console&quot;)&gt;</em><a class="headerlink" href="#mpiea_mmr.ui.MaximizeAreaConsole.bl_rna" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mpiea_mmr.ui.MaximizeAreaView3d">
+<em class="property">class </em><code class="descclassname">mpiea_mmr.ui.</code><code class="descname">MaximizeAreaView3d</code><a class="reference internal" href="_modules/mpiea_mmr/ui.html#MaximizeAreaView3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpiea_mmr.ui.MaximizeAreaView3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">bpy_types.Operator</span></code>, <a class="reference internal" href="#mpiea_mmr.ui.AbstractMaximizeArea" title="mpiea_mmr.ui.AbstractMaximizeArea"><code class="xref py py-class docutils literal notranslate"><span class="pre">mpiea_mmr.ui.AbstractMaximizeArea</span></code></a></p>
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.MaximizeAreaView3d.AREA_TYPE">
+<code class="descname">AREA_TYPE</code><em class="property"> = 'VIEW_3D'</em><a class="headerlink" href="#mpiea_mmr.ui.MaximizeAreaView3d.AREA_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.MaximizeAreaView3d.bl_idname">
+<code class="descname">bl_idname</code><em class="property"> = 'screen.maximize_view_3d'</em><a class="headerlink" href="#mpiea_mmr.ui.MaximizeAreaView3d.bl_idname" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.MaximizeAreaView3d.bl_label">
+<code class="descname">bl_label</code><em class="property"> = 'Maximize VIEW_3D (if present)'</em><a class="headerlink" href="#mpiea_mmr.ui.MaximizeAreaView3d.bl_label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mpiea_mmr.ui.MaximizeAreaView3d.bl_rna">
+<code class="descname">bl_rna</code><em class="property"> = &lt;bpy_struct, Struct(&quot;SCREEN_OT_maximize_view_3d&quot;)&gt;</em><a class="headerlink" href="#mpiea_mmr.ui.MaximizeAreaView3d.bl_rna" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

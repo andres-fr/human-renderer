@@ -25,6 +25,10 @@ from .ui import ObjectCursorArray
 from .ui import MY_PANEL_PT_MyPanel1, MY_PANEL_PT_MyPanel2
 from .ui import MPIEA_MMR_PT_ExportPanel
 
+#
+from .ui import MaximizeAreaView3d
+from .ui import MaximizeAreaConsole
+
 # scene builder
 
 from . import scene_builder
@@ -54,7 +58,7 @@ bl_info = {
 # #############################################################################
 
 classes = [ObjectCursorArray, MY_PANEL_PT_MyPanel1, MY_PANEL_PT_MyPanel2,
-           MPIEA_MMR_PT_ExportPanel]
+           MPIEA_MMR_PT_ExportPanel, MaximizeAreaView3d, MaximizeAreaConsole]
 register_cl, unregister_cl = bpy.utils.register_classes_factory(classes)
 kmm = KeymapManager()
 omm = OperatorToMenuManager()
@@ -68,7 +72,7 @@ def register():
     omm.register(ObjectCursorArray, bpy.types.VIEW3D_MT_object)
     kmm.register("D", "PRESS", ObjectCursorArray.bl_idname)
     #
-    scene_builder.main()
+    # scene_builder.main(**scene_builder.MAIN_KWARGS)
 
 
 def unregister():

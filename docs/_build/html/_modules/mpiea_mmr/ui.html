@@ -168,7 +168,8 @@
 
 <span class="kn">from</span> <span class="nn">bpy.types</span> <span class="k">import</span> <span class="n">Operator</span><span class="p">,</span> <span class="n">Panel</span>
 <span class="kn">from</span> <span class="nn">bpy.props</span> <span class="k">import</span> <span class="n">IntProperty</span>
-
+<span class="c1">#</span>
+<span class="kn">from</span> <span class="nn">.blender_utils</span> <span class="k">import</span> <span class="n">maximize_area</span>
 
 <span class="c1"># #############################################################################</span>
 <span class="c1"># ## OPERATORS</span>
@@ -203,6 +204,63 @@
             <span class="n">obj_new</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">location</span> <span class="o">*</span> <span class="n">factor</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">cursor</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">factor</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">}</span></div></div>
+
+
+<span class="c1"># ###############################################</span>
+
+<div class="viewcode-block" id="AbstractMaximizeArea"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.ui.AbstractMaximizeArea">[docs]</a><span class="k">class</span> <span class="nc">AbstractMaximizeArea</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Mixin to allow operators to easily wrap the ``maximize_area`` function</span>
+<span class="sd">    from the blender utils.</span>
+
+<span class="sd">    .. warning::</span>
+
+<span class="sd">      This is an **abstract class**. It is not expected to be directly</span>
+<span class="sd">      used. Instead, extend it before as shown.</span>
+
+<span class="sd">    To create an Operator for a specific area type, simply extend this class</span>
+<span class="sd">    as follows::</span>
+
+<span class="sd">       class MaximizeAreaView3d(Operator, AbstractMaximizeArea):</span>
+<span class="sd">           AREA_TYPE = &quot;VIEW_3D&quot;</span>
+<span class="sd">           bl_idname = &quot;screen.maximize_view_3d&quot;  # path after &#39;bpy.ops&#39;</span>
+<span class="sd">           bl_label = &quot;Maximize VIEW_3D (if present)&quot;</span>
+
+<span class="sd">    | Supported types can be seen here:</span>
+<span class="sd">    | https://docs.blender.org/api/blender2.8/bpy.types.Area.html</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AbstractMaximizeArea.poll"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.ui.AbstractMaximizeArea.poll">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">poll</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predicate, returns True iff context.screen.areas contains an area</span>
+<span class="sd">        of self.AREA_TYPE</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">context</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">areas</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="bp">cls</span><span class="o">.</span><span class="n">AREA_TYPE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="c1"># if no area was of type VIEW_3D</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="AbstractMaximizeArea.execute"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.ui.AbstractMaximizeArea.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">maximize_area</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">AREA_TYPE</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">}</span></div></div>
+
+
+<div class="viewcode-block" id="MaximizeAreaView3d"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.ui.MaximizeAreaView3d">[docs]</a><span class="k">class</span> <span class="nc">MaximizeAreaView3d</span><span class="p">(</span><span class="n">Operator</span><span class="p">,</span> <span class="n">AbstractMaximizeArea</span><span class="p">):</span>
+    <span class="n">AREA_TYPE</span> <span class="o">=</span> <span class="s2">&quot;VIEW_3D&quot;</span>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;screen.maximize_view_3d&quot;</span>  <span class="c1"># path after &#39;bpy.ops&#39;</span>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Maximize VIEW_3D (if present)&quot;</span></div>
+
+
+<div class="viewcode-block" id="MaximizeAreaConsole"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.ui.MaximizeAreaConsole">[docs]</a><span class="k">class</span> <span class="nc">MaximizeAreaConsole</span><span class="p">(</span><span class="n">Operator</span><span class="p">,</span> <span class="n">AbstractMaximizeArea</span><span class="p">):</span>
+    <span class="n">AREA_TYPE</span> <span class="o">=</span> <span class="s2">&quot;CONSOLE&quot;</span>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;screen.maximize_console&quot;</span>  <span class="c1"># path after &#39;bpy.ops&#39;</span>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Maximize Python console (if present)&quot;</span></div>
+
+<span class="c1"># ###############################################</span>
 
 
 <span class="c1"># #############################################################################</span>

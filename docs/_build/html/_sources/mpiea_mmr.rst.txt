@@ -12,6 +12,14 @@ mpiea\_mmr.blender\_utils module
     :undoc-members:
     :show-inheritance:
 
+mpiea\_mmr.scene\_builder module
+--------------------------------
+
+.. automodule:: mpiea_mmr.scene_builder
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 mpiea\_mmr.ui module
 --------------------
 

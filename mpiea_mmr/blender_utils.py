@@ -11,8 +11,17 @@ __author__ = "Andres FR"
 
 import argparse
 import sys
+from math import radians  # degrees
 #
+from mathutils import Euler  # mathutils is a blender package
 import bpy
+C = bpy.context
+D = bpy.data
+
+
+# #############################################################################
+# ## USER INTERACTION
+# #############################################################################
 
 class ArgumentParserForBlender(argparse.ArgumentParser):
     """
@@ -67,71 +76,6 @@ class ArgumentParserForBlender(argparse.ArgumentParser):
         argv_after_dd = self.get_argv_after_doubledash(sys.argv)
         return super().parse_args(args=argv_after_dd)
 
-
-
-# #############################################################################
-# ## EYE ICON
-# ## See https://blenderartists.org/t/show-hide-collection-blender-beta-2-80/1141768
-# #############################################################################
-
-def get_viewport_ordered_collections(context):
-    def fn(c, out, addme):
-        if addme:
-            out.append(c)
-        for c1 in c.children:
-            out.append(c1)
-        for c1 in c.children:
-            fn(c1, out, False)
-    collections = []
-    fn(context.scene.collection, collections, True)
-    return collections
-
-def get_area_from_context(context, area_type):
-    area = None
-    for a in context.screen.areas:
-        if a.type == area_type:
-            area = a
-            break
-    return area
-
-def set_collection_viewport_visibility(context, collection_name, visibility=True):
-    collections = get_viewport_ordered_collections(context)
-
-    collection = None
-    index = 0
-    for c in collections:
-        if c.name == collection_name:
-            collection = c
-            break
-        index += 1
-
-    if collection is None:
-        return
-
-    first_object = None
-    if len(collection.objects) > 0:
-        first_object = collection.objects[0]
-
-    try:
-        bpy.ops.object.hide_collection(context, collection_index=index, toggle=True)
-
-        if first_object.visible_get() != visibility:
-            bpy.ops.object.hide_collection(context, collection_index=index, toggle=True)
-    except:
-        context_override = context.copy()
-        context_override['area'] = get_area_from_context(context, 'VIEW_3D')
-
-        bpy.ops.object.hide_collection(context_override, collection_index=index, toggle=True)
-
-        if first_object.visible_get() != visibility:
-            bpy.ops.object.hide_collection(context_override, collection_index=index, toggle=True)
-
-    return collection
-
-
-# #############################################################################
-# ##
-# #############################################################################
 
 class OperatorToMenuManager(list):
     """
@@ -248,5 +192,220 @@ class KeymapManager(list):
 
 
 # #############################################################################
-# ##
+# ## EYE ICON
+# ## See https://blenderartists.org/t/show-hide-collection-blender-beta-2-80/1141768
 # #############################################################################
+
+def get_viewport_ordered_collections(context):
+    def fn(c, out, addme):
+        if addme:
+            out.append(c)
+        for c1 in c.children:
+            out.append(c1)
+        for c1 in c.children:
+            fn(c1, out, False)
+    collections = []
+    fn(context.scene.collection, collections, True)
+    return collections
+
+def get_area_from_context(context, area_type):
+    area = None
+    for a in context.screen.areas:
+        if a.type == area_type:
+            area = a
+            break
+    return area
+
+def set_collection_viewport_visibility(context, collection_name, visibility=True):
+    collections = get_viewport_ordered_collections(context)
+
+    collection = None
+    index = 0
+    for c in collections:
+        if c.name == collection_name:
+            collection = c
+            break
+        index += 1
+
+    if collection is None:
+        return
+
+    first_object = None
+    if len(collection.objects) > 0:
+        first_object = collection.objects[0]
+
+    try:
+        bpy.ops.object.hide_collection(context, collection_index=index, toggle=True)
+
+        if first_object.visible_get() != visibility:
+            bpy.ops.object.hide_collection(context, collection_index=index, toggle=True)
+    except:
+        context_override = context.copy()
+        context_override["area"] = get_area_from_context(context, 'VIEW_3D')
+
+        bpy.ops.object.hide_collection(context_override, collection_index=index, toggle=True)
+
+        if first_object.visible_get() != visibility:
+            bpy.ops.object.hide_collection(context_override, collection_index=index, toggle=True)
+
+    return collection
+
+
+#############################################################################
+## MATH
+#############################################################################
+
+def rot_euler_degrees(rot_x, rot_y, rot_z, order="XYZ"):
+    """
+    Returns an Euler rotation object with the given rotations (in degrees)
+    and rotation order.
+    """
+    return Euler((radians(rot_x), radians(rot_y), radians(rot_z)), order)
+
+
+#############################################################################
+## MISC
+#############################################################################
+
+def update_scene():
+    """
+    Sometimes changes don't show up due to lazy evaluation. This function
+    triggers scene update and recalculation of all changes.
+    """
+    C.scene.update()
+
+
+def save_blenderfile(filepath):
+    """
+    Saves blender file (usually to D.filepath)
+    """
+    O.wm.save_as_mainfile(filepath=filepath)
+
+
+def open_blenderfile(filepath):
+    """
+     blender file
+    """
+    O.wm.open_mainfile(filepath=filepath)
+
+
+def set_render_resolution_percentage(p=100):
+    """
+    """
+    D.scenes[0].render.resolution_percentage = p
+
+
+def get_obj(obj_name):
+    """
+    Actions like undo or entering edit mode invalidate the object references.
+    This function returns a reference that is always valid, assuming that the
+    given obj_name is a key of bpy.data.objects.
+    """
+    return D.objects[obj_name]
+
+
+def select_by_name(*names):
+    """
+    Given a variable number of names as strings, tries to select all existing
+    objects in D.objects by their name.
+    """
+    for name in names:
+        try:
+            D.objects[name].select_set(True)
+        except Exception as e:
+            print(e)
+
+
+def deselect_by_name(*names):
+    """
+    Given a variable number of names as strings, tries to select all existing
+    objects in D.objects by their name.
+    """
+    for name in names:
+        try:
+            D.objects[name].select_set(False)
+        except Exception as e:
+            print(e)
+
+
+def select_all(action="SELECT"):
+    """
+    Action can be SELECT, DESELECT, INVERT, TOGGLE
+    """
+    bpy.ops.object.select_all(action=action)
+
+
+def delete_selected():
+    """
+    """
+    bpy.ops.object.delete()
+
+
+def set_mode(mode="OBJECT"):
+    """
+    """
+    bpy.ops.object.mode_set(mode=mode)
+
+
+# def purge_unused_data(categories=[D.meshes, D.materials, D.textures, D.images,
+#                                   D.curves, D.lights, D.cameras, D.screens]):
+#     """
+#     Blender objects point to data. E.g., a lamp points to a given data lamp
+#     object. Removing the objects doesn't remove the data, which may lead to
+#     data blocks that aren't being used by anyone. Given an ORDERED collection
+#     of categories, this function removes all unused datablocks.
+#     See https://blender.stackexchange.com/a/102046
+#     """
+#     for cat in categories:
+#         for block in cat:
+#             if block.users == 0:
+#                 cat.remove(block)
+
+
+def set_shading_mode(mode="SOLID", screens=[]):
+    """
+    Performs an action analogous to clicking on the display/shade button of
+    the 3D view. Mode is one of "RENDERED", "MATERIAL", "SOLID", "WIREFRAME".
+    The change is applied to the given collection of bpy.data.screens.
+    If none is given, the function is applied to bpy.context.screen (the
+    active screen) only. E.g. set all screens to rendered mode::
+
+       set_shading_mode("RENDERED", D.screens)
+    """
+    screens = screens if screens else [C.screen]
+    for s in screens:
+        for spc in s.areas:
+            if spc.type == "VIEW_3D":
+                spc.spaces[0].shading.type = mode
+                break # we expect at most 1 VIEW_3D space
+
+
+# def maximize_area(screen_name="Layout", area_name="VIEW_3D"):
+#     """
+#     This function does the following:
+#     1. If there is an area with the given name:
+#        1.1. Minimizes any other maximized window
+#        1.2. Maximizes the desired area
+#     """
+#     screen = D.screens[screen_name]
+#     for a in screen.areas:
+#         if a.type == area_name:
+#             # If screen is already in some fullscreen mode, revert it
+#             if screen.show_fullscreen:
+#                 bpy.ops.screen.back_to_previous()
+#             # Set area to fullscreen (dict admits "window","screen","area")
+#             bpy.ops.screen.screen_full_area({"screen": screen, "area": a})
+#             break
+
+
+def maximize_area(context, area_name="VIEW_3D"):
+    """
+    If the current context has an area of type self.AREA_TYPE, that area gets
+    maximized. Otherwise does nothing. Supported types can be seen here::
+
+       https://docs.blender.org/api/blender2.8/bpy.types.Area.html
+    """
+    for a in context.screen.areas:
+        if a.type == area_name:
+            bpy.ops.screen.screen_full_area({"area": a})
+            break

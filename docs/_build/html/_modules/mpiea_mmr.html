@@ -175,6 +175,13 @@
 <span class="kn">from</span> <span class="nn">.ui</span> <span class="k">import</span> <span class="n">MY_PANEL_PT_MyPanel1</span><span class="p">,</span> <span class="n">MY_PANEL_PT_MyPanel2</span>
 <span class="kn">from</span> <span class="nn">.ui</span> <span class="k">import</span> <span class="n">MPIEA_MMR_PT_ExportPanel</span>
 
+<span class="c1">#</span>
+<span class="kn">from</span> <span class="nn">.ui</span> <span class="k">import</span> <span class="n">MaximizeAreaView3d</span>
+<span class="kn">from</span> <span class="nn">.ui</span> <span class="k">import</span> <span class="n">MaximizeAreaConsole</span>
+
+<span class="c1"># scene builder</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">scene_builder</span>
 
 <span class="c1"># #############################################################################</span>
 <span class="c1"># ## CONFIG</span>
@@ -201,7 +208,7 @@
 <span class="c1"># #############################################################################</span>
 
 <span class="n">classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ObjectCursorArray</span><span class="p">,</span> <span class="n">MY_PANEL_PT_MyPanel1</span><span class="p">,</span> <span class="n">MY_PANEL_PT_MyPanel2</span><span class="p">,</span>
-           <span class="n">MPIEA_MMR_PT_ExportPanel</span><span class="p">]</span>
+           <span class="n">MPIEA_MMR_PT_ExportPanel</span><span class="p">,</span> <span class="n">MaximizeAreaView3d</span><span class="p">,</span> <span class="n">MaximizeAreaConsole</span><span class="p">]</span>
 <span class="n">register_cl</span><span class="p">,</span> <span class="n">unregister_cl</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">register_classes_factory</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span>
 <span class="n">kmm</span> <span class="o">=</span> <span class="n">KeymapManager</span><span class="p">()</span>
 <span class="n">omm</span> <span class="o">=</span> <span class="n">OperatorToMenuManager</span><span class="p">()</span>
@@ -214,6 +221,8 @@
     <span class="n">register_cl</span><span class="p">()</span>
     <span class="n">omm</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">ObjectCursorArray</span><span class="p">,</span> <span class="n">bpy</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">VIEW3D_MT_object</span><span class="p">)</span>
     <span class="n">kmm</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;PRESS&quot;</span><span class="p">,</span> <span class="n">ObjectCursorArray</span><span class="o">.</span><span class="n">bl_idname</span><span class="p">)</span></div>
+    <span class="c1">#</span>
+    <span class="c1"># scene_builder.main(**scene_builder.MAIN_KWARGS)</span>
 
 
 <div class="viewcode-block" id="unregister"><a class="viewcode-back" href="../mpiea_mmr.html#mpiea_mmr.unregister">[docs]</a><span class="k">def</span> <span class="nf">unregister</span><span class="p">():</span>

@@ -1,0 +1,463 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mpiea_mmr.scene_builder &mdash; mpiea_mmr 0.1.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> mpiea_mmr
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../mpiea_mmr.html">mpiea_mmr package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">mpiea_mmr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../mpiea_mmr.html">mpiea_mmr</a> &raquo;</li>
+        
+      <li>mpiea_mmr.scene_builder</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mpiea_mmr.scene_builder</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains the functionality related to scene building, i.e.</span>
+<span class="sd">creating/importing/modifying objects, etc.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Andres FR&quot;</span>
+
+<span class="kn">import</span> <span class="nn">bpy</span>
+<span class="c1">#</span>
+<span class="kn">from</span> <span class="nn">.blender_utils</span> <span class="k">import</span> <span class="n">maximize_area</span>
+<span class="c1">#</span>
+
+
+<span class="n">C</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span>
+
+
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># ## OBJECTS</span>
+<span class="c1"># #############################################################################</span>
+
+
+<span class="c1"># # -*- coding:utf-8 -*-</span>
+
+
+<span class="c1"># &quot;&quot;&quot;</span>
+<span class="c1"># Scene builder script for Blender. It performs the following tasks:</span>
+<span class="c1"># 1. General config (rendering etc)</span>
+<span class="c1"># 2. Create and configure sunlight</span>
+<span class="c1"># 3. Create and configure camera</span>
+<span class="c1"># 4. Create camera light, append to camera and configure</span>
+<span class="c1"># 5. Create floor with tiled image texture and colored subsurface</span>
+<span class="c1"># 6. Load human model as MHX2 format</span>
+<span class="c1"># 7. Load motion capture as BVH and apply to human</span>
+<span class="c1"># 8. Run sequence</span>
+<span class="c1"># &quot;&quot;&quot;</span>
+
+
+<span class="c1"># __author__ = &quot;Andres FR&quot;</span>
+
+
+<span class="c1"># import argparse</span>
+<span class="c1"># import sys</span>
+<span class="c1"># from math import radians, degrees</span>
+
+<span class="c1"># from mathutils import Vector, Euler  # mathutils is a blender package</span>
+<span class="c1"># import bpy</span>
+<span class="c1"># C = bpy.context</span>
+<span class="c1"># D = bpy.data</span>
+
+
+
+<span class="c1"># ###############################################################################</span>
+<span class="c1"># ### GLOBALS</span>
+<span class="c1"># ###############################################################################</span>
+
+
+<span class="c1"># INIT_SHADING_MODE = &quot;RENDERED&quot;</span>
+<span class="c1"># INIT_3D_MAXIMIZED = False</span>
+<span class="c1"># # renderer</span>
+<span class="c1"># EEVEE_RENDER_SAMPLES = 1</span>
+<span class="c1"># EEVEE_VIEWPORT_SAMPLES = 1</span>
+<span class="c1"># EEVEE_VIEWPORT_DENOISING = False</span>
+<span class="c1"># # sequencer</span>
+<span class="c1"># FRAME_START = 2  # 1 is T-pose if imported with MakeWalk</span>
+
+
+<span class="c1"># # In Blender, x points away from the cam, y to the left and z up</span>
+<span class="c1"># # (right-hand rule). Locations are in meters, rotation in degrees.</span>
+<span class="c1"># # Positive rotation on an axis means counter-clockwise when</span>
+<span class="c1"># # the axis points to the cam. 0,0,0 rotation points straight</span>
+<span class="c1"># # to the bottom.</span>
+
+<span class="c1"># SUN_NAME = &quot;SunLight&quot;</span>
+<span class="c1"># SUN_LOC = Vector((0.0, 0.0, 10.0))</span>
+<span class="c1"># SUN_ROT = rot_euler_degrees(0, 0, 0)</span>
+<span class="c1"># SUN_STRENGTH = 1.0  # in units relative to a reference sun</span>
+
+<span class="c1"># CAM_NAME = &quot;Cam&quot;</span>
+<span class="c1"># CAM_LOC = Vector((-9.0, -9.0, 1.6))  # cam is on the front-right</span>
+<span class="c1"># CAM_ROT = rot_euler_degrees(85.0, 0.0, -45.0)  # human-like view at the origin</span>
+
+<span class="c1"># CAM_LIGHT_NAME = &quot;CamLight&quot;</span>
+<span class="c1"># CAM_LIGHT_LOC = Vector((0.0, 1.0, 0.0))</span>
+<span class="c1"># CAM_LIGHT_WATTS = 40.0  # intensity of the bulb in watts</span>
+<span class="c1"># CAM_LIGHT_SHADOW = False</span>
+
+<span class="c1"># FLOOR_NAME = &quot;Floor&quot;</span>
+<span class="c1"># FLOOR_SIZE = 10  # in meters</span>
+<span class="c1"># FLOOR_METALLIC = 0.0  # metalic aspect, ratio from 0 to 1</span>
+<span class="c1"># FLOOR_SPECULAR = 0.0  # specular aspect, ratio from 0 to 1</span>
+<span class="c1"># FLOOR_ROUGHNESS = 1.0  # the higher the more light difussion. From 0 to 1</span>
+<span class="c1"># FLOOR_SUBSURFACE_RATIO = 0.5</span>
+<span class="c1"># FLOOR_SUBSURFACE_COLOR = Vector((1.0, 1.0, 1.0, 1.0))  # RGBA (A=1 for opaque)</span>
+<span class="c1"># floor_mat_name = FLOOR_NAME+&quot;Material&quot;</span>
+<span class="c1"># FLOOR_IMG_ABSPATH = &#39;/home/a9fb1e/github-work/human-renderer/blender_data/assets/marble_chess.jpg&#39;</span>
+
+<span class="c1"># MHX2_ABSPATH = &quot;/home/a9fb1e/github-work/human-renderer/makehuman_data/exported_models/tpose_african.mhx2&quot;</span>
+<span class="c1"># MHX2_NAME = &quot;TposeAfrican&quot;</span>
+
+
+<span class="c1"># BVH_ABSPATH = &quot;/home/a9fb1e/github-work/human-renderer/makehuman_data/poses/cmu_motion_captures/01/01_06.bvh&quot;</span>
+
+
+<span class="c1"># ###############################################################################</span>
+<span class="c1"># ### MAIN ROUTINE</span>
+<span class="c1"># ###############################################################################</span>
+
+<span class="c1"># # general settings</span>
+
+<span class="c1"># # set denoising feature</span>
+<span class="c1"># C.scene.eevee.use_taa_reprojection = EEVEE_VIEWPORT_DENOISING</span>
+<span class="c1"># C.scene.eevee.taa_render_samples = EEVEE_RENDER_SAMPLES</span>
+<span class="c1"># C.scene.eevee.taa_samples = EEVEE_VIEWPORT_SAMPLES</span>
+<span class="c1"># C.scene.frame_start = FRAME_START</span>
+<span class="c1"># # set all 3D screens to RENDERED mode</span>
+<span class="c1"># set_shading_mode(INIT_SHADING_MODE, D.screens)</span>
+
+<span class="c1"># # set fullscreen</span>
+<span class="c1"># if INIT_3D_MAXIMIZED:</span>
+<span class="c1">#     maximize_layout_3d_area()</span>
+
+
+<span class="c1"># # select and delete all objects</span>
+<span class="c1"># bpy.ops.object.select_all(action=&quot;SELECT&quot;)</span>
+<span class="c1"># bpy.ops.object.delete()</span>
+<span class="c1"># purge_unused_data()</span>
+
+<span class="c1"># # add a sun</span>
+<span class="c1"># bpy.ops.object.light_add(type=&quot;SUN&quot;, location=SUN_LOC, rotation=SUN_ROT)</span>
+<span class="c1"># C.object.name = SUN_NAME</span>
+<span class="c1"># C.object.data.name = SUN_NAME</span>
+<span class="c1"># C.object.data.energy = SUN_STRENGTH</span>
+
+<span class="c1"># # add a cam</span>
+<span class="c1"># bpy.ops.object.camera_add(location=CAM_LOC, rotation=CAM_ROT)</span>
+<span class="c1"># C.object.name = CAM_NAME</span>
+<span class="c1"># C.object.data.name = CAM_NAME</span>
+
+<span class="c1"># # add light as a child of cam</span>
+<span class="c1"># bpy.ops.object.light_add(type=&quot;POINT&quot;, location=CAM_LIGHT_LOC)</span>
+<span class="c1"># C.object.name = CAM_LIGHT_NAME</span>
+<span class="c1"># C.object.data.name = CAM_LIGHT_NAME</span>
+<span class="c1"># C.object.data.energy = CAM_LIGHT_WATTS</span>
+<span class="c1"># C.object.parent = get_obj(CAM_NAME)</span>
+<span class="c1"># C.object.data.use_shadow = False</span>
+
+
+<span class="c1"># # add floor</span>
+<span class="c1"># bpy.ops.mesh.primitive_plane_add()</span>
+<span class="c1"># C.object.name = FLOOR_NAME</span>
+<span class="c1"># C.object.data.name = FLOOR_NAME</span>
+<span class="c1"># C.object.scale = (FLOOR_SIZE, FLOOR_SIZE, 0)</span>
+
+<span class="c1"># # add floor texture</span>
+<span class="c1"># floor_material = bpy.data.materials.new(name=floor_mat_name)</span>
+<span class="c1"># C.object.data.materials.append(floor_material)</span>
+<span class="c1"># floor_material.use_nodes = True</span>
+<span class="c1"># bsdf_inputs = floor_material.node_tree.nodes[&quot;Principled BSDF&quot;].inputs</span>
+<span class="c1"># bsdf_inputs[&quot;Metallic&quot;].default_value = FLOOR_METALLIC</span>
+<span class="c1"># bsdf_inputs[&quot;Specular&quot;].default_value = FLOOR_SPECULAR</span>
+<span class="c1"># bsdf_inputs[&quot;Roughness&quot;].default_value = FLOOR_ROUGHNESS</span>
+<span class="c1"># # add image node to floor texture, load the desired image and set it</span>
+<span class="c1"># floor_img_node = floor_material.node_tree.nodes.new(&quot;ShaderNodeTexImage&quot;)</span>
+<span class="c1"># floor_img_node.location = (-300, 300)</span>
+<span class="c1"># img = bpy.data.images.load(FLOOR_IMG_ABSPATH)</span>
+<span class="c1"># floor_img_node.image = img</span>
+
+<span class="c1"># # connect image node with BSDF node:</span>
+<span class="c1"># floor_material.node_tree.links.new(floor_img_node.outputs[&quot;Color&quot;],</span>
+<span class="c1">#                                    bsdf_inputs[&quot;Base Color&quot;])</span>
+
+<span class="c1"># # expand floor UV to make image be displayed in smaller tiles</span>
+<span class="c1"># floor_uv_vertices = D.meshes[FLOOR_NAME].uv_layers[&quot;UVMap&quot;].data</span>
+<span class="c1"># for v in floor_uv_vertices: # collection of MeshUVLoops</span>
+<span class="c1">#     v.uv *= FLOOR_SIZE  # v.uv is a 2D Vector</span>
+
+
+<span class="c1"># # mix floor image with subsurface color</span>
+<span class="c1"># subsurface_node = floor_material.node_tree.nodes.new(&quot;ShaderNodeValue&quot;)</span>
+<span class="c1"># subsurface_color_node = floor_material.node_tree.nodes.new(&quot;ShaderNodeRGB&quot;)</span>
+<span class="c1"># subsurface_node.location = (-300, 100)</span>
+<span class="c1"># subsurface_color_node.location = (-300, -100)</span>
+<span class="c1"># #</span>
+<span class="c1"># subsurface_node.outputs[&quot;Value&quot;].default_value = FLOOR_SUBSURFACE_RATIO</span>
+<span class="c1"># subsurface_color_node.outputs[&quot;Color&quot;].default_value = FLOOR_SUBSURFACE_COLOR</span>
+<span class="c1"># #</span>
+<span class="c1"># floor_material.node_tree.links.new(subsurface_node.outputs[&quot;Value&quot;],</span>
+<span class="c1">#                                    bsdf_inputs[&quot;Subsurface&quot;])</span>
+<span class="c1"># floor_material.node_tree.links.new(subsurface_color_node.outputs[&quot;Color&quot;],</span>
+<span class="c1">#                                    bsdf_inputs[&quot;Subsurface Color&quot;])</span>
+
+
+<span class="c1"># # import makehuman</span>
+<span class="c1"># select_all(action=&quot;DESELECT&quot;)  # make sure that</span>
+<span class="c1"># select_by_name(MHX2_NAME)      # only human is selected</span>
+
+<span class="c1"># bpy.ops.import_scene.makehuman_mhx2(filepath=MHX2_ABSPATH)</span>
+<span class="c1"># C.object.name = MHX2_NAME</span>
+<span class="c1"># C.object.data.name = MHX2_NAME</span>
+
+
+<span class="c1"># # retarget BVH to human</span>
+<span class="c1"># bpy.ops.mcp.load_and_retarget(filepath=BVH_ABSPATH)  # Assumes selected is a human</span>
+
+
+<span class="c1"># # QUESTIONABLE/OPTIONAL STUFF:</span>
+
+<span class="c1"># # prevent user from selecting any light, cam or floor:</span>
+<span class="c1"># D.objects[SUN_NAME].hide_select = True</span>
+<span class="c1"># D.objects[CAM_NAME].hide_select = True</span>
+<span class="c1"># D.objects[CAM_LIGHT_NAME].hide_select = True</span>
+<span class="c1"># D.objects[FLOOR_NAME].hide_select = True</span>
+<span class="c1"># # start playing sequence</span>
+<span class="c1"># bpy.ops.screen.animation_play()</span>
+
+
+
+<span class="c1"># # hide from ALL viewports.</span>
+<span class="c1"># # As for dec 2018, &quot;eye&quot; functionality not in the API:</span>
+<span class="c1"># # https://devtalk.blender.org/t/what-object-property-does-bpy-ops-object-hide-view-set-actually-toggle/4517/3</span>
+<span class="c1"># # C.object.hide_viewport = True</span>
+
+
+<span class="c1"># # bpy.ops.object.mode_set(mode=&quot;OBJECT&quot;)</span>
+<span class="c1"># # C.object.hide_viewport = True  # hide skeleton from 3d view</span>
+
+
+
+<span class="c1"># # [&#39;Base Color&#39;, &#39;Subsurface&#39;, &#39;Subsurface Radius&#39;, &#39;Subsurface Color&#39;, &#39;Metallic&#39;, &#39;Specular&#39;, &#39;Specular Tint&#39;, &#39;Roughness&#39;, &#39;Anisotropic&#39;, &#39;Anisotropic Rotation&#39;, &#39;Sheen&#39;, &#39;Sheen Tint&#39;, &#39;Clearcoat&#39;, &#39;Clearcoat Roughness&#39;, &#39;IOR&#39;, &#39;Transmission&#39;, &#39;Transmission Roughness&#39;, &#39;Normal&#39;, &#39;Clearcoat Normal&#39;, &#39;Tangent&#39;]</span>
+
+<span class="c1"># # &gt;&gt;&gt; m.node_tree.nodes[&#39;Image Texture&#39;].image</span>
+<span class="c1"># # &gt;&gt;&gt; m = C.object.data.materials[&#39;FloorMaterial&#39;]</span>
+
+<span class="c1"># # TODO:</span>
+
+
+<span class="c1"># # 5. Add N humans in Tpose at specified positions</span>
+<span class="c1"># # TODO: create own workspace? instead of # remove undesired UI</span>
+
+<span class="c1"># # utest or DELETE every implemented code, used or not</span>
+<span class="c1"># # things like set_shading_mode or maximize_3d_view are to be tested on every window, every screen, every area etc. (e.g. false everywhere except the active one etc).</span>
+
+
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># ## MAIN ROUTINE</span>
+<span class="c1"># #############################################################################</span>
+
+<span class="n">MAIN_KWARGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;view3d_maximized&quot;</span><span class="p">:</span> <span class="kc">True</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.scene_builder.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">view3d_maximized</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; scene builder main&quot;</span><span class="p">)</span>
+
+    <span class="c1"># set fullscreen</span>
+    <span class="k">if</span> <span class="n">view3d_maximized</span><span class="p">:</span>
+        <span class="n">maximize_area</span><span class="p">(</span><span class="s2">&quot;Layout&quot;</span><span class="p">,</span> <span class="s2">&quot;VIEW_3D&quot;</span><span class="p">)</span>
+
+    <span class="n">C</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Andres FR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
