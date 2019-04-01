@@ -12,9 +12,10 @@ All notable changes to this project will be documented in this file.
 ## [[Unreleased](https://github.com/andres-fr/human-renderer/compare/0.1.0...HEAD)]
 
 ### Added
-- Scene builder script with sun, cam, lightcam, floor, human, textures and bvh sequence.
-- Custom Blender UI creator
-- converted script to an add-on with all infrastructure working, including Travis CI [ONGOING]
+- Added autodoc functionality to infrastructure.
+- Design and implementation of add-on as an Operator+Panel API with functionality for scene building, custom UI and advanced editing [ONGOING]
+- Iplementation of apps as startup scripts that use the implemented API [ONGOING]
+- Added Travis CI [ONGOING]
 
 ## [0.1.0] - 27/02/2019
 
@@ -23,6 +24,15 @@ All notable changes to this project will be documented in this file.
 
 
 ## TODO:
+
+- Working on script reimplementation, scene building done (untested) up to floor. Remaining:
+  * API coverage for makehuman interaction (clean and comprehensive please)
+  * API coverage for "eye icon"
+  * API coverage for multi-channel, multi-object sounds (multiple channels per object? children objects?)
+  * API coverage for sequence processing, synchronization etc
+  * API coverage for serialization (blender file, objects, sounds, also: Efficient storage of the retargeted human models!).
+  * API coverage for advanced UI editing (own workspace etc)
+
 
 
 - Design: ops can't be easily called at addon register time. Cleanest way is probably to

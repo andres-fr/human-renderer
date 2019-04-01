@@ -202,66 +202,6 @@ class KeymapManager(list):
         self.clear()
 
 
-# #############################################################################
-# ## EYE ICON
-# ## See https://blenderartists.org/t/show-hide-collection-blender-beta-2-80/1141768
-# #############################################################################
-
-def get_viewport_ordered_collections(context):
-    def fn(c, out, addme):
-        if addme:
-            out.append(c)
-        for c1 in c.children:
-            out.append(c1)
-        for c1 in c.children:
-            fn(c1, out, False)
-    collections = []
-    fn(context.scene.collection, collections, True)
-    return collections
-
-def get_area_from_context(context, area_type):
-    area = None
-    for a in context.screen.areas:
-        if a.type == area_type:
-            area = a
-            break
-    return area
-
-def set_collection_viewport_visibility(context, collection_name, visibility=True):
-    collections = get_viewport_ordered_collections(context)
-
-    collection = None
-    index = 0
-    for c in collections:
-        if c.name == collection_name:
-            collection = c
-            break
-        index += 1
-
-    if collection is None:
-        return
-
-    first_object = None
-    if len(collection.objects) > 0:
-        first_object = collection.objects[0]
-
-    try:
-        bpy.ops.object.hide_collection(context, collection_index=index, toggle=True)
-
-        if first_object.visible_get() != visibility:
-            bpy.ops.object.hide_collection(context, collection_index=index, toggle=True)
-    except:
-        context_override = context.copy()
-        context_override["area"] = get_area_from_context(context, 'VIEW_3D')
-
-        bpy.ops.object.hide_collection(context_override, collection_index=index, toggle=True)
-
-        if first_object.visible_get() != visibility:
-            bpy.ops.object.hide_collection(context_override, collection_index=index, toggle=True)
-
-    return collection
-
-
 #############################################################################
 ## MATH
 #############################################################################
@@ -575,3 +515,109 @@ def add_floor(context, name, size, metallic=0.0, specular=0.0, roughness=1.0,
         floor_uv_vertices = plane.data.uv_layers["UVMap"].data
         for v in floor_uv_vertices: # collection of MeshUVLoops
             v.uv *= size * 0.5 / texture_img_tilesize # v.uv is a 2D Vector
+
+
+
+# #############################################################################
+
+
+
+# # general settings
+
+# # set denoising feature
+# C.scene.eevee.use_taa_reprojection = EEVEE_VIEWPORT_DENOISING
+# C.scene.eevee.taa_render_samples = EEVEE_RENDER_SAMPLES
+# C.scene.eevee.taa_samples = EEVEE_VIEWPORT_SAMPLES
+# C.scene.frame_start = FRAME_START
+# # set all 3D screens to RENDERED mode
+# set_shading_mode(INIT_SHADING_MODE, D.screens)
+
+
+
+
+# # import makehuman
+# select_all(action="DESELECT")  # make sure that
+# select_by_name(MHX2_NAME)      # only human is selected
+
+# bpy.ops.import_scene.makehuman_mhx2(filepath=MHX2_ABSPATH)
+# C.object.name = MHX2_NAME
+# C.object.data.name = MHX2_NAME
+
+
+# # retarget BVH to human
+# bpy.ops.mcp.load_and_retarget(filepath=BVH_ABSPATH)  # Assumes selected is a human
+
+
+# # QUESTIONABLE/OPTIONAL STUFF:
+
+# # prevent user from selecting any light, cam or floor:
+# D.objects[SUN_NAME].hide_select = True
+# D.objects[CAM_NAME].hide_select = True
+# D.objects[CAM_LIGHT_NAME].hide_select = True
+# D.objects[FLOOR_NAME].hide_select = True
+# # start playing sequence
+# bpy.ops.screen.animation_play()
+
+
+
+
+
+
+# # #############################################################################
+# # ## EYE ICON
+# # ## See https://blenderartists.org/t/show-hide-collection-blender-beta-2-80/1141768
+# # #############################################################################
+
+# def get_viewport_ordered_collections(context):
+#     def fn(c, out, addme):
+#         if addme:
+#             out.append(c)
+#         for c1 in c.children:
+#             out.append(c1)
+#         for c1 in c.children:
+#             fn(c1, out, False)
+#     collections = []
+#     fn(context.scene.collection, collections, True)
+#     return collections
+
+# def get_area_from_context(context, area_type):
+#     area = None
+#     for a in context.screen.areas:
+#         if a.type == area_type:
+#             area = a
+#             break
+#     return area
+
+# def set_collection_viewport_visibility(context, collection_name, visibility=True):
+#     collections = get_viewport_ordered_collections(context)
+
+#     collection = None
+#     index = 0
+#     for c in collections:
+#         if c.name == collection_name:
+#             collection = c
+#             break
+#         index += 1
+
+#     if collection is None:
+#         return
+
+#     first_object = None
+#     if len(collection.objects) > 0:
+#         first_object = collection.objects[0]
+
+#     try:
+#         bpy.ops.object.hide_collection(context, collection_index=index, toggle=True)
+
+#         if first_object.visible_get() != visibility:
+#             bpy.ops.object.hide_collection(context, collection_index=index, toggle=True)
+#     except:
+#         context_override = context.copy()
+#         context_override["area"] = get_area_from_context(context, 'VIEW_3D')
+
+#         bpy.ops.object.hide_collection(context_override, collection_index=index, toggle=True)
+
+#         if first_object.visible_get() != visibility:
+#             bpy.ops.object.hide_collection(context_override, collection_index=index, toggle=True)
+
+#     return collection

@@ -3,11 +3,8 @@
 
 """
 This module contains the functionality related to user-interaction (UI)
-with Blender, i.e.:
-
-- Subclasses from ``bpy.types.Operator`` defining user-callable functors.
-- Subclasses from ``bpy.types.Panel`` that contain GUI widgets and \
-functionality.
+with Blender, i.e. subclasses from ``bpy.types.Panel`` that contain GUI
+widgets and functionality.
 """
 
 
@@ -15,7 +12,6 @@ __author__ = "Andres FR"
 
 
 from bpy.types import Panel
-
 
 
 # #############################################################################
@@ -51,7 +47,7 @@ class MpieaMmrPanel():
     bl_region_type = "UI"
     # not sure if needed:
     # bl_context = "object"
-    # bl_options = {'UNDO'}  # {'HIDE_HEADER', 'UNDO', 'REGISTER', 'DEFAULT_CLOSED'}
+    # bl_options = {'UNDO'}  # {'HIDE_HEADER', 'REGISTER', 'DEFAULT_CLOSED'}
 
     @classmethod
     def poll(cls, context):
