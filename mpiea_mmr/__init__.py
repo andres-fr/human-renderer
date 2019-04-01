@@ -19,19 +19,17 @@ __author__ = "Andres FR"
 import bpy
 #
 from .blender_utils import OperatorToMenuManager, KeymapManager
+
 # import operators
-from .ui import ObjectCursorArray
-# import panels
-from .ui import MY_PANEL_PT_MyPanel1, MY_PANEL_PT_MyPanel2
-from .ui import MPIEA_MMR_PT_ExportPanel
+from .operators import MaximizeAreaView3d
+from .operators import MaximizeAreaConsole
+from .operators import CleanAndPurgeScene
+from .operators import CreateBasicScene
+from .operators import CleanPurgeAndCreateBasicScene
+# # import panels
+# from .ui import MY_PANEL_PT_MyPanel1, MY_PANEL_PT_MyPanel2
+# from .ui import MPIEA_MMR_PT_ExportPanel
 
-#
-from .ui import MaximizeAreaView3d
-from .ui import MaximizeAreaConsole
-
-# scene builder
-
-from . import scene_builder
 
 # #############################################################################
 # ## CONFIG
@@ -57,8 +55,20 @@ bl_info = {
 # ## MAIN ROUTINE
 # #############################################################################
 
-classes = [ObjectCursorArray, MY_PANEL_PT_MyPanel1, MY_PANEL_PT_MyPanel2,
-           MPIEA_MMR_PT_ExportPanel, MaximizeAreaView3d, MaximizeAreaConsole]
+# the classes to be registered
+classes = []
+# # add Panels to registered classes
+# classes += [MY_PANEL_PT_MyPanel1,
+#             MY_PANEL_PT_MyPanel2,
+#             MPIEA_MMR_PT_ExportPanel]
+
+# add Operators to registered classes
+classes += [MaximizeAreaView3d,
+            MaximizeAreaConsole,
+            CleanAndPurgeScene,
+            CreateBasicScene,
+            CleanPurgeAndCreateBasicScene]
+
 register_cl, unregister_cl = bpy.utils.register_classes_factory(classes)
 kmm = KeymapManager()
 omm = OperatorToMenuManager()
@@ -69,8 +79,8 @@ def register():
     Main register function, called on startup by Blender
     """
     register_cl()
-    omm.register(ObjectCursorArray, bpy.types.VIEW3D_MT_object)
-    kmm.register("D", "PRESS", ObjectCursorArray.bl_idname)
+    # omm.register(ObjectCursorArray, bpy.types.VIEW3D_MT_object)
+    # kmm.register(bpy.context, "D", "PRESS", ObjectCursorArray.bl_idname)
     #
     # scene_builder.main(**scene_builder.MAIN_KWARGS)
 

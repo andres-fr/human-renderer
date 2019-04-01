@@ -1,0 +1,459 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mpiea_mmr.operators &mdash; mpiea_mmr 0.1.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> mpiea_mmr
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../mpiea_mmr.html">mpiea_mmr package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">mpiea_mmr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../mpiea_mmr.html">mpiea_mmr</a> &raquo;</li>
+        
+      <li>mpiea_mmr.operators</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mpiea_mmr.operators</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains ubclasses from ``bpy.types.Operator`` defining</span>
+<span class="sd">user-callable functors. Operators can also be embedded in Panels and</span>
+<span class="sd">other UI elements.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Andres FR&quot;</span>
+
+<span class="kn">from</span> <span class="nn">mathutils</span> <span class="k">import</span> <span class="n">Vector</span>  <span class="c1"># mathutils is a blender package</span>
+<span class="kn">import</span> <span class="nn">bpy</span>
+<span class="kn">from</span> <span class="nn">bpy.types</span> <span class="k">import</span> <span class="n">Operator</span>
+<span class="c1"># from bpy.props import IntProperty</span>
+<span class="c1">#</span>
+<span class="kn">from</span> <span class="nn">.blender_utils</span> <span class="k">import</span> <span class="n">get_area_by_type</span>
+<span class="kn">from</span> <span class="nn">.blender_utils</span> <span class="k">import</span> <span class="n">rot_euler_degrees</span>
+<span class="kn">from</span> <span class="nn">.blender_utils</span> <span class="k">import</span> <span class="n">PurgeUnusedData</span>
+<span class="kn">from</span> <span class="nn">.blender_utils</span> <span class="k">import</span> <span class="n">add_sun</span>
+<span class="kn">from</span> <span class="nn">.blender_utils</span> <span class="k">import</span> <span class="n">add_cam</span>
+<span class="kn">from</span> <span class="nn">.blender_utils</span> <span class="k">import</span> <span class="n">add_floor</span>
+<span class="kn">from</span> <span class="nn">.blender_utils</span> <span class="k">import</span> <span class="n">asset_path</span>
+<span class="c1">#</span>
+
+
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># ## EXAMPLE</span>
+<span class="c1"># #############################################################################</span>
+
+<span class="c1"># class ObjectCursorArray(Operator):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     Duplicates selected object N times between its position and the cursor&#39;s.</span>
+
+<span class="c1">#     More info:</span>
+<span class="c1">#     &lt;API_URL&gt;/bpy.types.Operator.html#bpy.types.Operator.bl_options</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     bl_idname = &quot;object.cursor_array&quot;  # This comes after &#39;bpy.ops&#39;</span>
+<span class="c1">#     bl_label = &quot;Cursor Array Label&quot;</span>
+<span class="c1">#     bl_options = {&#39;REGISTER&#39;, &#39;UNDO&#39;}</span>
+
+<span class="c1">#     tot1: IntProperty(name=&quot;Steps1&quot;, default=2, min=1, max=100)</span>
+<span class="c1">#     tot2: IntProperty(name=&quot;Steps2&quot;, default=2, min=1, max=100)</span>
+
+<span class="c1">#     def execute(self, context):</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         scene = context.scene</span>
+<span class="c1">#         cursor = scene.cursor.location</span>
+<span class="c1">#         obj = context.active_object</span>
+<span class="c1">#         tot_all = self.tot1 + self.tot2</span>
+<span class="c1">#         for i in range(tot_all):</span>
+<span class="c1">#             obj_new = obj.copy()</span>
+<span class="c1">#             scene.collection.objects.link(obj_new)</span>
+
+<span class="c1">#             factor = i / tot_all</span>
+<span class="c1">#             obj_new.location = (obj.location * factor) + (cursor * (1.0 - factor))</span>
+
+<span class="c1">#         return {&#39;FINISHED&#39;}</span>
+
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># ## APPEARANCE</span>
+<span class="c1"># #############################################################################</span>
+
+<div class="viewcode-block" id="AbstractMaximizeArea"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.operators.AbstractMaximizeArea">[docs]</a><span class="k">class</span> <span class="nc">AbstractMaximizeArea</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    If the current context has an area of type self.AREA_TYPE, that area gets</span>
+<span class="sd">    maximized. Otherwise does nothing. Supported types can be seen here::</span>
+
+<span class="sd">    .. warning::</span>
+
+<span class="sd">      This is an **abstract class**. It is not expected to be directly</span>
+<span class="sd">      used. Instead, extend it before as shown.</span>
+
+<span class="sd">    To create an Operator for a specific area type, simply extend this class</span>
+<span class="sd">    as follows::</span>
+
+<span class="sd">       class MaximizeAreaView3d(Operator, AbstractMaximizeArea):</span>
+<span class="sd">           AREA_TYPE = &quot;VIEW_3D&quot;</span>
+<span class="sd">           bl_idname = &quot;screen.maximize_view_3d&quot;  # path after &#39;bpy.ops&#39;</span>
+<span class="sd">           bl_label = &quot;Maximize VIEW_3D (if present)&quot;</span>
+
+<span class="sd">    | Supported types can be seen here:</span>
+<span class="sd">    | https://docs.blender.org/api/blender2.8/bpy.types.Area.html</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AbstractMaximizeArea.poll"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.operators.AbstractMaximizeArea.poll">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">poll</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predicate, True iff context.screen.areas contains an area</span>
+<span class="sd">        of self.AREA_TYPE</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">get_area_by_type</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">AREA_TYPE</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">a</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractMaximizeArea.execute"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.operators.AbstractMaximizeArea.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See class docstring.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">get_area_by_type</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">AREA_TYPE</span><span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">screen_full_area</span><span class="p">({</span><span class="s2">&quot;area&quot;</span><span class="p">:</span> <span class="n">a</span><span class="p">})</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">}</span></div></div>
+
+
+<div class="viewcode-block" id="MaximizeAreaView3d"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.operators.MaximizeAreaView3d">[docs]</a><span class="k">class</span> <span class="nc">MaximizeAreaView3d</span><span class="p">(</span><span class="n">Operator</span><span class="p">,</span> <span class="n">AbstractMaximizeArea</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    See docstring for AbstractMaximizeArea.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">AREA_TYPE</span> <span class="o">=</span> <span class="s2">&quot;VIEW_3D&quot;</span>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;screen.maximize_view_3d&quot;</span>  <span class="c1"># path after &#39;bpy.ops&#39;</span>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Maximize VIEW_3D (if present)&quot;</span></div>
+
+
+<div class="viewcode-block" id="MaximizeAreaConsole"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.operators.MaximizeAreaConsole">[docs]</a><span class="k">class</span> <span class="nc">MaximizeAreaConsole</span><span class="p">(</span><span class="n">Operator</span><span class="p">,</span> <span class="n">AbstractMaximizeArea</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    See docstring for AbstractMaximizeArea.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">AREA_TYPE</span> <span class="o">=</span> <span class="s2">&quot;CONSOLE&quot;</span>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;screen.maximize_console&quot;</span>  <span class="c1"># path after &#39;bpy.ops&#39;</span>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Maximize Python console (if present)&quot;</span></div>
+
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># ## SCENE BUILDING</span>
+<span class="c1"># #############################################################################</span>
+
+
+<div class="viewcode-block" id="CleanAndPurgeSceneMixin"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.operators.CleanAndPurgeSceneMixin">[docs]</a><span class="k">class</span> <span class="nc">CleanAndPurgeSceneMixin</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Contains functionality to remove all objects in the secene, as well as all</span>
+<span class="sd">    data blocks with zero users.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="CleanAndPurgeSceneMixin.clean_and_purge_scene"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.operators.CleanAndPurgeSceneMixin.clean_and_purge_scene">[docs]</a>    <span class="k">def</span> <span class="nf">clean_and_purge_scene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See class docstring.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;SELECT&quot;</span><span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">PurgeUnusedData</span><span class="p">()()</span></div></div>
+
+
+<div class="viewcode-block" id="CreateBasicSceneMixin"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.operators.CreateBasicSceneMixin">[docs]</a><span class="k">class</span> <span class="nc">CreateBasicSceneMixin</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Contains the following functionality:</span>
+<span class="sd">    1. Adds a sun with</span>
+<span class="sd">    Removes all objects in the secene, as well as all data blocks with zero</span>
+<span class="sd">    users.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">SUN_NAME</span> <span class="o">=</span> <span class="s2">&quot;SunLight&quot;</span>
+    <span class="n">SUN_LOC</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">))</span>
+    <span class="n">SUN_ROT</span> <span class="o">=</span> <span class="n">rot_euler_degrees</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">SUN_STRENGTH</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># in units relative to a reference sun</span>
+    <span class="c1">#</span>
+    <span class="n">CAM_NAME</span> <span class="o">=</span> <span class="s2">&quot;Cam&quot;</span>
+    <span class="n">CAM_LOC</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="o">-</span><span class="mf">9.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">))</span>  <span class="c1"># cam is on the front-right</span>
+    <span class="n">CAM_ROT</span> <span class="o">=</span> <span class="n">rot_euler_degrees</span><span class="p">(</span><span class="mf">85.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">45.0</span><span class="p">)</span>  <span class="c1"># human-like view to origin</span>
+    <span class="c1">#</span>
+    <span class="n">CAM_LIGHT_NAME</span> <span class="o">=</span> <span class="s2">&quot;CamLight&quot;</span>
+    <span class="n">CAM_LIGHT_LOC</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+    <span class="n">CAM_LIGHT_WATTS</span> <span class="o">=</span> <span class="mf">40.0</span>  <span class="c1"># intensity of the bulb in watts</span>
+    <span class="n">CAM_LIGHT_SHADOW</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1">#</span>
+    <span class="n">FLOOR_NAME</span> <span class="o">=</span> <span class="s2">&quot;Floor&quot;</span>
+    <span class="n">FLOOR_SIZE</span> <span class="o">=</span> <span class="mi">20</span>  <span class="c1"># in meters</span>
+    <span class="n">FLOOR_METALLIC</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># metalic aspect, ratio from 0 to 1</span>
+    <span class="n">FLOOR_SPECULAR</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># specular aspect, ratio from 0 to 1</span>
+    <span class="n">FLOOR_ROUGHNESS</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># the higher the more light difussion. From 0 to 1</span>
+    <span class="n">FLOOR_SUBSURFACE_RATIO</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="n">FLOOR_SUBSURFACE_COLOR</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>  <span class="c1"># RGBA (A=1 opaque)</span>
+    <span class="n">FLOOR_IMG_ABSPATH</span> <span class="o">=</span> <span class="n">asset_path</span><span class="p">(</span><span class="s2">&quot;assets&quot;</span><span class="p">,</span> <span class="s2">&quot;images&quot;</span><span class="p">,</span> <span class="s2">&quot;marble_chess.jpg&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CreateBasicSceneMixin.create_basic_scene"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.operators.CreateBasicSceneMixin.create_basic_scene">[docs]</a>    <span class="k">def</span> <span class="nf">create_basic_scene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See class docstring.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">add_sun</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">SUN_NAME</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">SUN_LOC</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">SUN_ROT</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">SUN_STRENGTH</span><span class="p">)</span>
+        <span class="n">add_cam</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">CAM_NAME</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">CAM_LOC</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">CAM_ROT</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">CAM_LIGHT_NAME</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">CAM_LIGHT_LOC</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">CAM_LIGHT_WATTS</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">CAM_LIGHT_SHADOW</span><span class="p">)</span>
+        <span class="n">add_floor</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">FLOOR_NAME</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">FLOOR_SIZE</span><span class="p">,</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">FLOOR_METALLIC</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">FLOOR_SPECULAR</span><span class="p">,</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">FLOOR_ROUGHNESS</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">FLOOR_SUBSURFACE_RATIO</span><span class="p">,</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">FLOOR_SUBSURFACE_COLOR</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">FLOOR_IMG_ABSPATH</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="CleanAndPurgeScene"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.operators.CleanAndPurgeScene">[docs]</a><span class="k">class</span> <span class="nc">CleanAndPurgeScene</span><span class="p">(</span><span class="n">CleanAndPurgeSceneMixin</span><span class="p">,</span> <span class="n">Operator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Straightforward implementation of the CleanAndPurgeSceneMixin.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;scene.clean_and_purge&quot;</span>  <span class="c1"># This comes after &#39;bpy.ops&#39;</span>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Clean and purge scene&quot;</span>
+    <span class="c1"># bl_options = {&#39;REGISTER&#39;, &#39;UNDO&#39;}</span>
+
+<div class="viewcode-block" id="CleanAndPurgeScene.poll"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.operators.CleanAndPurgeScene.poll">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">poll</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predicate, True iff context.area.type==&#39;VIEW_3D&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;VIEW_3D&quot;</span></div>
+
+<div class="viewcode-block" id="CleanAndPurgeScene.execute"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.operators.CleanAndPurgeScene.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See class docstring.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clean_and_purge_scene</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">}</span></div></div>
+
+
+<div class="viewcode-block" id="CreateBasicScene"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.operators.CreateBasicScene">[docs]</a><span class="k">class</span> <span class="nc">CreateBasicScene</span><span class="p">(</span><span class="n">CreateBasicSceneMixin</span><span class="p">,</span> <span class="n">Operator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Straightforward implementation of the CreateBasicSceneMixin.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;scene.create_basic_scene&quot;</span>  <span class="c1"># This comes after &#39;bpy.ops&#39;</span>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Create basic scene&quot;</span>
+    <span class="c1"># bl_options = {&#39;REGISTER&#39;, &#39;UNDO&#39;}</span>
+
+<div class="viewcode-block" id="CreateBasicScene.poll"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.operators.CreateBasicScene.poll">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">poll</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predicate, True iff the ``context.scene`` has zero objects and</span>
+<span class="sd">        context.area.type == &quot;VIEW_3D&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">num_objects</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">objects</span><span class="p">)</span>
+        <span class="n">is_area_3d</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;VIEW_3D&quot;</span>
+        <span class="k">return</span> <span class="n">is_area_3d</span> <span class="ow">and</span> <span class="p">(</span><span class="n">num_objects</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CreateBasicScene.execute"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.operators.CreateBasicScene.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See class docstring.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_basic_scene</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">}</span></div></div>
+
+
+<div class="viewcode-block" id="CleanPurgeAndCreateBasicScene"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.operators.CleanPurgeAndCreateBasicScene">[docs]</a><span class="k">class</span> <span class="nc">CleanPurgeAndCreateBasicScene</span><span class="p">(</span><span class="n">CleanAndPurgeSceneMixin</span><span class="p">,</span>
+                                    <span class="n">CreateBasicSceneMixin</span><span class="p">,</span> <span class="n">Operator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Equivalent of first calling CleanAndPurgeScene, then CreateBasicScene.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;scene.clean_purge_and_create_basic_scene&quot;</span>  <span class="c1"># This comes after &#39;bpy.ops&#39;</span>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Clean, purge and create basic scene&quot;</span>
+    <span class="c1"># bl_options = {&#39;REGISTER&#39;, &#39;UNDO&#39;}</span>
+
+<div class="viewcode-block" id="CleanPurgeAndCreateBasicScene.poll"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.operators.CleanPurgeAndCreateBasicScene.poll">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">poll</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predicate, True iff context.area.type==&#39;VIEW_3D&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;VIEW_3D&quot;</span></div>
+
+<div class="viewcode-block" id="CleanPurgeAndCreateBasicScene.execute"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.operators.CleanPurgeAndCreateBasicScene.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See class docstring.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clean_and_purge_scene</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_basic_scene</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">}</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Andres FR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

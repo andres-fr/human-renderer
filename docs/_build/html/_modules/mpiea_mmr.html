@@ -169,19 +169,17 @@
 <span class="kn">import</span> <span class="nn">bpy</span>
 <span class="c1">#</span>
 <span class="kn">from</span> <span class="nn">.blender_utils</span> <span class="k">import</span> <span class="n">OperatorToMenuManager</span><span class="p">,</span> <span class="n">KeymapManager</span>
+
 <span class="c1"># import operators</span>
-<span class="kn">from</span> <span class="nn">.ui</span> <span class="k">import</span> <span class="n">ObjectCursorArray</span>
-<span class="c1"># import panels</span>
-<span class="kn">from</span> <span class="nn">.ui</span> <span class="k">import</span> <span class="n">MY_PANEL_PT_MyPanel1</span><span class="p">,</span> <span class="n">MY_PANEL_PT_MyPanel2</span>
-<span class="kn">from</span> <span class="nn">.ui</span> <span class="k">import</span> <span class="n">MPIEA_MMR_PT_ExportPanel</span>
+<span class="kn">from</span> <span class="nn">.operators</span> <span class="k">import</span> <span class="n">MaximizeAreaView3d</span>
+<span class="kn">from</span> <span class="nn">.operators</span> <span class="k">import</span> <span class="n">MaximizeAreaConsole</span>
+<span class="kn">from</span> <span class="nn">.operators</span> <span class="k">import</span> <span class="n">CleanAndPurgeScene</span>
+<span class="kn">from</span> <span class="nn">.operators</span> <span class="k">import</span> <span class="n">CreateBasicScene</span>
+<span class="kn">from</span> <span class="nn">.operators</span> <span class="k">import</span> <span class="n">CleanPurgeAndCreateBasicScene</span>
+<span class="c1"># # import panels</span>
+<span class="c1"># from .ui import MY_PANEL_PT_MyPanel1, MY_PANEL_PT_MyPanel2</span>
+<span class="c1"># from .ui import MPIEA_MMR_PT_ExportPanel</span>
 
-<span class="c1">#</span>
-<span class="kn">from</span> <span class="nn">.ui</span> <span class="k">import</span> <span class="n">MaximizeAreaView3d</span>
-<span class="kn">from</span> <span class="nn">.ui</span> <span class="k">import</span> <span class="n">MaximizeAreaConsole</span>
-
-<span class="c1"># scene builder</span>
-
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">scene_builder</span>
 
 <span class="c1"># #############################################################################</span>
 <span class="c1"># ## CONFIG</span>
@@ -207,8 +205,20 @@
 <span class="c1"># ## MAIN ROUTINE</span>
 <span class="c1"># #############################################################################</span>
 
-<span class="n">classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ObjectCursorArray</span><span class="p">,</span> <span class="n">MY_PANEL_PT_MyPanel1</span><span class="p">,</span> <span class="n">MY_PANEL_PT_MyPanel2</span><span class="p">,</span>
-           <span class="n">MPIEA_MMR_PT_ExportPanel</span><span class="p">,</span> <span class="n">MaximizeAreaView3d</span><span class="p">,</span> <span class="n">MaximizeAreaConsole</span><span class="p">]</span>
+<span class="c1"># the classes to be registered</span>
+<span class="n">classes</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># # add Panels to registered classes</span>
+<span class="c1"># classes += [MY_PANEL_PT_MyPanel1,</span>
+<span class="c1">#             MY_PANEL_PT_MyPanel2,</span>
+<span class="c1">#             MPIEA_MMR_PT_ExportPanel]</span>
+
+<span class="c1"># add Operators to registered classes</span>
+<span class="n">classes</span> <span class="o">+=</span> <span class="p">[</span><span class="n">MaximizeAreaView3d</span><span class="p">,</span>
+            <span class="n">MaximizeAreaConsole</span><span class="p">,</span>
+            <span class="n">CleanAndPurgeScene</span><span class="p">,</span>
+            <span class="n">CreateBasicScene</span><span class="p">,</span>
+            <span class="n">CleanPurgeAndCreateBasicScene</span><span class="p">]</span>
+
 <span class="n">register_cl</span><span class="p">,</span> <span class="n">unregister_cl</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">register_classes_factory</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span>
 <span class="n">kmm</span> <span class="o">=</span> <span class="n">KeymapManager</span><span class="p">()</span>
 <span class="n">omm</span> <span class="o">=</span> <span class="n">OperatorToMenuManager</span><span class="p">()</span>
@@ -218,9 +228,9 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Main register function, called on startup by Blender</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">register_cl</span><span class="p">()</span>
-    <span class="n">omm</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">ObjectCursorArray</span><span class="p">,</span> <span class="n">bpy</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">VIEW3D_MT_object</span><span class="p">)</span>
-    <span class="n">kmm</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;PRESS&quot;</span><span class="p">,</span> <span class="n">ObjectCursorArray</span><span class="o">.</span><span class="n">bl_idname</span><span class="p">)</span></div>
+    <span class="n">register_cl</span><span class="p">()</span></div>
+    <span class="c1"># omm.register(ObjectCursorArray, bpy.types.VIEW3D_MT_object)</span>
+    <span class="c1"># kmm.register(bpy.context, &quot;D&quot;, &quot;PRESS&quot;, ObjectCursorArray.bl_idname)</span>
     <span class="c1">#</span>
     <span class="c1"># scene_builder.main(**scene_builder.MAIN_KWARGS)</span>
 

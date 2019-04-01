@@ -160,20 +160,38 @@
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Andres FR&quot;</span>
 
-
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">abspath</span><span class="p">,</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">join</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">radians</span>  <span class="c1"># degrees</span>
 <span class="c1">#</span>
-<span class="kn">from</span> <span class="nn">mathutils</span> <span class="k">import</span> <span class="n">Euler</span>  <span class="c1"># mathutils is a blender package</span>
+<span class="kn">from</span> <span class="nn">mathutils</span> <span class="k">import</span> <span class="n">Vector</span><span class="p">,</span> <span class="n">Euler</span>  <span class="c1"># mathutils is a blender package</span>
 <span class="kn">import</span> <span class="nn">bpy</span>
-<span class="n">C</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span>
-<span class="n">D</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span>
+<span class="c1">#</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">__path__</span> <span class="k">as</span> <span class="n">PACKAGE_ROOT_PATH</span>
 
 
 <span class="c1"># #############################################################################</span>
-<span class="c1"># ## USER INTERACTION</span>
+<span class="c1"># ## ENVIRONMENT</span>
 <span class="c1"># #############################################################################</span>
+
+<div class="viewcode-block" id="asset_path"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.asset_path">[docs]</a><span class="k">def</span> <span class="nf">asset_path</span><span class="p">(</span><span class="o">*</span><span class="n">path_elements</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A convenience path wrapper to find assets in this repository. Retrieves</span>
+<span class="sd">    the absolute path, given the OS-agnostic path relative to the package</span>
+<span class="sd">    root path (by bysically joining the path elements via ``os.path.join``).</span>
+<span class="sd">    E.g., the following call retrieves the absolute path for</span>
+<span class="sd">    ``&lt;PACKAGE_ROOT&gt;/a/b/test.txt``::</span>
+
+<span class="sd">       asset_path(&quot;a&quot;, &quot;b&quot;, &quot;test.txt&quot;)</span>
+
+<span class="sd">    :params strings path_elements: From left to right, the path nodes,</span>
+<span class="sd">       the last one being the filename.</span>
+<span class="sd">    :rtype: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">PACKAGE_ROOT_PATH</span><span class="p">)</span> <span class="o">+</span> <span class="n">path_elements</span>
+    <span class="k">return</span> <span class="n">join</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="ArgumentParserForBlender"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.ArgumentParserForBlender">[docs]</a><span class="k">class</span> <span class="nc">ArgumentParserForBlender</span><span class="p">(</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -229,6 +247,10 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">argv_after_dd</span><span class="p">)</span></div></div>
 
 
+<span class="c1"># #############################################################################</span>
+<span class="c1"># ## UI CONFIG HELPERS</span>
+<span class="c1"># #############################################################################</span>
+
 <div class="viewcode-block" id="OperatorToMenuManager"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.OperatorToMenuManager">[docs]</a><span class="k">class</span> <span class="nc">OperatorToMenuManager</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This class implements functionality for adding/removing operators</span>
@@ -278,27 +300,15 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This class implements functionality for registering/deregistering keymaps</span>
 <span class="sd">    into Blender. It also behaves like a regular list, holding the keymaps</span>
-<span class="sd">    currently registered.</span>
-
-<span class="sd">    To inspect the registered keymaps:</span>
-<span class="sd">    ::</span>
-
-<span class="sd">       wm = context.window_manager</span>
-<span class="sd">       km_items = wm.keyconfigs.addon.keymaps[KEYMAP_NAME].keymap_items</span>
-<span class="sd">       # km_items is a dict containing the op_name -&gt; km binding.</span>
-<span class="sd">       # To see the key and stroke_mode:</span>
-<span class="sd">       km_item = km_items.values()[0]  # some item</span>
-<span class="sd">       key, stroke = km_item.type, km_item.value</span>
-<span class="sd">      # Default operator properties can be customized for a specific keymap:</span>
-<span class="sd">       km_item.properties.&lt;PROP&gt; = 3.14  # &lt;PROP&gt; was defined in the Operator</span>
+<span class="sd">    currently registered. To inspect the registered keymaps simply iterate</span>
+<span class="sd">    the instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">KEYMAP_NAME</span> <span class="o">=</span> <span class="s2">&quot;Object Mode&quot;</span>  <span class="c1"># ATM not well documented in the API</span>
     <span class="n">KEYMAP_SPACE_TYPE</span> <span class="o">=</span> <span class="s2">&quot;EMPTY&quot;</span>  <span class="c1"># ATM not well documented in the API</span>
 
-<div class="viewcode-block" id="KeymapManager.register"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.KeymapManager.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">stroke_mode</span><span class="p">,</span> <span class="n">op_name</span><span class="p">,</span>
-                 <span class="n">ctrl</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                 <span class="n">context</span><span class="o">=</span><span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="p">):</span>
+<div class="viewcode-block" id="KeymapManager.register"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.KeymapManager.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">stroke_mode</span><span class="p">,</span> <span class="n">op_name</span><span class="p">,</span>
+                 <span class="n">ctrl</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a new keymap to this collection, and to the config in</span>
 <span class="sd">        ``context.window_manager.keyconfigs.addon``. See the API for details:</span>
@@ -314,9 +324,10 @@
 <span class="sd">        Usage example:</span>
 <span class="sd">        ::</span>
 
-<span class="sd">           register_keymap(bpy.context, &quot;D&quot;, &quot;PRESS&quot;, MyOperator.bl_idname)</span>
+<span class="sd">           kmm = KeymapManager()</span>
+<span class="sd">           kmm.register(bpy.context, &quot;D&quot;, &quot;PRESS&quot;, MyOperator.bl_idname)</span>
 
-<span class="sd">        :param bpy.types.Context context: A context like ``bpy.context``.</span>
+<span class="sd">        :param bpy.types.Context context: The Blender context to work in.</span>
 <span class="sd">        :param str key: See bpy.types.KeyMapItem.key_modifier</span>
 <span class="sd">        :param str stroke_mode: See bpy.types.KeyMapItem.value</span>
 <span class="sd">        :param str op_name: Name of a valid operation in ``bpy.ops``</span>
@@ -419,26 +430,26 @@
 <span class="c1">## MISC</span>
 <span class="c1">#############################################################################</span>
 
-<div class="viewcode-block" id="update_scene"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.update_scene">[docs]</a><span class="k">def</span> <span class="nf">update_scene</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Sometimes changes don&#39;t show up due to lazy evaluation. This function</span>
-<span class="sd">    triggers scene update and recalculation of all changes.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">C</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+<span class="c1"># def update_scene():</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     Sometimes changes don&#39;t show up due to lazy evaluation. This function</span>
+<span class="c1">#     triggers scene update and recalculation of all changes.</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     bpy.context.scene.update()</span>
 
 
-<div class="viewcode-block" id="save_blenderfile"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.save_blenderfile">[docs]</a><span class="k">def</span> <span class="nf">save_blenderfile</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Saves blender file (usually to D.filepath)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">O</span><span class="o">.</span><span class="n">wm</span><span class="o">.</span><span class="n">save_as_mainfile</span><span class="p">(</span><span class="n">filepath</span><span class="o">=</span><span class="n">filepath</span><span class="p">)</span></div>
+<span class="c1"># def save_blenderfile(filepath):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     Saves blender file (usually to D.filepath)</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     bpy.ops.wm.save_as_mainfile(filepath=filepath)</span>
 
 
 <div class="viewcode-block" id="open_blenderfile"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.open_blenderfile">[docs]</a><span class="k">def</span> <span class="nf">open_blenderfile</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">     blender file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">O</span><span class="o">.</span><span class="n">wm</span><span class="o">.</span><span class="n">open_mainfile</span><span class="p">(</span><span class="n">filepath</span><span class="o">=</span><span class="n">filepath</span><span class="p">)</span></div>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">wm</span><span class="o">.</span><span class="n">open_mainfile</span><span class="p">(</span><span class="n">filepath</span><span class="o">=</span><span class="n">filepath</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="set_render_resolution_percentage"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.set_render_resolution_percentage">[docs]</a><span class="k">def</span> <span class="nf">set_render_resolution_percentage</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
@@ -447,13 +458,13 @@
     <span class="n">D</span><span class="o">.</span><span class="n">scenes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">render</span><span class="o">.</span><span class="n">resolution_percentage</span> <span class="o">=</span> <span class="n">p</span></div>
 
 
-<div class="viewcode-block" id="get_obj"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.get_obj">[docs]</a><span class="k">def</span> <span class="nf">get_obj</span><span class="p">(</span><span class="n">obj_name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Actions like undo or entering edit mode invalidate the object references.</span>
-<span class="sd">    This function returns a reference that is always valid, assuming that the</span>
-<span class="sd">    given obj_name is a key of bpy.data.objects.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">D</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">obj_name</span><span class="p">]</span></div>
+<span class="c1"># def get_obj(obj_name):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     Actions like undo or entering edit mode invalidate the object references.</span>
+<span class="c1">#     This function returns a reference that is always valid, assuming that the</span>
+<span class="c1">#     given obj_name is a key of bpy.data.objects.</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     return D.objects[obj_name]</span>
 
 
 <div class="viewcode-block" id="select_by_name"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.select_by_name">[docs]</a><span class="k">def</span> <span class="nf">select_by_name</span><span class="p">(</span><span class="o">*</span><span class="n">names</span><span class="p">):</span>
@@ -480,38 +491,24 @@
             <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="select_all"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.select_all">[docs]</a><span class="k">def</span> <span class="nf">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;SELECT&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Action can be SELECT, DESELECT, INVERT, TOGGLE</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="delete_selected"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.delete_selected">[docs]</a><span class="k">def</span> <span class="nf">delete_selected</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span></div>
-
-
-<div class="viewcode-block" id="set_mode"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.set_mode">[docs]</a><span class="k">def</span> <span class="nf">set_mode</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;OBJECT&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">mode_set</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span></div>
-
-
-<span class="c1"># def purge_unused_data(categories=[D.meshes, D.materials, D.textures, D.images,</span>
-<span class="c1">#                                   D.curves, D.lights, D.cameras, D.screens]):</span>
+<span class="c1"># def select_all(action=&quot;SELECT&quot;):</span>
 <span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     Blender objects point to data. E.g., a lamp points to a given data lamp</span>
-<span class="c1">#     object. Removing the objects doesn&#39;t remove the data, which may lead to</span>
-<span class="c1">#     data blocks that aren&#39;t being used by anyone. Given an ORDERED collection</span>
-<span class="c1">#     of categories, this function removes all unused datablocks.</span>
-<span class="c1">#     See https://blender.stackexchange.com/a/102046</span>
+<span class="c1">#     Action can be SELECT, DESELECT, INVERT, TOGGLE</span>
 <span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     for cat in categories:</span>
-<span class="c1">#         for block in cat:</span>
-<span class="c1">#             if block.users == 0:</span>
-<span class="c1">#                 cat.remove(block)</span>
+<span class="c1">#     bpy.ops.object.select_all(action=action)</span>
+
+
+<span class="c1"># def delete_selected():</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     bpy.ops.object.delete()</span>
+
+
+<span class="c1"># def set_mode(mode=&quot;OBJECT&quot;):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     bpy.ops.object.mode_set(mode=mode)</span>
+
 
 
 <div class="viewcode-block" id="set_shading_mode"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.set_shading_mode">[docs]</a><span class="k">def</span> <span class="nf">set_shading_mode</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;SOLID&quot;</span><span class="p">,</span> <span class="n">screens</span><span class="o">=</span><span class="p">[]):</span>
@@ -524,7 +521,7 @@
 
 <span class="sd">       set_shading_mode(&quot;RENDERED&quot;, D.screens)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">screens</span> <span class="o">=</span> <span class="n">screens</span> <span class="k">if</span> <span class="n">screens</span> <span class="k">else</span> <span class="p">[</span><span class="n">C</span><span class="o">.</span><span class="n">screen</span><span class="p">]</span>
+    <span class="n">screens</span> <span class="o">=</span> <span class="n">screens</span> <span class="k">if</span> <span class="n">screens</span> <span class="k">else</span> <span class="p">[</span><span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">screen</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">screens</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">areas</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">spc</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;VIEW_3D&quot;</span><span class="p">:</span>
@@ -532,35 +529,204 @@
                 <span class="k">break</span> <span class="c1"># we expect at most 1 VIEW_3D space</span></div>
 
 
-<span class="c1"># def maximize_area(screen_name=&quot;Layout&quot;, area_name=&quot;VIEW_3D&quot;):</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     This function does the following:</span>
-<span class="c1">#     1. If there is an area with the given name:</span>
-<span class="c1">#        1.1. Minimizes any other maximized window</span>
-<span class="c1">#        1.2. Maximizes the desired area</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     screen = D.screens[screen_name]</span>
-<span class="c1">#     for a in screen.areas:</span>
-<span class="c1">#         if a.type == area_name:</span>
-<span class="c1">#             # If screen is already in some fullscreen mode, revert it</span>
-<span class="c1">#             if screen.show_fullscreen:</span>
-<span class="c1">#                 bpy.ops.screen.back_to_previous()</span>
-<span class="c1">#             # Set area to fullscreen (dict admits &quot;window&quot;,&quot;screen&quot;,&quot;area&quot;)</span>
-<span class="c1">#             bpy.ops.screen.screen_full_area({&quot;screen&quot;: screen, &quot;area&quot;: a})</span>
-<span class="c1">#             break</span>
 
-
-<div class="viewcode-block" id="maximize_area"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.maximize_area">[docs]</a><span class="k">def</span> <span class="nf">maximize_area</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">area_name</span><span class="o">=</span><span class="s2">&quot;VIEW_3D&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="get_area_by_type"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.get_area_by_type">[docs]</a><span class="k">def</span> <span class="nf">get_area_by_type</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">area_type</span><span class="o">=</span><span class="s2">&quot;VIEW_3D&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    If the current context has an area of type self.AREA_TYPE, that area gets</span>
-<span class="sd">    maximized. Otherwise does nothing. Supported types can be seen here::</span>
-
-<span class="sd">       https://docs.blender.org/api/blender2.8/bpy.types.Area.html</span>
+<span class="sd">    If the given ``context`` contains an area of the given ``area_type``,</span>
+<span class="sd">    returns the area. Otherwise returns None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">context</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">areas</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">area_name</span><span class="p">:</span>
-            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">screen_full_area</span><span class="p">({</span><span class="s2">&quot;area&quot;</span><span class="p">:</span> <span class="n">a</span><span class="p">})</span>
-            <span class="k">break</span></div>
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">area_type</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">a</span>
+    <span class="c1"># if no area of given type was found</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="PurgeUnusedData"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.PurgeUnusedData">[docs]</a><span class="k">class</span> <span class="nc">PurgeUnusedData</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Blender objects point to data. E.g., a lamp points to a given data lamp</span>
+<span class="sd">    object. Removing the objects doesn&#39;t remove the data, which may lead to</span>
+<span class="sd">    data blocks that aren&#39;t being used by anyone. Given a collection</span>
+<span class="sd">    of categories returned by the ``get_categories`` method, this function</span>
+<span class="sd">    removes all datablocks with zero users.</span>
+<span class="sd">    .. note::</span>
+
+<span class="sd">       The order of the given categories may affect the result (e.g.</span>
+<span class="sd">       deleting some parent data before the children may be problematic.</span>
+<span class="sd">       See https://blender.stackexchange.com/a/102046</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">       The categories have to be returned by a method at runtime, since at</span>
+<span class="sd">       the time of registering ``bpy.data`` is not accessible and won&#39;t</span>
+<span class="sd">       compile.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PurgeUnusedData.get_categories"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.PurgeUnusedData.get_categories">[docs]</a>    <span class="k">def</span> <span class="nf">get_categories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :returns: A list of ``bpy.data.*`` categories like ``bpy.data.meshes``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">categories</span> <span class="o">=</span> <span class="p">[</span><span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">meshes</span><span class="p">,</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">materials</span><span class="p">,</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">textures</span><span class="p">,</span>
+                      <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">images</span><span class="p">,</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">curves</span><span class="p">,</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">lights</span><span class="p">,</span>
+                      <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">cameras</span><span class="p">,</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">screens</span><span class="p">,</span>
+                      <span class="c1">#bpy.data.workspaces, bpy.data.brushes,</span>
+                      <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">sounds</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">categories</span></div>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See class docstring.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">cat</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_categories</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">cat</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">block</span><span class="o">.</span><span class="n">users</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">cat</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">block</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="add_sun"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.add_sun">[docs]</a><span class="k">def</span> <span class="nf">add_sun</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">sun_name</span><span class="p">,</span> <span class="n">sun_loc</span><span class="p">,</span> <span class="n">sun_rot</span><span class="p">,</span> <span class="n">sun_strength</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds a sun object to the given context, with the given features.</span>
+
+<span class="sd">    :param bpy.types.Context context: The Blender context to work in.</span>
+<span class="sd">    :param str sun_name: The desired name for the object and its corresponding</span>
+<span class="sd">       data block. Note that if not unique, Blender will append a number.</span>
+<span class="sd">    :param Vector sun_loc: The ``mathutils.Vector(x,y,z)`` initial location.</span>
+<span class="sd">    :param Euler sun_rot: The ``mathutils.Euler`` initial rotation.</span>
+<span class="sd">    :param float sun_strength: light intensity relative a reference sun (i.e.</span>
+<span class="sd">       ``1.0`` means &quot;one sun&quot; of intensity).</span>
+<span class="sd">    :returns: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">light_add</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;SUN&quot;</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">sun_loc</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="n">sun_rot</span><span class="p">)</span>
+    <span class="c1"># since we just added the sun, it should be in context.object</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">sun_name</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">sun_name</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">energy</span> <span class="o">=</span> <span class="n">sun_strength</span></div>
+
+
+<div class="viewcode-block" id="add_cam"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.add_cam">[docs]</a><span class="k">def</span> <span class="nf">add_cam</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">cam_name</span><span class="p">,</span> <span class="n">cam_loc</span><span class="p">,</span> <span class="n">cam_rot</span><span class="p">,</span>
+            <span class="n">light_name</span><span class="o">=</span><span class="s2">&quot;CamLight&quot;</span><span class="p">,</span> <span class="n">light_loc</span><span class="o">=</span><span class="n">Vector</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+            <span class="n">light_watts</span><span class="o">=</span><span class="mf">40.0</span><span class="p">,</span> <span class="n">light_shadow</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds a camera object (and optionally a point light attached to it) to the</span>
+<span class="sd">    given context, with the given features.</span>
+
+<span class="sd">    :param bpy.types.Context context: The Blender context to work in.</span>
+<span class="sd">    :param str cam_name: The desired name for the object and its corresponding</span>
+<span class="sd">       data block. Note that if not unique, Blender will append a number.</span>
+<span class="sd">    :param Vector cam_loc: The ``mathutils.Vector(x,y,z)`` initial location.</span>
+<span class="sd">    :param Euler cam_rot: The ``mathutils.Euler`` initial rotation.</span>
+
+<span class="sd">    :param str light_name: (Optional). The desired name for the object and its</span>
+<span class="sd">       corresponding data block. Note that if not unique, Blender will append a</span>
+<span class="sd">       number.</span>
+<span class="sd">    :param Vector light_loc: (Optional). The ``mathutils.Vector(x,y,z)``</span>
+<span class="sd">       initial location.</span>
+<span class="sd">    :param Euler light_rot: (Optional). The ``mathutils.Euler`` initial</span>
+<span class="sd">       rotation.</span>
+<span class="sd">    :param float light_watts: (Optional). Cam light intensity in Watts.</span>
+<span class="sd">    :param bool light_shadow: (Optional).Whether the cam light causes shadows.</span>
+
+<span class="sd">    :returns: None</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">       The camera light is optional. If any of the ``light_*`` parameters is</span>
+<span class="sd">       ``None``, it won&#39;t be added.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># add a cam</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">camera_add</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">cam_loc</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="n">cam_rot</span><span class="p">)</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">cam_name</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">cam_name</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">light_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">light_loc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+       <span class="ow">or</span> <span class="p">(</span><span class="n">light_watts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">light_shadow</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># add light as a child of cam</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">light_add</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;POINT&quot;</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">light_loc</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">light_name</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">light_name</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">energy</span> <span class="o">=</span> <span class="n">light_watts</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">cam_name</span><span class="p">]</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">use_shadow</span> <span class="o">=</span> <span class="n">light_shadow</span></div>
+
+
+<div class="viewcode-block" id="add_floor"><a class="viewcode-back" href="../../mpiea_mmr.html#mpiea_mmr.blender_utils.add_floor">[docs]</a><span class="k">def</span> <span class="nf">add_floor</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">metallic</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">specular</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">roughness</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+              <span class="n">subsurf_ratio</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">subsurf_color</span><span class="o">=</span><span class="n">Vector</span><span class="p">((</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)),</span>
+              <span class="n">texture_img_abspath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">texture_img_tilesize</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds a square mesh at zero height,(representing the floor) to the given</span>
+<span class="sd">    context, with the given features. It adds a colored subsurface to the mesh,</span>
+<span class="sd">    as well as some &quot;material&quot; options, and optionally a texture from an image.</span>
+
+<span class="sd">    :param str name: The desired name for the object and its corresponding</span>
+<span class="sd">       data block. Note that if not unique, Blender will append a number.</span>
+<span class="sd">    :param float size: Side length of the square, in meters.</span>
+
+<span class="sd">    :param float metallic: From ``0`` (not metallic) to ``1`` (fully metallic).</span>
+<span class="sd">    :param float specular: From ``0`` (not specular) to ``1`` (fully specular).</span>
+<span class="sd">    :param float specular: From ``0`` (not rough) to ``1`` (fully rough).</span>
+
+<span class="sd">    :param float subsurf_ratio: Subsurface mix, from ``0`` (no subsurface)</span>
+<span class="sd">       to ``1``.</span>
+<span class="sd">    :param mathutils.Vector subsurf_color: 4-dimensional float RGBA with values</span>
+<span class="sd">       from ``0`` (black/transparent) to ``1`` (full color/opaque).</span>
+
+<span class="sd">    :param str texture_img_abspath: (Optional), absolute path to an image to</span>
+<span class="sd">       load as tiled texture onto the plane.</span>
+<span class="sd">    :param float texture_img_tilesize: (Optional), positive float. The size</span>
+<span class="sd">       ratio for the tiled image texture: the bigger this number, the bigger</span>
+<span class="sd">       the tiles on the plane will be.</span>
+
+<span class="sd">    :returns: None</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">       The texture image is optional. If any of the ``texture_*`` parameters is</span>
+<span class="sd">       ``None``, it won&#39;t be added.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># add floor</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">primitive_plane_add</span><span class="p">()</span>
+    <span class="n">plane</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">object</span>
+    <span class="n">plane</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="n">plane</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="n">plane</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="p">(</span><span class="n">size</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">size</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># because plane is 2x2</span>
+
+    <span class="c1"># add floor texture</span>
+    <span class="n">floor_material</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Material&quot;</span><span class="p">)</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">floor_material</span><span class="p">)</span>
+    <span class="n">floor_material</span><span class="o">.</span><span class="n">use_nodes</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">bsdf_inputs</span> <span class="o">=</span> <span class="n">floor_material</span><span class="o">.</span><span class="n">node_tree</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s2">&quot;Principled BSDF&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">inputs</span>
+    <span class="n">bsdf_inputs</span><span class="p">[</span><span class="s2">&quot;Metallic&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">metallic</span>
+    <span class="n">bsdf_inputs</span><span class="p">[</span><span class="s2">&quot;Specular&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">specular</span>
+    <span class="n">bsdf_inputs</span><span class="p">[</span><span class="s2">&quot;Roughness&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">roughness</span>
+
+    <span class="c1"># mix floor texture with subsurf color</span>
+    <span class="n">subsurf_node</span> <span class="o">=</span> <span class="n">floor_material</span><span class="o">.</span><span class="n">node_tree</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;ShaderNodeValue&quot;</span><span class="p">)</span>
+    <span class="n">subsurf_color_node</span> <span class="o">=</span> <span class="n">floor_material</span><span class="o">.</span><span class="n">node_tree</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;ShaderNodeRGB&quot;</span><span class="p">)</span>
+    <span class="n">subsurf_node</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">subsurf_color_node</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="n">subsurf_node</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;Value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">subsurf_ratio</span>
+    <span class="n">subsurf_color_node</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;Color&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">subsurf_color</span>
+    <span class="c1">#</span>
+    <span class="n">floor_material</span><span class="o">.</span><span class="n">node_tree</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">subsurf_node</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;Value&quot;</span><span class="p">],</span>
+                                       <span class="n">bsdf_inputs</span><span class="p">[</span><span class="s2">&quot;Subsurface&quot;</span><span class="p">])</span>
+    <span class="n">floor_material</span><span class="o">.</span><span class="n">node_tree</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">subsurf_color_node</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;Color&quot;</span><span class="p">],</span>
+                                       <span class="n">bsdf_inputs</span><span class="p">[</span><span class="s2">&quot;Subsurface Color&quot;</span><span class="p">])</span>
+
+    <span class="c1"># optionally add image to texture</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">texture_img_abspath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">texture_img_tilesize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">img_node</span> <span class="o">=</span> <span class="n">floor_material</span><span class="o">.</span><span class="n">node_tree</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;ShaderNodeTexImage&quot;</span><span class="p">)</span>
+        <span class="n">img_node</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">texture_img_abspath</span><span class="p">)</span>
+        <span class="n">img_node</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">img</span>
+        <span class="c1"># connect image node with BSDF node:</span>
+        <span class="n">floor_material</span><span class="o">.</span><span class="n">node_tree</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">img_node</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;Color&quot;</span><span class="p">],</span>
+                                           <span class="n">bsdf_inputs</span><span class="p">[</span><span class="s2">&quot;Base Color&quot;</span><span class="p">])</span>
+
+        <span class="c1"># expand floor UV to make image be displayed in smaller tiles</span>
+        <span class="n">floor_uv_vertices</span> <span class="o">=</span> <span class="n">plane</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">uv_layers</span><span class="p">[</span><span class="s2">&quot;UVMap&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">floor_uv_vertices</span><span class="p">:</span> <span class="c1"># collection of MeshUVLoops</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">uv</span> <span class="o">*=</span> <span class="n">size</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">/</span> <span class="n">texture_img_tilesize</span> <span class="c1"># v.uv is a 2D Vector</span></div>
 </pre></div>
 
            </div>

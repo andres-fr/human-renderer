@@ -12,10 +12,10 @@ mpiea\_mmr.blender\_utils module
     :undoc-members:
     :show-inheritance:
 
-mpiea\_mmr.scene\_builder module
---------------------------------
+mpiea\_mmr.operators module
+---------------------------
 
-.. automodule:: mpiea_mmr.scene_builder
+.. automodule:: mpiea_mmr.operators
     :members:
     :undoc-members:
     :show-inheritance:

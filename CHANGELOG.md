@@ -24,6 +24,12 @@ All notable changes to this project will be documented in this file.
 
 ## TODO:
 
+
+- Design: ops can't be easily called at addon register time. Cleanest way is probably to
+  1. Have all api-like functionality in the regular add-on
+  2. Have apps as separate "standalone" scripts somewhere separated, to be called via `blender --python`
+  3. The scripts should contain args, and all the args should also be accessible via UI, so that args can be corrected, and also have good default arguments so that a naked call to the script loads a reasonable scene.
+
 - reimplement scene_builder script:
   * Plugin-neutral functionality goes to the blender utils as regular python
   * Ops that are potentially exposed to the user go as Operators
