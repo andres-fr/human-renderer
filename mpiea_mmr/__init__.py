@@ -51,16 +51,20 @@ bl_info = {
     "category": "MPIEA"}
 
 
+KEYMAPS = [{"op_name": MaximizeAreaView3d.bl_idname,
+            "key": "THREE", "stroke_mode": "PRESS",
+            "ctrl": True, "shift": True, "alt": False},
+           {"op_name": CleanPurgeAndCreateBasicScene.bl_idname,
+            "key": "ZERO", "stroke_mode": "PRESS",
+            "ctrl": True, "shift": True, "alt": False}]
+
+
 # #############################################################################
 # ## MAIN ROUTINE
 # #############################################################################
 
 # the classes to be registered
 classes = []
-# # add Panels to registered classes
-# classes += [MY_PANEL_PT_MyPanel1,
-#             MY_PANEL_PT_MyPanel2,
-#             MPIEA_MMR_PT_ExportPanel]
 
 # add Operators to registered classes
 classes += [MaximizeAreaView3d,
@@ -68,6 +72,11 @@ classes += [MaximizeAreaView3d,
             CleanAndPurgeScene,
             CreateBasicScene,
             CleanPurgeAndCreateBasicScene]
+
+# # add Panels to registered classes
+# classes += [MY_PANEL_PT_MyPanel1,
+#             MY_PANEL_PT_MyPanel2,
+#             MPIEA_MMR_PT_ExportPanel]
 
 register_cl, unregister_cl = bpy.utils.register_classes_factory(classes)
 kmm = KeymapManager()
@@ -79,10 +88,9 @@ def register():
     Main register function, called on startup by Blender
     """
     register_cl()
+    for km_dict in KEYMAPS:
+        kmm.register(bpy.context, **km_dict)
     # omm.register(ObjectCursorArray, bpy.types.VIEW3D_MT_object)
-    # kmm.register(bpy.context, "D", "PRESS", ObjectCursorArray.bl_idname)
-    #
-    # scene_builder.main(**scene_builder.MAIN_KWARGS)
 
 
 def unregister():

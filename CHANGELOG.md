@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - Design and implementation of add-on as an Operator+Panel API with functionality for scene building, custom UI and advanced editing [ONGOING]
 - Iplementation of apps as startup scripts that use the implemented API [ONGOING]
 - Added Travis CI [ONGOING]
+- Added scripts with use cases [ONGOING]
 
 ## [0.1.0] - 27/02/2019
 
@@ -24,6 +25,8 @@ All notable changes to this project will be documented in this file.
 
 
 ## TODO:
+
+- Working on example script, makehuman poll issues.
 
 - Working on script reimplementation, scene building done (untested) up to floor. Remaining:
   * API coverage for makehuman interaction (clean and comprehensive please)

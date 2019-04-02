@@ -21,7 +21,7 @@ from .blender_utils import PurgeUnusedData
 from .blender_utils import add_sun
 from .blender_utils import add_cam
 from .blender_utils import add_floor
-from .blender_utils import asset_path
+from .blender_utils import resolve_path
 
 
 # #############################################################################
@@ -97,7 +97,8 @@ class CleanAndPurgeSceneMixin():
     data blocks with zero users.
     """
 
-    def clean_and_purge_scene(self, context):
+    @classmethod
+    def clean_and_purge_scene(_, context):
         """
         See class docstring.
         """
@@ -135,21 +136,22 @@ class CreateBasicSceneMixin():
     FLOOR_ROUGHNESS = 1.0  # the higher the more light difussion. From 0 to 1
     FLOOR_SUBSURFACE_RATIO = 0.5
     FLOOR_SUBSURFACE_COLOR = Vector((1.0, 1.0, 1.0, 1.0))  # RGBA (A=1 opaque)
-    FLOOR_IMG_ABSPATH = asset_path("assets", "images", "marble_chess.jpg")
+    FLOOR_IMG_ABSPATH = resolve_path("data", "images", "marble_chess.jpg")
 
-    def create_basic_scene(self, context):
+    @classmethod
+    def create_basic_scene(clss, context):
         """
         See class docstring.
         """
-        add_sun(context, self.SUN_NAME, self.SUN_LOC, self.SUN_ROT,
-                self.SUN_STRENGTH)
-        add_cam(context, self.CAM_NAME, self.CAM_LOC, self.CAM_ROT,
-                self.CAM_LIGHT_NAME, self.CAM_LIGHT_LOC,
-                self.CAM_LIGHT_WATTS, self.CAM_LIGHT_SHADOW)
-        add_floor(context, self.FLOOR_NAME, self.FLOOR_SIZE,
-                  self.FLOOR_METALLIC, self.FLOOR_SPECULAR,
-                  self.FLOOR_ROUGHNESS, self.FLOOR_SUBSURFACE_RATIO,
-                  self.FLOOR_SUBSURFACE_COLOR, self.FLOOR_IMG_ABSPATH)
+        add_sun(context, clss.SUN_NAME, clss.SUN_LOC, clss.SUN_ROT,
+                clss.SUN_STRENGTH)
+        add_cam(context, clss.CAM_NAME, clss.CAM_LOC, clss.CAM_ROT,
+                clss.CAM_LIGHT_NAME, clss.CAM_LIGHT_LOC,
+                clss.CAM_LIGHT_WATTS, clss.CAM_LIGHT_SHADOW)
+        add_floor(context, clss.FLOOR_NAME, clss.FLOOR_SIZE,
+                  clss.FLOOR_METALLIC, clss.FLOOR_SPECULAR,
+                  clss.FLOOR_ROUGHNESS, clss.FLOOR_SUBSURFACE_RATIO,
+                  clss.FLOOR_SUBSURFACE_COLOR, clss.FLOOR_IMG_ABSPATH)
 
 
 class CleanAndPurgeScene(CleanAndPurgeSceneMixin, Operator):
@@ -164,9 +166,13 @@ class CleanAndPurgeScene(CleanAndPurgeSceneMixin, Operator):
     @classmethod
     def poll(cls, context):
         """
-        Predicate, True iff context.area.type=='VIEW_3D'
+        Predicate, True if context.area.type=='VIEW_3D' (or
+        context.area is None, for background mode)
         """
-        return context.area.type == "VIEW_3D"
+        if context.area is None:
+            return True
+        else:
+            return context.area.type == "VIEW_3D"
 
     def execute(self, context):
         """
@@ -189,11 +195,19 @@ class CreateBasicScene(CreateBasicSceneMixin, Operator):
     def poll(cls, context):
         """
         Predicate, True iff the ``context.scene`` has zero objects and
-        context.area.type == "VIEW_3D"
+        context.area.type == "VIEW_3D" (or context.area is None, for
+        background mode)
         """
         num_objects = len(context.scene.objects)
-        is_area_3d = context.area.type == "VIEW_3D"
-        return is_area_3d and (num_objects == 0)
+        if num_objects > 0:
+            # always false for more than zero objects
+            return False
+        elif context.area is None:
+            # true if there are 0 objects and area doesn't exist
+            return True
+        else:
+            # true if there are 0 objects and existing area is of type 3d
+            return context.area.type == "VIEW_3D"
 
     def execute(self, context):
         """
@@ -215,9 +229,13 @@ class CleanPurgeAndCreateBasicScene(CleanAndPurgeSceneMixin,
     @classmethod
     def poll(cls, context):
         """
-        Predicate, True iff context.area.type=='VIEW_3D'
+        Predicate, True if context.area.type=='VIEW_3D' (or
+        context.area is None, for background mode)
         """
-        return context.area.type == "VIEW_3D"
+        if context.area is None:
+            return True
+        else:
+            return context.area.type == "VIEW_3D"
 
     def execute(self, context):
         """
@@ -226,3 +244,8 @@ class CleanPurgeAndCreateBasicScene(CleanAndPurgeSceneMixin,
         self.clean_and_purge_scene(context)
         self.create_basic_scene(context)
         return {'FINISHED'}
+
+
+# #############################################################################
+# ## MAKEHUMAN
+# #############################################################################

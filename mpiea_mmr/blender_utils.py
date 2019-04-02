@@ -8,7 +8,8 @@ Utilities for interaction with Blender
 
 __author__ = "Andres FR"
 
-from os.path import abspath, dirname, join
+
+import os
 import argparse
 import sys
 from math import radians  # degrees
@@ -23,22 +24,22 @@ from . import __path__ as PACKAGE_ROOT_PATH
 # ## ENVIRONMENT
 # #############################################################################
 
-def asset_path(*path_elements):
+def resolve_path(*path_elements):
     """
-    A convenience path wrapper to find assets in this repository. Retrieves
+    A convenience path wrapper to find elements in this repository. Retrieves
     the absolute path, given the OS-agnostic path relative to the package
     root path (by bysically joining the path elements via ``os.path.join``).
     E.g., the following call retrieves the absolute path for
     ``<PACKAGE_ROOT>/a/b/test.txt``::
 
-       asset_path("a", "b", "test.txt")
+       resolve_path("a", "b", "test.txt")
 
     :params strings path_elements: From left to right, the path nodes,
        the last one being the filename.
     :rtype: str
     """
     p = tuple(PACKAGE_ROOT_PATH) + path_elements
-    return join(*p)
+    return os.path.join(*p)
 
 
 class ArgumentParserForBlender(argparse.ArgumentParser):
@@ -154,7 +155,7 @@ class KeymapManager(list):
 
     KEYMAP_NAME = "Object Mode"  # ATM not well documented in the API
     KEYMAP_SPACE_TYPE = "EMPTY"  # ATM not well documented in the API
-
+    KEYMAP_REGION_TYPE = "WINDOW"  # ATM not well documented in the API
     def register(self, context, key, stroke_mode, op_name,
                  ctrl=True, shift=True, alt=False):
         """
@@ -166,8 +167,9 @@ class KeymapManager(list):
         | https://docs.blender.org/manual/de/dev/advanced/keymap_editing.html
 
         .. warning:
-           For the moment, the keymap was confirmed to work only if
-           ``name="Object Mode"`` and ``space_type="EMPTY"``
+           For the moment, the keymaps were confirmed to work only when the
+           mouse cursor is on the ``VIEW_3D`` area, and for the parameters
+           ``name="Object Mode", space_type="EMPTY"``
 
         Usage example:
         ::
@@ -187,7 +189,8 @@ class KeymapManager(list):
         kc = wm.keyconfigs.addon # this is None in background mode
         if kc:
             km = kc.keymaps.new(name=self.KEYMAP_NAME,
-                                space_type=self.KEYMAP_SPACE_TYPE)
+                                space_type=self.KEYMAP_SPACE_TYPE,
+                                region_type=self.KEYMAP_REGION_TYPE)
             kmi = km.keymap_items.new(op_name, key, stroke_mode,
                                       ctrl=ctrl, shift=shift, alt=alt)
             self.append((km, kmi))
@@ -233,17 +236,17 @@ def rot_euler_degrees(rot_x, rot_y, rot_z, order="XYZ"):
 #     bpy.ops.wm.save_as_mainfile(filepath=filepath)
 
 
-def open_blenderfile(filepath):
-    """
-     blender file
-    """
-    bpy.ops.wm.open_mainfile(filepath=filepath)
+# def open_blenderfile(filepath):
+#     """
+#      blender file
+#     """
+#     bpy.ops.wm.open_mainfile(filepath=filepath)
 
 
-def set_render_resolution_percentage(p=100):
-    """
-    """
-    D.scenes[0].render.resolution_percentage = p
+# def set_render_resolution_percentage(p=100):
+#     """
+#     """
+#     D.scenes[0].render.resolution_percentage = p
 
 
 # def get_obj(obj_name):
@@ -253,30 +256,6 @@ def set_render_resolution_percentage(p=100):
 #     given obj_name is a key of bpy.data.objects.
 #     """
 #     return D.objects[obj_name]
-
-
-def select_by_name(*names):
-    """
-    Given a variable number of names as strings, tries to select all existing
-    objects in D.objects by their name.
-    """
-    for name in names:
-        try:
-            D.objects[name].select_set(True)
-        except Exception as e:
-            print(e)
-
-
-def deselect_by_name(*names):
-    """
-    Given a variable number of names as strings, tries to select all existing
-    objects in D.objects by their name.
-    """
-    for name in names:
-        try:
-            D.objects[name].select_set(False)
-        except Exception as e:
-            print(e)
 
 
 # def select_all(action="SELECT"):
@@ -298,18 +277,21 @@ def deselect_by_name(*names):
 #     bpy.ops.object.mode_set(mode=mode)
 
 
-
-def set_shading_mode(mode="SOLID", screens=[]):
+def set_shading_mode(context, mode="SOLID", screens=[]):
     """
     Performs an action analogous to clicking on the display/shade button of
-    the 3D view. Mode is one of "RENDERED", "MATERIAL", "SOLID", "WIREFRAME".
-    The change is applied to the given collection of bpy.data.screens.
+    the 3D view. The change is applied to the given collection of screens.
     If none is given, the function is applied to bpy.context.screen (the
     active screen) only. E.g. set all screens to rendered mode::
 
-       set_shading_mode("RENDERED", D.screens)
+       set_shading_mode("RENDERED", bpy.data.screens)
+
+    :param bpy.types.Context context: The Blender context to work in.
+    :param str mode: One of "RENDERED", "MATERIAL", "SOLID", "WIREFRAME".
+    :param list screens: (sub)set of ``bpy.data.screens``.
+
     """
-    screens = screens if screens else [bpy.context.screen]
+    screens = screens if screens else [context.screen]
     for s in screens:
         for spc in s.areas:
             if spc.type == "VIEW_3D":
