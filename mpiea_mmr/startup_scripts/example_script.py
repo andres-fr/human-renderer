@@ -29,6 +29,7 @@ __author__ = "Andres FR"
 
 #
 import bpy
+import aud  # audaspace
 import mpiea_mmr as mmr
 
 
@@ -73,26 +74,70 @@ TPOSE_AFRICAN_PATH = mmr.blender_utils.resolve_path("data", "makehuman_models",
                                                     "exported",
                                                     "tpose_african.mhx2")
 
+
+
+
+BVH_MALI_SNIPPET = mmr.blender_utils.resolve_path("data", "mali_dataset",
+                                                  "mocap",
+                                                  "SAG_D1-003_(snippet)_slate03_2-35-44.759.bvh")
+                                                  # "SAG_D1-003_(snippet)_slate01_2-23-29.701.bvh")
+
+
 SOME_BVH_PATH = mmr.blender_utils.resolve_path("data", "bvh_files",
                                                "cmu_motion_captures", "01",
                                                "01_06.bvh")
 
+WAVPATH_1 = mmr.blender_utils.resolve_path("data", "mali_dataset",
+                                           "audio", "SAG_D1_10_Voc-1.wav")
+
+WAVPATH_2 = mmr.blender_utils.resolve_path("data", "mali_dataset",
+                                           "audio", "SAG_D1_10_M-Jem-2.wav")
+
+
+
 def import_makehuman(context, name, mhx2_abspath, xy_pos=(0, 0),
                      bvh_abspath=None):
     """
+    This is not in the library because it directly uses the MHX2 plugin.
+
+    TODO: maybe to make this load quicker, load the assets into a class
+    at beginning and let the class manage scene interaction via factories
+    etc. Mimick the 'select hierarchy' -> copy functionality.
     """
     # make sure nothing else is selected before starting
-    bpy.ops.object.select_all(action="DESELECT")
+    ### bpy.ops.object.select_all(action="DESELECT")
     # import  MHX2
     bpy.ops.import_scene.makehuman_mhx2(filepath=mhx2_abspath)
+    human = context.object
+    human.location = (xy_pos) + (0.07,)  # elevate a little
     context.object.name = name
     context.object.data.name = name
     # optionally apply BVH to it
     if bvh_abspath is not None:
         # Assumes context.object is a MHX2
         bpy.ops.mcp.load_and_retarget(filepath=bvh_abspath)
+    return human
 
 
+def play_some_sounds():
+    """
+    https://docs.blender.org/api/blender2.8/aud.html?highlight=audio
+    """
+    device = aud.Device()
+    snd1 = aud.Sound(WAVPATH_1)
+    snd2 = aud.Sound(WAVPATH_2)
+    #
+    handle1  = device.play(snd1)
+    handle1.location = (-1, 0, 0)
+    #
+    handle2  = device.play(snd2)
+    handle2.location = (1, 0, 0)
+    # position not relative to listener?
+    handle1.relative = False
+    handle2.relative = False
+    # TODO: set this to the viewer position interactively
+    device.listener_location = 0, 0, 0
+    # device.listener_orientation = 0, 0, 0, 0  # quaternion
 
 # #############################################################################
 # ## MAIN ROUTINE
@@ -133,7 +178,7 @@ def parse_args():
                         type=str, default=TPOSE_AFRICAN_PATH,
                         help="path to the MHX2 human model to load")
     parser.add_argument("-B", "--bvh_path",
-                        type=str, nargs="*", #  default=SOME_BVH_PATH,
+                        type=str, nargs="*",
                         help="paths to the BVH files to load (one per given \
                         xy position pair).")
 
@@ -167,16 +212,17 @@ def main():
         bpy.ops.screen.maximize_view_3d()
 
 
-    # TODO: some operator fails here because of poll. Check that...
-    # # position the humans:
-    # for i, xy_tuple in enumerate(zip(human_pos[::2], human_pos[1::2]), 1):
-    #     import_makehuman(bpy.context, "Hooman_"+str(i),
-    #                      args["mhx2_path"], xy_tuple, SOME_BVH_PATH) # args["bvh_path"]
-    #     print("<<<", xy_tuple)
+    # position the humans:
+    humans = []
+    for i, xy_tuple in enumerate(zip(human_pos[::2], human_pos[1::2]), 1):
+        bvh = BVH_MALI_SNIPPET if i == 1 else None
+        h = import_makehuman(bpy.context, "hooman_"+str(i),
+                             args["mhx2_path"], xy_tuple, bvh)
+        humans.append(h)
 
-    # for x, y in args["human_positions"]:
-    #     print(">>>>>>>>><", x, y)
-    # PositionListValidator.validate_str(args["human_positions"])
+
+
+    ### play_some_sounds()
 
 
     # animation config:
@@ -188,6 +234,7 @@ def main():
 
 
 if __name__ == "__main__":
+    ### main()
     try:
         main()
     except Exception as e:
@@ -197,3 +244,19 @@ if __name__ == "__main__":
         print(e)
         print("Aborting Blender because script failed...\n")
         raise SystemExit
+
+
+
+
+# TODO:
+# 1. fix human thing (see above) try doing interactively and then from script. DONE
+# * mocap only loading 158?? This has to do with frame_range: https://blender.stackexchange.com/questions/27889/how-to-find-number-of-animated-frames-in-a-scene-via-python
+# 2. add music at given position. first in the script, then create an operator
+#   -> it is possible to position the music using audaspace. TODO: position relative to view matrix
+#   -> it is possible to load a stripe and then adjust from the video editor, but this is not audaspace? try to merge both...
+#
+# 3. add video?
+# 3.load MPIEA human and music, show how to sync/find cues:
+#        it is possible to sync audio and mocap with the video and nonlinear anim. editors
+
+# 4. add required

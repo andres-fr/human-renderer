@@ -26,7 +26,8 @@ from .operators import MaximizeAreaConsole
 from .operators import CleanAndPurgeScene
 from .operators import CreateBasicScene
 from .operators import CleanPurgeAndCreateBasicScene
-# # import panels
+
+# #import panels
 # from .ui import MY_PANEL_PT_MyPanel1, MY_PANEL_PT_MyPanel2
 # from .ui import MPIEA_MMR_PT_ExportPanel
 
