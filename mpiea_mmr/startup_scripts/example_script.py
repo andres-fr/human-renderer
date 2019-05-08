@@ -113,10 +113,12 @@ def import_makehuman(context, name, mhx2_abspath, xy_pos=(0, 0),
     context.object.name = name
     context.object.data.name = name
     # optionally apply BVH to it
+    frame_range = None  # if BVH set, this is a Vector(start, end)
     if bvh_abspath is not None:
         # Assumes context.object is a MHX2
         bpy.ops.mcp.load_and_retarget(filepath=bvh_abspath)
-    return human
+        frame_range = human.animation_data.action.frame_range
+    return human, frame_range
 
 
 def play_some_sounds():
@@ -214,20 +216,29 @@ def main():
 
     # position the humans:
     humans = []
+    mocap_initframe = 0 # args["sequence_startframe"]
+    mocap_endframe = 0 # args["sequence_endframe"]
     for i, xy_tuple in enumerate(zip(human_pos[::2], human_pos[1::2]), 1):
         bvh = BVH_MALI_SNIPPET if i == 1 else None
-        h = import_makehuman(bpy.context, "hooman_"+str(i),
-                             args["mhx2_path"], xy_tuple, bvh)
+        h, fr = import_makehuman(bpy.context, "hooman_"+str(i),
+                                 args["mhx2_path"], xy_tuple, bvh)
+        if fr is not None:
+            beg, end = fr
+            mocap_initframe = min(mocap_initframe, beg)
+            mocap_endframe = max(mocap_endframe, end)
         humans.append(h)
 
 
 
     ### play_some_sounds()
 
-
     # animation config:
-    bpy.context.scene.frame_start = args["sequence_startframe"]
-    bpy.context.scene.frame_end = args["sequence_endframe"]
+    bpy.context.scene.frame_start = mocap_initframe # args["sequence_startframe"]
+    bpy.context.scene.frame_end = mocap_endframe # args["sequence_endframe"]
+    # bpy.context.scene.McpStartFrame = args["sequence_startframe"]
+    # bpy.context.scene.McpEndFrame = args["sequence_endframe"]
+
+
     if args["play_sequence"]:
         bpy.ops.screen.animation_play()
 
@@ -251,6 +262,8 @@ if __name__ == "__main__":
 # TODO:
 # 1. fix human thing (see above) try doing interactively and then from script. DONE
 # * mocap only loading 158?? This has to do with frame_range: https://blender.stackexchange.com/questions/27889/how-to-find-number-of-animated-frames-in-a-scene-via-python
+#   it seems ok, the retargetting compresses the info to the available fps
+
 # 2. add music at given position. first in the script, then create an operator
 #   -> it is possible to position the music using audaspace. TODO: position relative to view matrix
 #   -> it is possible to load a stripe and then adjust from the video editor, but this is not audaspace? try to merge both...
@@ -260,3 +273,11 @@ if __name__ == "__main__":
 #        it is possible to sync audio and mocap with the video and nonlinear anim. editors
 
 # 4. add required
+
+
+
+
+
+
+#       >>>>> 2 1 250 1 1581      # if set becomes 2 0 0 1 1581
+#        >>>>> 3 0 5000 10 1581  # if set becomes 3 0 0 10 1581
