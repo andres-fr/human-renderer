@@ -344,3 +344,18 @@ class MyOperator(Operator):
 ## ISSUES:
 
 * Time limits: the max nr of frames is about 1 million, i.e. 5 hours at 60 fps. https://docs.blender.org/manual/en/latest/advanced/limits.html
+
+
+
+# Getting Matplotlib to run:
+
+1. pip install the matplotlib
+
+2. there were some numpy issues, pip removing and installing several times fixed it
+
+3. Then tkinter was missing. fixed it so: https://stackoverflow.com/a/56050748/4511978
+
+4. Finally it seems that multiprocess is needed. The mp.Queue was giving an error, solved it by also copying the _multiprocess.so file from my venv to the blender lib-dynload directory.
+
+
+5. See the example I posted on SO to see how to spawn an interactive matplotlib process

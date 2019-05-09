@@ -281,3 +281,40 @@ if __name__ == "__main__":
 
 #       >>>>> 2 1 250 1 1581      # if set becomes 2 0 0 1 1581
 #        >>>>> 3 0 5000 10 1581  # if set becomes 3 0 0 10 1581
+
+
+
+
+
+
+# import matplotlib.pyplot as plt
+# import multiprocessing as mp
+# import numpy
+
+
+# def worker(q):
+#     fig=plt.figure()
+#     ax=fig.add_subplot(111)
+#     ln, = ax.plot([], [])
+#     fig.canvas.draw()   # draw and show it
+#     plt.show(block=False)
+#     i = 0
+#     while True:
+#         obj = q.get()
+#         n = obj + 0
+#         print("sub : got:", n)
+#         lnx, lny = ln.get_xdata(), ln.get_ydata()
+#         ln.set_xdata(numpy.append(lnx, i))
+#         ln.set_ydata(numpy.append(lny, n))
+#         ax.relim()
+#         ax.autoscale_view(True,True,True)
+#         fig.canvas.draw()
+#         i += 1
+
+
+# queue = mp.Queue()
+# p = mp.Process(target=worker, args=(queue,))
+# p.start()
+
+
+# # queue.put(C.scene.frame_current)
