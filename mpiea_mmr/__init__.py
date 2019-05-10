@@ -16,6 +16,8 @@ Alternatively, run this init file as a script from Blender.
 __author__ = "Andres FR"
 
 
+from .mvn import MpieaMvn
+
 import bpy
 #
 from .blender_utils import OperatorToMenuManager, KeymapManager
