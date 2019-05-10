@@ -158,7 +158,7 @@ class MpieaMvn(object):
             d["time"] = int(d["time"])  # ms since start, i.e. ms_i - ms_0
             d["ms"] = int(d["ms"])  # unix timestamp, ms since epoch
             if is_normal:  # only normal frames have index
-                d["index"] = int(d["index"]) # starts by 0, increases by 1
+                d["index"] = int(d["index"])  # starts by 0, increases by 1
             return d
         #
         frames_metadata = mvn.subject.frames.attrib
