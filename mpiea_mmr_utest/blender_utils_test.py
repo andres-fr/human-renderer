@@ -31,7 +31,7 @@ class ArgparserTest(unittest.TestCase):
         with patch.object(sys, 'argv', testargv):
             # in this context sys.argv is testargv
             apfb = self.APFB()
-            argv_after = apfb.get_argv_after_doubledash()
+            argv_after = apfb.get_argv_after_doubledash(sys.argv)
             self.assertEqual(argv_after, [])
 
     def test_one_doubledash(self):
@@ -44,7 +44,7 @@ class ArgparserTest(unittest.TestCase):
         with patch.object(sys, 'argv', testargv):
             # in this context sys.argv is testargv
             apfb = self.APFB()
-            argv_after = apfb.get_argv_after_doubledash()
+            argv_after = apfb.get_argv_after_doubledash(sys.argv)
             self.assertEqual(argv_after, self.NUMBERS[p+1:])
 
     def test_two_doubledashes(self):
@@ -59,7 +59,7 @@ class ArgparserTest(unittest.TestCase):
         with patch.object(sys, 'argv', testargv):
             # in this context sys.argv is testargv
             apfb = self.APFB()
-            argv_after = apfb.get_argv_after_doubledash()
+            argv_after = apfb.get_argv_after_doubledash(sys.argv)
             self.assertEqual(argv_after, self.NUMBERS[p1+1:])
 
     def test_undefined_call(self):

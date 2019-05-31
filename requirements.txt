@@ -11,3 +11,7 @@ twine
 # jsonschema
 matplotlib  # this requires some tweaking, see https://blender.stackexchange.com/questions/97764/how-to-install-matplotlib-for-use-in-blender-2-79/140162#140162
 lxml  # requires install libiconv?
+
+#
+torch
+pysoundfile

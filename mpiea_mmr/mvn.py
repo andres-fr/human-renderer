@@ -3,19 +3,15 @@
 
 """
 This module contains functionality concerning the adaption of the
-XSENS MVN format into our Python and/or Blender setup.
+XSENS MVN format into our Python setup.
 
 
 The following section introduces the contents of the imported MVN file and the
 way they can be accessed from Python::
 
   # load mvn schema https://www.xsens.com/mvn/mvnx/schema.xsd
-  MVN_SCHEMA_PATH = resolve_path("data", "mali_dataset", "mocap",
-                                 "mvn_schema_adapted.xsd")
-
-  mvn_path = resolve_path("data", "mali_dataset", "mocap",
-                          "SAG_D1-003_(snippet)_slate01_2-23-29.701.mvnx")
-
+  MVN_SCHEMA_PATH = "xxx"
+  mvn_path = "yyy"
   mmvn = MpieaMvn(mvn_path, MVN_SCHEMA_PATH)
 
   # These elements contain some small metadata:
@@ -87,7 +83,6 @@ __author__ = "Andres FR"
 
 
 from lxml import etree, objectify  # https://lxml.de/validation.html
-from .blender_utils import resolve_path
 
 
 # #############################################################################

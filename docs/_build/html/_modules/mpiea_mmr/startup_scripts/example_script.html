@@ -1,0 +1,513 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mpiea_mmr.startup_scripts.example_script &mdash; mpiea_mmr 0.1.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> mpiea_mmr
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../mpiea_mmr.html">mpiea_mmr package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">mpiea_mmr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../mpiea_mmr.html">mpiea_mmr</a> &raquo;</li>
+        
+      <li>mpiea_mmr.startup_scripts.example_script</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mpiea_mmr.startup_scripts.example_script</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding:utf-8 -*-</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Example app that uses the functionality of the ``MPIEA MultiModalRenderer``</span>
+<span class="sd">add-on for Blender.</span>
+
+<span class="sd">1. Make sure the add-on is installed and working</span>
+<span class="sd">2. Run script with ``blender --python &lt;SCRIPT_PATH&gt; -- &lt;SCRIPT_ARGS...&gt;``</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Andres FR&quot;</span>
+
+
+<span class="c1"># import os</span>
+
+<span class="c1"># import argparse</span>
+<span class="c1"># import sys</span>
+<span class="c1"># from math import radians  # degrees</span>
+<span class="c1"># #</span>
+<span class="c1"># from mathutils import Vector, Euler  # mathutils is a blender package</span>
+<span class="c1"># import bpy</span>
+<span class="c1"># #</span>
+<span class="c1"># from . import __path__ as PACKAGE_ROOT_PATH</span>
+
+<span class="c1"># import json</span>
+<span class="c1"># import jsonschema</span>
+
+<span class="c1">#</span>
+<span class="kn">import</span> <span class="nn">bpy</span>
+<span class="kn">import</span> <span class="nn">aud</span>  <span class="c1"># audaspace</span>
+<span class="kn">import</span> <span class="nn">mpiea_mmr</span> <span class="k">as</span> <span class="nn">mmr</span>
+
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># ## GLOBALS/HELPERS</span>
+<span class="c1"># #############################################################################</span>
+
+<span class="c1"># class PositionListValidator():</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     This class defines the JSON schema for a list of numbers like</span>
+<span class="c1">#     ``[(x1, y1), (x2, y2), ...]``, and provides a method to validate input</span>
+<span class="c1">#     strings.</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+
+<span class="c1">#     SCHEMA = {&quot;title&quot;: &quot;XY_position_schema&quot;,</span>
+<span class="c1">#               &quot;type&quot;: &quot;array&quot;,</span>
+<span class="c1">#               &quot;description&quot;: &quot;array of zero or more elements&quot;,</span>
+<span class="c1">#               &quot;items&quot;: {</span>
+<span class="c1">#                   &quot;type&quot;: &quot;array&quot;,</span>
+<span class="c1">#                   &quot;description&quot;: &quot;array of two numbers&quot;,</span>
+<span class="c1">#                   &quot;minItems&quot;: 2, &quot;maxItems&quot;: 2,</span>
+<span class="c1">#                   &quot;items&quot;: [{&quot;type&quot;: &quot;number&quot;, &quot;description&quot;: &quot;x-position&quot;},</span>
+<span class="c1">#                             {&quot;type&quot;: &quot;number&quot;, &quot;description&quot;: &quot;y-position&quot;}]</span>
+<span class="c1">#                        }</span>
+<span class="c1">#               }</span>
+
+<span class="c1">#     @classmethod</span>
+<span class="c1">#     def validate_str(clss, data):</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         Converts the given data to JSON and then validates it against</span>
+<span class="c1">#         self.SCHEMA.</span>
+
+<span class="c1">#         :param data: The input to be converted to JSON and validated</span>
+<span class="c1">#         :type data: str</span>
+<span class="c1">#         :returns: None</span>
+<span class="c1">#         :raises Exception: If the input data is illegal or invalid.</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         j = json.loads(data)</span>
+<span class="c1">#         jsonschema.validate(j, clss.SCHEMA)</span>
+
+<span class="n">TPOSE_AFRICAN_PATH</span> <span class="o">=</span> <span class="n">mmr</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">resolve_path</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;makehuman_models&quot;</span><span class="p">,</span>
+                                                    <span class="s2">&quot;exported&quot;</span><span class="p">,</span>
+                                                    <span class="s2">&quot;tpose_african.mhx2&quot;</span><span class="p">)</span>
+
+
+
+
+<span class="n">BVH_MALI_SNIPPET</span> <span class="o">=</span> <span class="n">mmr</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">resolve_path</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;mali_dataset&quot;</span><span class="p">,</span> <span class="s2">&quot;mocap&quot;</span><span class="p">,</span>
+                                          <span class="s2">&quot;SAG_D1-003_(snippet)_slate03_2-35-44.759.bvh&quot;</span><span class="p">)</span>
+                                          <span class="c1"># &quot;SAG_D1-003_(snippet)_slate01_2-23-29.701.bvh&quot;)</span>
+
+
+<span class="n">SOME_BVH_PATH</span> <span class="o">=</span> <span class="n">mmr</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">resolve_path</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;bvh_files&quot;</span><span class="p">,</span>
+                                       <span class="s2">&quot;cmu_motion_captures&quot;</span><span class="p">,</span> <span class="s2">&quot;01&quot;</span><span class="p">,</span>
+                                       <span class="s2">&quot;01_06.bvh&quot;</span><span class="p">)</span>
+
+<span class="n">WAVPATH_1</span> <span class="o">=</span> <span class="n">mmr</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">resolve_path</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;mali_dataset&quot;</span><span class="p">,</span> <span class="s2">&quot;audio&quot;</span><span class="p">,</span>
+                                   <span class="s2">&quot;SAG_D1_10_Voc-1.wav&quot;</span><span class="p">)</span>
+
+<span class="n">WAVPATH_2</span> <span class="o">=</span> <span class="n">mmr</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">resolve_path</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;mali_dataset&quot;</span><span class="p">,</span> <span class="s2">&quot;audio&quot;</span><span class="p">,</span>
+                                   <span class="s2">&quot;SAG_D1_10_M-Jem-2.wav&quot;</span><span class="p">)</span>
+
+
+
+<div class="viewcode-block" id="import_makehuman"><a class="viewcode-back" href="../../../mpiea_mmr.startup_scripts.html#mpiea_mmr.startup_scripts.example_script.import_makehuman">[docs]</a><span class="k">def</span> <span class="nf">import_makehuman</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">mhx2_abspath</span><span class="p">,</span> <span class="n">xy_pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                     <span class="n">bvh_abspath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is not in the library because it directly uses the MHX2 plugin.</span>
+
+<span class="sd">    TODO: maybe to make this load quicker, load the assets into a class</span>
+<span class="sd">    at beginning and let the class manage scene interaction via factories</span>
+<span class="sd">    etc. Mimick the &#39;select hierarchy&#39; -&gt; copy functionality.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># make sure nothing else is selected before starting</span>
+    <span class="c1">### bpy.ops.object.select_all(action=&quot;DESELECT&quot;)</span>
+    <span class="c1"># import  MHX2</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">import_scene</span><span class="o">.</span><span class="n">makehuman_mhx2</span><span class="p">(</span><span class="n">filepath</span><span class="o">=</span><span class="n">mhx2_abspath</span><span class="p">)</span>
+    <span class="n">human</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">object</span>
+    <span class="n">human</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="n">xy_pos</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.07</span><span class="p">,)</span>  <span class="c1"># elevate a little</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="c1"># optionally apply BVH to it</span>
+    <span class="n">frame_range</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># if BVH set, this is a Vector(start, end)</span>
+    <span class="k">if</span> <span class="n">bvh_abspath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Assumes context.object is a MHX2</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mcp</span><span class="o">.</span><span class="n">load_and_retarget</span><span class="p">(</span><span class="n">filepath</span><span class="o">=</span><span class="n">bvh_abspath</span><span class="p">)</span>
+        <span class="n">frame_range</span> <span class="o">=</span> <span class="n">human</span><span class="o">.</span><span class="n">animation_data</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">frame_range</span>
+    <span class="k">return</span> <span class="n">human</span><span class="p">,</span> <span class="n">frame_range</span></div>
+
+
+<div class="viewcode-block" id="play_some_sounds"><a class="viewcode-back" href="../../../mpiea_mmr.startup_scripts.html#mpiea_mmr.startup_scripts.example_script.play_some_sounds">[docs]</a><span class="k">def</span> <span class="nf">play_some_sounds</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    https://docs.blender.org/api/blender2.8/aud.html?highlight=audio</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="n">aud</span><span class="o">.</span><span class="n">Device</span><span class="p">()</span>
+    <span class="n">snd1</span> <span class="o">=</span> <span class="n">aud</span><span class="o">.</span><span class="n">Sound</span><span class="p">(</span><span class="n">WAVPATH_1</span><span class="p">)</span>
+    <span class="n">snd2</span> <span class="o">=</span> <span class="n">aud</span><span class="o">.</span><span class="n">Sound</span><span class="p">(</span><span class="n">WAVPATH_2</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="n">handle1</span>  <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">snd1</span><span class="p">)</span>
+    <span class="n">handle1</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="n">handle2</span>  <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">snd2</span><span class="p">)</span>
+    <span class="n">handle2</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># position not relative to listener?</span>
+    <span class="n">handle1</span><span class="o">.</span><span class="n">relative</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">handle2</span><span class="o">.</span><span class="n">relative</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># TODO: set this to the viewer position interactively</span>
+    <span class="n">device</span><span class="o">.</span><span class="n">listener_location</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span></div>
+    <span class="c1"># device.listener_orientation = 0, 0, 0, 0  # quaternion</span>
+
+<span class="c1"># #############################################################################</span>
+<span class="c1"># ## MAIN ROUTINE</span>
+<span class="c1"># #############################################################################</span>
+
+<div class="viewcode-block" id="parse_args"><a class="viewcode-back" href="../../../mpiea_mmr.startup_scripts.html#mpiea_mmr.startup_scripts.example_script.parse_args">[docs]</a><span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function creates, configures and uses an ``ArgumentParserForBlender``</span>
+<span class="sd">    to parse the script arguments given after the double-dash in a call like</span>
+<span class="sd">    ``blender --python &lt;SCRIPT_PATH&gt; -- &lt;SCRIPT_ARGS...&gt;``.</span>
+
+<span class="sd">    :returns: A dictionary of ``&#39;parameter_name&#39;: parameter_value`` pairs.</span>
+<span class="sd">    :raises SystemExit: If the argument parser encounters any problem.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">mmr</span><span class="o">.</span><span class="n">blender_utils</span><span class="o">.</span><span class="n">ArgumentParserForBlender</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">,</span> <span class="s2">&quot;--create_basic_scene&quot;</span><span class="p">,</span>
+                        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Cleans initial scene and creates a basic one.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;--view3d_fullscreen&quot;</span><span class="p">,</span>
+                        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Sets the View3D to fullscreen mode.&quot;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-P&quot;</span><span class="p">,</span> <span class="s2">&quot;--play_sequence&quot;</span><span class="p">,</span>
+                        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Triggers play button upon start.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-S&quot;</span><span class="p">,</span> <span class="s2">&quot;--sequence_startframe&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Non-negative, sequence starts at this frame&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-E&quot;</span><span class="p">,</span> <span class="s2">&quot;--sequence_endframe&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Sequence ends here (can&#39;t be less than start).&quot;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="s2">&quot;--human_positions&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;A list of &#39;x1 y1 x2 y2 ...&#39; position pairs </span><span class="se">\</span>
+<span class="s2">                        where humans will be generated.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-H&quot;</span><span class="p">,</span> <span class="s2">&quot;--mhx2_path&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">TPOSE_AFRICAN_PATH</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;path to the MHX2 human model to load&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-B&quot;</span><span class="p">,</span> <span class="s2">&quot;--bvh_path&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;paths to the BVH files to load (one per given </span><span class="se">\</span>
+<span class="s2">                        xy position pair).&quot;</span><span class="p">)</span>
+
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../mpiea_mmr.startup_scripts.html#mpiea_mmr.startup_scripts.example_script.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># parse CLI arguments</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">SystemExit</span> <span class="k">as</span> <span class="n">se</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">se</span><span class="p">)</span>  <span class="c1"># Print the cause of error before crashing</span>
+        <span class="k">raise</span> <span class="n">se</span>  <span class="c1"># This makes blender crash</span>
+    <span class="c1"># check CLI arguments consistency</span>
+    <span class="n">human_pos</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;human_positions&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">human_pos</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>\
+        <span class="s2">&quot;Number of human positions &#39;x1 y1 x2 y2 ...&#39; must be pair!&quot;</span>
+    <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;sequence_startframe&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;sequence_endframe&quot;</span><span class="p">],</span>\
+        <span class="s2">&quot;Required: 0 &lt;= start_frame &lt;= end_frame&quot;</span>
+    <span class="c1"># optionally replace original scene with basic scene</span>
+    <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;create_basic_scene&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s2">&quot;Layout&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">areas</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;VIEW_3D&quot;</span><span class="p">:</span>
+                <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">clean_purge_and_create_basic_scene</span><span class="p">()</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;view3d_fullscreen&quot;</span><span class="p">]:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">maximize_view_3d</span><span class="p">()</span>
+
+
+    <span class="c1"># position the humans:</span>
+    <span class="n">humans</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">mocap_initframe</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># args[&quot;sequence_startframe&quot;]</span>
+    <span class="n">mocap_endframe</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># args[&quot;sequence_endframe&quot;]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">xy_tuple</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">human_pos</span><span class="p">[::</span><span class="mi">2</span><span class="p">],</span> <span class="n">human_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]),</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">bvh</span> <span class="o">=</span> <span class="n">BVH_MALI_SNIPPET</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">h</span><span class="p">,</span> <span class="n">fr</span> <span class="o">=</span> <span class="n">import_makehuman</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="s2">&quot;hooman_&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
+                                 <span class="n">args</span><span class="p">[</span><span class="s2">&quot;mhx2_path&quot;</span><span class="p">],</span> <span class="n">xy_tuple</span><span class="p">,</span> <span class="n">bvh</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">beg</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">fr</span>
+            <span class="n">mocap_initframe</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">mocap_initframe</span><span class="p">,</span> <span class="n">beg</span><span class="p">)</span>
+            <span class="n">mocap_endframe</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">mocap_endframe</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+        <span class="n">humans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+
+
+
+    <span class="c1">### play_some_sounds()</span>
+
+    <span class="c1"># animation config:</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">frame_start</span> <span class="o">=</span> <span class="n">mocap_initframe</span> <span class="c1"># args[&quot;sequence_startframe&quot;]</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">frame_end</span> <span class="o">=</span> <span class="n">mocap_endframe</span> <span class="c1"># args[&quot;sequence_endframe&quot;]</span>
+    <span class="c1"># bpy.context.scene.McpStartFrame = args[&quot;sequence_startframe&quot;]</span>
+    <span class="c1"># bpy.context.scene.McpEndFrame = args[&quot;sequence_endframe&quot;]</span>
+
+
+    <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;play_sequence&quot;</span><span class="p">]:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">animation_play</span><span class="p">()</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1">### main()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">main</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="c1"># Blender absorbs any error except for SystemExit ones.</span>
+        <span class="c1"># This code makes Blender abort if anything goes wrong with the script.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Exception of type&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Aborting Blender because script failed...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">SystemExit</span>
+
+
+
+
+<span class="c1"># TODO:</span>
+<span class="c1"># 1. fix human thing (see above) try doing interactively and then from script. DONE</span>
+<span class="c1"># * mocap only loading 158?? This has to do with frame_range: https://blender.stackexchange.com/questions/27889/how-to-find-number-of-animated-frames-in-a-scene-via-python</span>
+<span class="c1">#   it seems ok, the retargetting compresses the info to the available fps</span>
+
+<span class="c1"># 2. add music at given position. first in the script, then create an operator</span>
+<span class="c1">#   -&gt; it is possible to position the music using audaspace. TODO: position relative to view matrix</span>
+<span class="c1">#   -&gt; it is possible to load a stripe and then adjust from the video editor, but this is not audaspace? try to merge both...</span>
+<span class="c1">#</span>
+<span class="c1"># 3. add video?</span>
+<span class="c1"># 3.load MPIEA human and music, show how to sync/find cues:</span>
+<span class="c1">#        it is possible to sync audio and mocap with the video and nonlinear anim. editors</span>
+
+<span class="c1"># 4. add required</span>
+
+
+
+
+
+
+<span class="c1">#       &gt;&gt;&gt;&gt;&gt; 2 1 250 1 1581      # if set becomes 2 0 0 1 1581</span>
+<span class="c1">#        &gt;&gt;&gt;&gt;&gt; 3 0 5000 10 1581  # if set becomes 3 0 0 10 1581</span>
+
+
+
+
+
+
+<span class="c1"># import matplotlib.pyplot as plt</span>
+<span class="c1"># import multiprocessing as mp</span>
+<span class="c1"># import numpy</span>
+
+
+<span class="c1"># def worker(q):</span>
+<span class="c1">#     fig=plt.figure()</span>
+<span class="c1">#     ax=fig.add_subplot(111)</span>
+<span class="c1">#     ln, = ax.plot([], [])</span>
+<span class="c1">#     fig.canvas.draw()   # draw and show it</span>
+<span class="c1">#     plt.show(block=False)</span>
+<span class="c1">#     i = 0</span>
+<span class="c1">#     while True:</span>
+<span class="c1">#         obj = q.get()</span>
+<span class="c1">#         n = obj + 0</span>
+<span class="c1">#         print(&quot;sub : got:&quot;, n)</span>
+<span class="c1">#         lnx, lny = ln.get_xdata(), ln.get_ydata()</span>
+<span class="c1">#         ln.set_xdata(numpy.append(lnx, i))</span>
+<span class="c1">#         ln.set_ydata(numpy.append(lny, n))</span>
+<span class="c1">#         ax.relim()</span>
+<span class="c1">#         ax.autoscale_view(True,True,True)</span>
+<span class="c1">#         fig.canvas.draw()</span>
+<span class="c1">#         i += 1</span>
+
+
+<span class="c1"># queue = mp.Queue()</span>
+<span class="c1"># p = mp.Process(target=worker, args=(queue,))</span>
+<span class="c1"># p.start()</span>
+
+
+<span class="c1"># # queue.put(C.scene.frame_current)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Andres FR
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

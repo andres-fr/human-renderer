@@ -26,7 +26,7 @@ from . import __path__ as PACKAGE_ROOT_PATH
 
 def resolve_path(*path_elements):
     """
-    A convenience path wrapper to find elements in this repository. Retrieves
+    A convenience path wrapper to find elements in this package. Retrieves
     the absolute path, given the OS-agnostic path relative to the package
     root path (by bysically joining the path elements via ``os.path.join``).
     E.g., the following call retrieves the absolute path for
