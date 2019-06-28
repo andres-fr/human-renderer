@@ -130,7 +130,7 @@ class CreateBasicSceneMixin():
     CAM_LIGHT_SHADOW = False
     #
     FLOOR_NAME = "Floor"
-    FLOOR_SIZE = 20  # in meters
+    FLOOR_SIZES = Vector((20, 20, 0.01))  # in meters
     FLOOR_METALLIC = 0.0  # metalic aspect, ratio from 0 to 1
     FLOOR_SPECULAR = 0.0  # specular aspect, ratio from 0 to 1
     FLOOR_ROUGHNESS = 1.0  # the higher the more light difussion. From 0 to 1
@@ -148,7 +148,7 @@ class CreateBasicSceneMixin():
         add_cam(context, clss.CAM_NAME, clss.CAM_LOC, clss.CAM_ROT,
                 clss.CAM_LIGHT_NAME, clss.CAM_LIGHT_LOC,
                 clss.CAM_LIGHT_WATTS, clss.CAM_LIGHT_SHADOW)
-        add_floor(context, clss.FLOOR_NAME, clss.FLOOR_SIZE,
+        add_floor(context, clss.FLOOR_NAME, clss.FLOOR_SIZES,
                   clss.FLOOR_METALLIC, clss.FLOOR_SPECULAR,
                   clss.FLOOR_ROUGHNESS, clss.FLOOR_SUBSURFACE_RATIO,
                   clss.FLOOR_SUBSURFACE_COLOR, clss.FLOOR_IMG_ABSPATH)

@@ -418,9 +418,9 @@ def add_cam(context, cam_name, cam_loc, cam_rot,
         context.object.data.use_shadow = light_shadow
 
 
-def add_floor(context, name, size, metallic=0.0, specular=0.0, roughness=1.0,
+def add_floor(context, name, xyz_sizes, metallic=0.0, specular=0.0, roughness=1.0,
               subsurf_ratio=0.0, subsurf_color=Vector((1.0, 1.0, 1.0, 1.0)),
-              texture_img_abspath=None, texture_img_tilesize=1.0):
+              texture_img_abspath=None):
     """
     Adds a square mesh at zero height,(representing the floor) to the given
     context, with the given features. It adds a colored subsurface to the mesh,
@@ -428,7 +428,7 @@ def add_floor(context, name, size, metallic=0.0, specular=0.0, roughness=1.0,
 
     :param str name: The desired name for the object and its corresponding
        data block. Note that if not unique, Blender will append a number.
-    :param float size: Side length of the square, in meters.
+    :param Vector xyz_sizes: 3D Vector of (x,y,z) sizes, in meters.
 
     :param float metallic: From ``0`` (not metallic) to ``1`` (fully metallic).
     :param float specular: From ``0`` (not specular) to ``1`` (fully specular).
@@ -441,9 +441,6 @@ def add_floor(context, name, size, metallic=0.0, specular=0.0, roughness=1.0,
 
     :param str texture_img_abspath: (Optional), absolute path to an image to
        load as tiled texture onto the plane.
-    :param float texture_img_tilesize: (Optional), positive float. The size
-       ratio for the tiled image texture: the bigger this number, the bigger
-       the tiles on the plane will be.
 
     :returns: None
 
@@ -456,7 +453,7 @@ def add_floor(context, name, size, metallic=0.0, specular=0.0, roughness=1.0,
     plane = context.object
     plane.name = name
     plane.data.name = name
-    plane.scale = (size * 0.5, size * 0.5, 0)  # because plane is 2x2
+    plane.scale = xyz_sizes  # (size * 0.5, size * 0.5, 0)  # because plane is 2x2
 
     # add floor texture
     floor_material = bpy.data.materials.new(name="Material")
@@ -482,7 +479,7 @@ def add_floor(context, name, size, metallic=0.0, specular=0.0, roughness=1.0,
                                        bsdf_inputs["Subsurface Color"])
 
     # optionally add image to texture
-    if (texture_img_abspath is None) or (texture_img_tilesize is None):
+    if (texture_img_abspath is None):
         return None
     else:
         img_node = floor_material.node_tree.nodes.new("ShaderNodeTexImage")
@@ -495,10 +492,10 @@ def add_floor(context, name, size, metallic=0.0, specular=0.0, roughness=1.0,
 
         # expand floor UV to make image be displayed in smaller tiles
         floor_uv_vertices = plane.data.uv_layers["UVMap"].data
-        for v in floor_uv_vertices: # collection of MeshUVLoops
-            v.uv *= size * 0.5 / texture_img_tilesize # v.uv is a 2D Vector
-
-
+        scale_x, scale_y = 0.5 * xyz_sizes[0], 0.5 * xyz_sizes[1]
+        for v in floor_uv_vertices:  # collection of MeshUVLoops
+            v.uv[0] *= scale_x
+            v.uv[1] *= scale_y
 
 # #############################################################################
 
